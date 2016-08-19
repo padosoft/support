@@ -1,0 +1,48 @@
+{
+    "name": "padosoft/support",
+    "description": "agnostic helpers to use as foundation in packages and other project",
+    "keywords": [
+        "padosoft",
+        "support",
+        "helpers"
+    ],
+    "homepage": "https://github.com/padosoft/support",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lorenzo Padovani",
+            "email": "helpdesk@padosoft.com",
+            "homepage": "https://www.padosoft.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : ">=7.0.0",
+        "nesbot/carbon": "^1.21"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Padosoft\\Support\\": "src"
+        },
+        "files": [
+            "src/array.php",
+            "src/constants.php",
+            "src/datetime.php",
+            "src/helpers.php",
+            "src/reflection.php",
+            "src/string.php",
+            "src/validation.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Padosoft\\Support\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    }
+}
