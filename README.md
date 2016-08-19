@@ -73,6 +73,10 @@ if( !isCF("00000000000") )  throw new Exception();
 if( !isCF("02361141209") )  throw new Exception();
 if( !isCF("00000000001") )  throw new Exception();
 
+//check integer value
+if( !isInteger(1561) )  throw new Exception();
+if( !isInteger('sadasd') )  throw new Exception();
+
 /*
  *  datetime helpers
  */
