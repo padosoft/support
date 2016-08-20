@@ -1,7 +1,19 @@
 <?php
 
 /**
- * Check if the value is a integer (only number
+ * Check if a string number starts with one ore more zero
+ * i.e.: 00...000 or 000...0Xxxx.x  with X an int
+ * @param $value
+ * @return bool
+ */
+function isStringNumberStartsWithMoreThanOneZero($value)
+{
+    return preg_match('/^[0]{2,}$/', $value) === 1 || preg_match('/^0{1,}[1-9]{1,}$/', $value) === 1;
+}
+
+/**
+ * Check if the value (int, float or string) is a integer.
+ * Only number <=PHP_INT_MAX (and >=PHP_INT_MIN if unsigned=true)
  * or if $acceptIntegerFloatingPoints==true a floating point that match an integer).
  * @param $value
  * @param bool $unsigned
@@ -10,20 +22,21 @@
  */
 function isInteger($value, $unsigned = true, $acceptIntegerFloatingPoints = false) : bool
 {
-    //00...000 or 000...0Xxxx.x con X int
-    if (preg_match('/^[0]{2,}$/', $value) === 1 || preg_match('/^0{1,}[1-9]{1,}$/', $value) === 1) {
+    if (isStringNumberStartsWithMoreThanOneZero($value)) {
         return false;
     }
 
     //accept only integer number and if $acceptIntegerFloatingPoints is true accept integer floating point too.
     return ((preg_match('/^' . ($unsigned ? '' : '-{0,1}') . '[0-9]{1,}$/', $value) === 1
-            && ($value <= PHP_INT_MAX && $value >= PHP_INT_MIN && ((int)((double)$value) == $value))
+            && ($value <= PHP_INT_MAX && $value >= PHP_INT_MIN && (((int)$value) == $value))
         )
         || ($acceptIntegerFloatingPoints && isIntegerFloatingPoint($value, $unsigned)));
 }
 
 /**
- * Check if string is a valid floating point and integer.
+ * Check if string is a valid floating point that
+ * match an integer (<=PHP_INT_MAX and >=PHP_INT_MIN if unsigned=true)
+ * or is an integer
  * Ex.: 1, 1e2, 1E2, 1e+2, 1e-2, 1.4e+2, -1.2e+2, -1.231e-2 etc...
  * @param $value
  * @param bool $unsigned
@@ -32,7 +45,10 @@ function isInteger($value, $unsigned = true, $acceptIntegerFloatingPoints = fals
 function isIntegerFloatingPoint($value, $unsigned = true) : bool
 {
     return isFloatingPoint($value, $unsigned)
-    && $value <= PHP_INT_MAX && $value >= PHP_INT_MIN && ((int)((double)$value) == $value);
+    && $value <= PHP_INT_MAX && $value >= PHP_INT_MIN
+    //big number rouned to int aproximately!
+    //big number change into exp format
+    && ((int)((double)$value) == $value || (int)$value == $value || strpos(strtoupper((string)$value), 'E') === false);
 }
 
 /**
@@ -44,8 +60,7 @@ function isIntegerFloatingPoint($value, $unsigned = true) : bool
  */
 function isFloatingPoint($value, $unsigned) : bool
 {
-    //00...000 or 000...0Xxxx.x con X int
-    if (preg_match('/^[0]{2,}$/', $value) === 1 || preg_match('/^0{1,}[1-9]{1,}$/', $value) === 1) {
+    if (isStringNumberStartsWithMoreThanOneZero($value)) {
         return false;
     }
 
@@ -54,6 +69,7 @@ function isFloatingPoint($value, $unsigned) : bool
 }
 
 /**
+ * Check if the value are a double (integer or float in the form 1, 1.11...1.
  * @param $value
  * @param int $dec
  * @param bool $unsigned
@@ -64,20 +80,15 @@ function isFloatingPoint($value, $unsigned) : bool
  */
 function isDouble($value, $dec = 2, $unsigned = true, $exactDec = false) : bool
 {
-    //00...000 or 000...0Xxxx.x con X int
-    if (preg_match('/^[0]{2,}$/', $value) === 1 || preg_match('/^0{1,}[1-9]{1,}$/', $value) === 1) {
+    if (isStringNumberStartsWithMoreThanOneZero($value)) {
         return false;
     }
-
-    if (!isInteger($dec)) {
-        $dec = '';
-    }
-
     $regEx = '/^' . ($unsigned ? '' : '-{0,1}') . '[0-9]{1,}(\.{1}[0-9]{' . ($exactDec ? '' : '1,') . $dec . '})' . ($exactDec ? '{1}' : '{0,1}') . '$/';
     return preg_match($regEx, $value) === 1;
 }
 
 /**
+ * Check if string is dd/mm/YYYY
  * @param $value
  * @return bool
  */
@@ -95,6 +106,7 @@ function isDateIta($value) : bool
 }
 
 /**
+ * Check if string is YYYY-mm-dd
  * @param $value
  * @return bool
  */
@@ -112,6 +124,7 @@ function isDateIso($value) : bool
 }
 
 /**
+ * Check if string is YYYY-mm-dd HH:ii:ss
  * @param $value
  * @return bool
  */
@@ -124,6 +137,7 @@ function isDateTimeIso($value) : bool
 }
 
 /**
+ * Check if string is dd/mm/YYYY HH:ii:ss
  * @param $value
  * @return bool
  */
@@ -136,6 +150,7 @@ function isDateTimeIta($value) : bool
 }
 
 /**
+ * Check if string is HH:ii:ss
  * @param $value
  * @return bool
  */
@@ -200,15 +215,9 @@ function isUrl($url) : bool
  * il dato viene considerato opzionale.
  * @return bool
  */
-function isPIVA($pi) : bool
+function isPiva(string $pi) : bool
 {
-    if ($pi === '') {
-        return false;
-    }
-    if (strlen($pi) != 11) {
-        return false;
-    }
-    if (preg_match("/^[0-9]+\$/", $pi) != 1) {
+    if ($pi === null || $pi === '' || strlen($pi) != 11 || preg_match("/^[0-9]+\$/", $pi) != 1) {
         return false;
     }
     $s = 0;
@@ -235,12 +244,9 @@ function isPIVA($pi) : bool
  * cioe' il dato viene considerato opzionale.
  * @return bool
  */
-function isCF($cf) : bool
+function isCf(string $cf) : bool
 {
-    if ($cf === '') {
-        return false;
-    }
-    if (strlen($cf) != 16) {
+    if ($cf === null || $cf === '' || strlen($cf) != 16) {
         return false;
     }
     $cf = strtoupper($cf);

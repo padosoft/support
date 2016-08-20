@@ -34,31 +34,28 @@ function class_constants($object, string $startsWithFilter = ''): array
     }, ARRAY_FILTER_USE_KEY);
 }
 
-if ( ! function_exists('class_uses_recursive'))
-{
+if (!function_exists('class_uses_recursive')) {
     /**
      * Returns all traits used by a class, it's subclasses and trait of their traits
      *
-     * @param  string  $class
+     * @param  string $class
      * @return array
      */
     function class_uses_recursive($class)
     {
         $results = [];
-        foreach (array_merge([$class => $class], class_parents($class)) as $class)
-        {
+        foreach (array_merge([$class => $class], class_parents($class)) as $class) {
             $results += trait_uses_recursive($class);
         }
         return array_unique($results);
     }
 }
 
-if ( ! function_exists('class_basename'))
-{
+if (!function_exists('class_basename')) {
     /**
      * Get the class "basename" of the given object / class.
      *
-     * @param  string|object  $class
+     * @param  string|object $class
      * @return string
      */
     function class_basename($class)

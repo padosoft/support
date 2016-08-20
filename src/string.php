@@ -287,31 +287,6 @@ if ( ! function_exists('str_limit'))
     }
 }
 
-if ( ! function_exists('str_random'))
-{
-    /**
-     * Generate a more truly "random" alpha-numeric string.
-     *
-     * @param  int  $length
-     * @return string
-     *
-     * @throws \RuntimeException
-     */
-    function str_random($length = 16)
-    {
-        if ( ! function_exists('openssl_random_pseudo_bytes'))
-        {
-            throw new RuntimeException('OpenSSL extension is required.');
-        }
-        $bytes = openssl_random_pseudo_bytes($length * 2);
-        if ($bytes === false)
-        {
-            throw new RuntimeException('Unable to generate random string.');
-        }
-        return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
-    }
-}
-
 if ( ! function_exists('str_replace_array'))
 {
     /**
@@ -353,27 +328,18 @@ if ( ! function_exists('studly_case'))
     }
 }
 
-/**
- * Helper functions for the helper functions, that can still be used standalone
- */
 if ( ! function_exists('studly'))
 {
     /**
      * Convert a value to studly caps case.
+     * Alias of studly_case
      *
      * @param  string  $value
      * @return string
      */
     function studly($value)
     {
-        $studlyCache = [];
-        $key = $value;
-        if (isset($studlyCache[$key]))
-        {
-            return $studlyCache[$key];
-        }
-        $value = ucwords(str_replace(array('-', '_'), ' ', $value));
-        return $studlyCache[$key] = str_replace(' ', '', $value);
+        return studly_case($value);
     }
 }
 

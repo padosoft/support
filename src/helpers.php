@@ -17,24 +17,24 @@ function rgb2hex(int $red, int $green, int $blue):  string
 }
 
 /**
- * @param int $val
+ * @param float $val
  * @param int $precision
  * @param string $simbol
  * @return string
  */
-function format_money($val = 0, $precision = 2, $simbol = "")
+function format_money(float $val = 0, int $precision = 2, string $simbol = "") : string
 {
     return "$simbol " . number_format($val, $precision, ',', '.');
 }
 
 /**
  * Format float 1125.86 into string '&euro 1.125,86'
- * @param int $val
+ * @param float $val
  * @return string
  */
-function format_euro($val = 0)
+function format_euro(float $val = 0) : string
 {
-    return "&euro; " . number_format($val, 2, ',', '.');
+    return format_money($val, 2, '&euro; ');
 }
 
 /**
@@ -51,12 +51,11 @@ function ordinal($cdnl)
     return $cdnl . $ext;
 }
 
-if ( ! function_exists('value'))
-{
+if (!function_exists('value')) {
     /**
      * Return the default value of the given value.
      *
-     * @param  mixed  $value
+     * @param  mixed $value
      * @return mixed
      */
     function value($value)
@@ -64,12 +63,11 @@ if ( ! function_exists('value'))
         return $value instanceof Closure ? $value() : $value;
     }
 }
-if ( ! function_exists('with'))
-{
+if (!function_exists('with')) {
     /**
      * Return the given object. Useful for chaining.
      *
-     * @param  mixed  $object
+     * @param  mixed $object
      * @return mixed
      */
     function with($object)

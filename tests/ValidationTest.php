@@ -300,4 +300,36 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($expected, isUrl($val));
         }
     }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider isPivaProvider
+     */
+    public function isPivaTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isPiva($val);
+        } else {
+            $this->assertEquals($expected, isPiva($val));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider isCfProvider
+     */
+    public function isCfTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isCf($val);
+        } else {
+            $this->assertEquals($expected, isCf($val));
+        }
+    }
 }

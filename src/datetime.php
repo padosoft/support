@@ -102,6 +102,36 @@ const MONTHS_ITA_ARR_1_BASED = [
     12 => 'Dicembre',
 ];
 
+const MONTHS_SHORT_ITA_ARR = [
+    0 => 'Gen',
+    1 => 'Feb',
+    2 => 'Mar',
+    3 => 'Apr',
+    4 => 'Mag',
+    5 => 'Giu',
+    6 => 'Lug',
+    7 => 'Ago',
+    8 => 'Set',
+    9 => 'Ott',
+    10 => 'Nov',
+    11 => 'Dic',
+];
+
+const MONTHS_SHORT_ITA_ARR_1_BASED = [
+    1 => 'Gen',
+    2 => 'Feb',
+    3 => 'Mar',
+    4 => 'Apr',
+    5 => 'Mag',
+    6 => 'Giu',
+    7 => 'Lug',
+    8 => 'Ago',
+    9 => 'Set',
+    10 => 'Ott',
+    11 => 'Nov',
+    12 => 'Dic',
+];
+
 /**
  * **************************
  * HELPERS
@@ -206,198 +236,137 @@ function roman_year(int $year = null): string
 
 /**
  * Split date iso
- * @param $date
- * @param $segment
+ * If $date is not valid set to '0000-00-00'.
+ * If $segment is not valid set to 'y'.
+ * @param string $date
+ * @param string $segment allowed value: d, giorno, m, mese, Y, anno
  * @return string
  */
-function partialsDateIso($date, $segment)
+function partialsDateIso(string $date, string $segment = 'Y') : string
 {
-    $defaultDate = '0000-00-00';
-
-    if($date===null || $date == '' || !isDateTimeIso($date) || $segment == '') {
-        return $defaultDate;
+    if ($segment === null || $segment == '') {
+        $segment = 'Y';
     }
 
-    switch ($segment)
-    {
+    if ($date === null || $date == '' || (!isDateIso($date) && !isDateTimeIso($date))) {
+        $date = '0000-00-00';
+    }
+
+    switch ($segment) {
         case 'giorno || d':
-            $result = substr($date,8,2);
-            return $result;
+            $result = substr($date, 8, 2);
             break;
         case 'mese || m':
-            $result = substr($date,5,2);
-            return $result;
+            $result = substr($date, 5, 2);
             break;
         case 'anno || Y':
-            $result = substr($date,0,4);
-            return $result;
-            break;
         default:
-            return $defaultDate;
+            $result = substr($date, 0, 4);
             break;
     }
 
+    return $result;
 }
 
 /**
- * funzione per trasformare la data da Iso a italiano
- * @param string $data
+ * Funzione per trasformare la data da Iso a italiano
+ * If date is invalid return '00/00/0000'.
+ * @param string $date
  * @return string
  */
-function dateIsoToIta($data="")
+function dateIsoToIta(string $date = "") : string
 {
-    if ($data=="")
-    {
+    if ($date === null || !isDateIso($date)) {
         return '00/00/0000';
     }
-    else
-    {
-        $arr_data = preg_split('[-]',$data);
-        return $arr_data[2]."/".$arr_data[1]."/".$arr_data[0];
-    }
+    $arr_data = preg_split('[-]', $date);
+    return $arr_data[2] . "/" . $arr_data[1] . "/" . $arr_data[0];
 }
 
 /**
  * funzione per trasformare la data da italiano a Iso
- * @param string $data
+ * If date is invalid return '0000-00-00'.
+ * @param string $date
  * @return string
  */
-function dateItaToIso($data="")
+function dateItaToIso(string $date = "") : string
 {
-    if ($data=="")
-    {
-        return "0000-00-00";
+    if ($date === null || !isDateIso($date)) {
+        return '0000-00-00';
     }
-    else
-    {
-        $arr_data = preg_split('/[\/.-]/',$data);
-        return $arr_data[2]."-".$arr_data[1]."-".$arr_data[0];
-    }
+    $arr_data = preg_split('/[\/.-]/', $date);
+    return $arr_data[2] . '-' . $arr_data[1] . '-' . $arr_data[0];
 }
 
 /**
+ * Return month name by number.
+ * If $monthNumber if out of range, return empty string.
  * @param $monthNumber
- * @param bool $nameComplete
+ * @param bool $nameComplete if se to false (default) return the short form (Gen, Feb,...).
  * @return string
  */
-function monthFromNumber($monthNumber, $nameComplete = false)
+function monthFromNumber(int $monthNumber, bool $nameComplete = false) : string
 {
-    $monthNumber = (int)$monthNumber;
-
-    if(!is_int($monthNumber) || $monthNumber <= 0) {
+    if ($monthNumber < 1 || $monthNumber > 12) {
         return '';
     }
 
-    if($monthNumber < 1 || $monthNumber > 12) {
-        return '';
-    }
-
-    switch ($monthNumber)
-    {
-        case '01 || 1':
-            return $nameComplete ? 'Gennaio' : 'Gen';
-            break;
-        case '02 || 2':
-            return $nameComplete ? 'Febbraio' : 'Feb';
-            break;
-        case '03 || 3':
-            return $nameComplete ? 'Marzo' : 'Mar';
-            break;
-        case '04 || 4':
-            return $nameComplete ? 'Aprile' : 'Apr';
-            break;
-        case '05 || 5':
-            return $nameComplete ? 'Maggio' : 'Mag';
-            break;
-        case '06 || 6':
-            return $nameComplete ? 'Giugno' : 'Giu';
-            break;
-        case '07 || 7':
-            return $nameComplete ? 'Luglio' : 'Lug';
-            break;
-        case '08 || 8':
-            return $nameComplete ? 'Agosto' : 'Ago';
-            break;
-        case '09 || 9':
-            return $nameComplete ? 'Settembre' : 'Set';
-            break;
-        case '10':
-            return $nameComplete ? 'Ottobre' : 'Ott';
-            break;
-        case '11':
-            return $nameComplete ? 'Novembre' : 'Nov';
-            break;
-        case '12':
-            return $nameComplete ? 'Dicembre' : 'Dic';
-            break;
-    }
+    return $nameComplete ? MONTHS_ITA_ARR_1_BASED[$monthNumber] : MONTHS_SHORT_ITA_ARR_1_BASED[$monthNumber];
 }
 
 /**
- * funzione per trasformare la data da Iso a italiano specifata
+ * Funzione per trasformare la data da Iso a italiano specifata
  * @param string $data
  * @param bool $ShowDayName
  * @param bool $ShortDayName
  * @return string
  */
-function dateIsoToItaSpec($data="",$ShowDayName=false,$ShortDayName=false)
+function dateIsoToItaSpec(string $data = "", bool $ShowDayName = false, bool $ShortDayName = false) : string
 {
-    if ($data=="")
-    {
+    if ($data === null || $data == "" || !isDateIso($data)) {
         return "00/00/0000";
-    }
-    else
-    {
-        $arr_data = explode('-',$data);
+    } else {
+        $arr_data = explode('-', $data);
 
-        $days = array ("Domenica", "Luned&igrave;", "Marted&igrave;", "Mercoled&igrave;", "Gioved&igrave;", "Venerd&igrave;", "Sabato");
-        $mese = array ("Gennaio", "Febbraio", "Marzo", "Aprile", "Maggio", "Giugno", "Luglio", "Agosto", "Settembre", "Ottobre", "Novembre", "Dicembre");
-        if (substr($arr_data[2],0,1)==0)
-        {
-            $arr_data[2] = substr($arr_data[2],1,1);
+        if (substr($arr_data[2], 0, 1) == 0) {
+            $arr_data[2] = substr($arr_data[2], 1, 1);
         }
-        if (!$ShowDayName)
-        {
-            return $arr_data[2]." ".$mese[(($arr_data[1])-1)]." ".$arr_data[0];
-        }else{
-            $dayName=$days[date("w",mktime(0,0,0,$arr_data[1],$arr_data[2],$arr_data[0]))];
-            if ($ShortDayName) {
-                $dayName=substr($dayName,0,3);
-            }
-            return $dayName." ".$arr_data[2]." ".$mese[(($arr_data[1])-1)]." ".$arr_data[0];
+        if (!$ShowDayName) {
+            return $arr_data[2] . " " . MONTHS_ITA_ARR[$arr_data[1] - 1] . " " . $arr_data[0];
+        } else {
+            $dayName = DAYS_ITA_ARR[(int)date("w", mktime(0, 0, 0, $arr_data[1], $arr_data[2], $arr_data[0]))];
+            return ($ShortDayName ? substr($dayName, 0,
+                3) : $dayName) . ' ' . $arr_data[2] . ' ' . MONTHS_ITA_ARR[$arr_data[1] - 1] . ' ' . $arr_data[0];
         }
-
     }
 }
 
 /**
- * @param $data
- * @return bool
+ * @param string $data
+ * @return string
  */
-function getNameDayFromDateIso($data)
+function getNameDayFromDateIso(string $data) : string
 {
-    if(!isDateIso($data)) {
-        return false;
+    if (!isDateIso($data)) {
+        return '';
     }
 
     $dateItaSpec = dateIsoToItaSpec($data, true);
-    $arrDate = explode(' ',trim($dateItaSpec));
+    $arrDate = explode(' ', trim($dateItaSpec));
     $giorno = $arrDate[0];
 
     return $giorno;
 }
 
 /**
- * @param $dataTimeIso
- * @return bool|string
+ * @param string $dataTimeIso
+ * @return string
  */
-function getTimeFromDateTimeIso($dataTimeIso)
+function getTimeFromDateTimeIso(string $dataTimeIso) : string
 {
-    if(!isDateTimeIso($dataTimeIso)) {
-        return false;
+    if (!isDateTimeIso($dataTimeIso)) {
+        return '00:00';
     }
 
-    $time = substr($dataTimeIso,10,6);
-
-    return $time;
+    return substr($dataTimeIso, 10, 6);
 }
