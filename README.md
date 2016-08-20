@@ -1,4 +1,4 @@
-# Generate slugs when saving Eloquent models
+# Agnostic helpers to use as foundation in packages and other project
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/padosoft/support.svg?style=flat-square)](https://packagist.org/packages/padosoft/support)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
@@ -63,15 +63,15 @@ if( !isDateIso("16-08-18") )  echo 'invalid.';
 if( !isDateIso("2016-02-38") )  echo 'invalid.';
 
 //check italian Fiscal Code
-if( !isCF("") )  throw new Exception();
-if( !isCF("abcdefghijklmnoz") )  throw new Exception();
-if( !isCF("xxxxxx12c34x567o") )  throw new Exception();
+if( !isCf("") )  throw new Exception();
+if( !isCf("abcdefghijklmnoz") )  throw new Exception();
+if( !isCf("xxxxxx12c34x567o") )  throw new Exception();
 
 //check italian VAT (Partita iva)
-if( !isPIVA("") )  throw new Exception();
-if( !isCF("00000000000") )  throw new Exception();
-if( !isCF("02361141209") )  throw new Exception();
-if( !isCF("00000000001") )  throw new Exception();
+if( !isPiva("") )  throw new Exception();
+if( !isCf("00000000000") )  throw new Exception();
+if( !isCf("02361141209") )  throw new Exception();
+if( !isCf("00000000001") )  throw new Exception();
 
 //check integer value
 if( !isInteger(1561) )  throw new Exception();
