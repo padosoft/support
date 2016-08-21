@@ -145,6 +145,39 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @test
      * @param $val
      * @param $expected
+     * @dataProvider isIntegerPositiveOrZeroNoFloatingValidateProvider
+     */
+    public function isIntegerPositiveOrZeroNoFloatingTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isIntegerPositiveOrZero($val, false);
+        } else {
+            $this->assertEquals($expected, isIntegerPositiveOrZero($val, false));
+        }
+    }
+
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider isIntegerPositiveNoFloatingValidateProvider
+     */
+    public function isIntegerPositiveNoFloatingTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isIntegerPositive($val, false);
+        } else {
+            $this->assertEquals($expected, isIntegerPositive($val, false));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
      * @dataProvider isIntegerSignedNoFloatingValidateProvider
      */
     public function isIntegerSignedNoFloatingTest($val, $expected)

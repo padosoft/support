@@ -12,6 +12,32 @@ function isStringNumberStartsWithMoreThanOneZero($value)
 }
 
 /**
+ * Check if the value (int, float or string) is a integer and greater than zero..
+ * Only number >0 and <=PHP_INT_MAX
+ * or if $acceptIntegerFloatingPoints==true a floating point that match an positive integer).
+ * @param $value
+ * @param bool $acceptIntegerFloatingPoints
+ * @return bool
+ */
+function isIntegerPositive($value, $acceptIntegerFloatingPoints = false) : bool
+{
+    return isInteger($value, true, $acceptIntegerFloatingPoints) && $value > 0;
+}
+
+/**
+ * Check if the value (int, float or string) is a integer and greater than zero or equals to zero..
+ * Only number >=0 and <=PHP_INT_MAX
+ * or if $acceptIntegerFloatingPoints==true a floating point that match an positive integer).
+ * @param $value
+ * @param bool $acceptIntegerFloatingPoints
+ * @return bool
+ */
+function isIntegerPositiveOrZero($value, $acceptIntegerFloatingPoints = false) : bool
+{
+    return isInteger($value, true, $acceptIntegerFloatingPoints) && $value >= 0;
+}
+
+/**
  * Check if the value (int, float or string) is a integer.
  * Only number <=PHP_INT_MAX (and >=PHP_INT_MIN if unsigned=true)
  * or if $acceptIntegerFloatingPoints==true a floating point that match an integer).
@@ -53,7 +79,7 @@ function isIntegerFloatingPoint($value, $unsigned = true) : bool
 
 /**
  * Check if string is a valid floating point.
- * Ex.: 1, 1e2, 1E2, 1e+2, 1e-2, 1.43234e+2, -1.231e+2, -1.231e-2 etc...
+ * Ex.: [+-]1, [+-]1e2, [+-]1E2, [+-]1e+2, [+-]1e-2, [+-]1.43234e+2, -1.231e+2, -1.231e-2 etc...
  * @param $value
  * @param $unsigned
  * @return bool
@@ -64,7 +90,7 @@ function isFloatingPoint($value, $unsigned) : bool
         return false;
     }
 
-    return preg_match('/^' . ($unsigned ? '' : '-{0,1}') . '[0-9]{1,}(\.[0-9]{1,}){0,1}([Ee][+,-]{0,1}[0-9]{1,}){0,}$/',
+    return preg_match('/^' . ($unsigned ? '[+]{0,1}' : '[-+]{0,1}') . '[0-9]{1,}(\.[0-9]{1,}){0,1}([Ee][+,-]{0,1}[0-9]{1,}){0,}$/',
         $value) === 1;
 }
 

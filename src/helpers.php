@@ -75,3 +75,26 @@ if (!function_exists('with')) {
         return $object;
     }
 }
+
+/**
+ * Set the default configuration of erro reporting for production.
+ */
+function setErrorReportingForProduction()
+{
+    if (version_compare(PHP_VERSION, '5.4.0') >= 0) {
+        error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT);
+    } elseif (version_compare(PHP_VERSION, '5.3.0') >= 0) {
+        error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
+    } else {
+        error_reporting(E_ALL ^ E_NOTICE);
+    }
+}
+
+/**
+ * Check if PHP script was executed by shell.
+ * @return bool
+ */
+function isExecutedByCLI() : bool
+{
+    return php_sapi_name() == 'cli';
+}

@@ -159,3 +159,27 @@ function CleanUpArrayOfInt($array)
 
     return $result;
 }
+
+/**
+ * Returns an array with two elements.
+ *
+ * Iterates over each value in the array passing them to the callback function.
+ * If the callback function returns true, the current value from array is returned in the first
+ * element of result array. If not, it is return in the second element of result array.
+ *
+ * Array keys are preserved.
+ *
+ * @param array $array
+ * @param callable $callback
+ * @return array
+ * @see https://github.com/spatie/array-functions/blob/master/src/array_functions.php
+ */
+function array_split_filter(array $array, callable $callback)
+{
+    $passesFilter = array_filter($array, $callback);
+    $negatedCallback = function ($item) use ($callback) {
+        return !$callback($item);
+    };
+    $doesNotPassFilter = array_filter($array, $negatedCallback);
+    return [$passesFilter, $doesNotPassFilter];
+}
