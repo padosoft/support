@@ -10,6 +10,7 @@ function getIPVisitor(array $server = []) : string
         return '';
     }
 
+    $IP2Check = '';
     if (array_key_exists('HTTP_X_FORWARDED_FOR', $server) && trim($server['HTTP_X_FORWARDED_FOR']) != '') {
         $IP2Check = $server['HTTP_X_FORWARDED_FOR'];
     } elseif (array_key_exists('REMOTE_ADDR', $server) && trim($server['REMOTE_ADDR'])) {
@@ -20,12 +21,16 @@ function getIPVisitor(array $server = []) : string
         return '';
     } elseif (strpos($IP2Check, ',') === false) {
         return $IP2Check;
-    } else {
-        // Header can contain multiple IP-s of proxies that are passed through.
-        // Only the IP added by the last proxy (last IP in the list) can be trusted.
-        $client_ip = trim(end(explode(',', $IP2Check)));
-        return $client_ip;
     }
+
+    // Header can contain multiple IP-s of proxies that are passed through.
+    // Only the IP added by the last proxy (last IP in the list) can be trusted.
+    $arrIps = explode(',', $IP2Check);
+    if (!is_array($arrIps) || count($arrIps) < 1) {
+        return '';
+    }
+
+    return trim(end($arrIps));
 }
 
 /**
