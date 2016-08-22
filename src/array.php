@@ -183,3 +183,27 @@ function array_split_filter(array $array, callable $callback)
     $doesNotPassFilter = array_filter($array, $negatedCallback);
     return [$passesFilter, $doesNotPassFilter];
 }
+
+/**
+ * Checks whether specific value exists in array of object.
+ * For exampe, following code
+ *  $exist = in_array_column([['id' => 1], ['id' => 2], ['id' => 3]], 3, 'id');
+ * will produce 2
+ * @author wapmorgan
+ * @since 2015.05.19
+ * @param array $haystack Source array
+ * @param mixed $needle Needed value
+ * @param string $column Column to perform search
+ * @param bool $strict Should search be strict or not.
+ * @return bool True if value exists in array, False otherwise.
+ * @see modified from https://github.com/wapmorgan/php-functions-repository/blob/master/i/in_array_column.php
+ */
+function in_array_column($haystack, $needle, $column, $strict = false)
+{
+    foreach ($haystack as $k => $elem) {
+        if ((!$strict && $elem[$column] == $needle) || ($strict && $elem[$column] === $needle)) {
+            return true;
+        }
+    }
+    return false;
+}

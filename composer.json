@@ -32,9 +32,11 @@
             "src/constants.php",
             "src/datetime.php",
             "src/helpers.php",
+            "src/ip.php",
             "src/reflection.php",
             "src/string.php",
-            "src/validation.php"
+            "src/validation.php",
+            "src/xml.php"
         ]
     },
     "autoload-dev": {
