@@ -51,7 +51,7 @@ function normalizeUtf8String(string $s) : string
     $original_string = $s;
 
     // Normalizer-class missing!
-    if (!class_exists("Normalizer", $autoload = false)) {
+    if (!class_exists("Normalizer", false)) {
         return $original_string;
     }
 
@@ -106,7 +106,7 @@ function normalizeUtf8String(string $s) : string
     $s = preg_replace('/[^\0-\x80]/u', "", $s);
 
     // possible errors in UTF8-regular-expressions
-    if ($s == null || $s == '') {
+    if (isNullOrEmpty($s)) {
         return $original_string;
     }
     return $s;
@@ -162,7 +162,6 @@ function sanitize_filename(
     $fileName = mb_ereg_replace('([^\w\s\d\-_~,;\[\]\(\).' . ($sanitizeForPath ? '\\/' : '') . '])', '', $fileName);
 
     // remove exadecimal, non white space chars
-    //$fileName = mb_ereg_replace('([[:cntrl:][:xdigit:]\b\0\n\r\t\f])', '', $fileName);
     $fileName = mb_ereg_replace('([[:cntrl:]\b\0\n\r\t\f])', '', $fileName);
 
     //normalize and trim
@@ -230,8 +229,6 @@ function sanitize_string_xss(string $data) : string
 /**
  * Sanitize the string by urlencoding characters.
  *
- * Usage: '<index>' => 'urlencode'
- *
  * @param string $value
  *
  * @return string
@@ -246,10 +243,7 @@ function sanitize_urlencode($value)
 /**
  * Sanitize the string by removing illegal characters from emails.
  *
- * Usage: '<index>' => 'sanitize_email'
- *
  * @param string $value
- * @param array $params
  *
  * @return string
  *
