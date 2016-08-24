@@ -121,7 +121,7 @@ function xml2array(string $xml, int $get_attributes = 1, string $priority = 'tag
                             $current[$tag]['0_attr'] = $current[$tag . '_attr'];
                             unset ($current[$tag . '_attr']);
                         }
-                        if ($attributes_data) {
+                        if (!empty($attributes_data)) {
                             $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                         }
                     }
