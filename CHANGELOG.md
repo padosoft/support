@@ -2,12 +2,13 @@
 
 All Notable changes to `support` will be documented in this file
 
-## 1.3.0-beta - 2016-08-24
+## 1.3.0 - 2016-08-24
 
 - ADD PHP 7.1 support.
 - ADD sanitize helpers.
 - ADD new validation helpers.
 - ADD new helpers.
+- CHANGE small changes and refactor.
 
 ## 1.2.0 - 2016-08-24
 
