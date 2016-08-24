@@ -37,7 +37,7 @@ function getIPVisitor(array $server = []) : string
  */
 function anonimizeIp(string $ip) : string
 {
-    if ($ip === null || strlen($ip) < 2 || strrpos($ip, ".") === false) {
+    if (isNullOrEmpty($ip) || strlen($ip) < 2 || strrpos($ip, ".") === false) {
         return $ip;
     }
     return substr($ip, 0, strrpos($ip, ".") + 1) . '0';

@@ -34,6 +34,7 @@
             "src/helpers.php",
             "src/ip.php",
             "src/reflection.php",
+            "src/sanitize.php",
             "src/string.php",
             "src/validation.php",
             "src/xml.php"

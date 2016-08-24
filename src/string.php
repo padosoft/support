@@ -1,16 +1,6 @@
 <?php
 
 /**
- * Strip new line breaks from a string
- * @param $str
- * @return string|array
- */
-function strip_nl($str)
-{
-    return str_replace("\n", "", str_replace("\r", "", $str));
-}
-
-/**
  * Generate random string (password) from a different charset based on $secLevel.
  * $secLevel=0 [a-z] charset.
  * $secLevel=1 [a-z0-9] charset.
@@ -68,21 +58,6 @@ function generateRandomString(int $length = 10, string $extChars = '', string $n
     return $randomString;
 }
 
-/**
- * Javascript escape
- * @param string $str
- * @return string
- * @source https://github.com/rtconner/laravel-plusplus/blob/laravel-5/src/plus-functions.php
- */
-function jse(string $str) : string
-{
-    if ($str === null || $str == '') {
-        return '';
-    }
-    $str = str_replace("\n", "", str_replace("\r", "", $str));
-    return addslashes($str);
-}
-
 if (!function_exists('gravatar')) {
     /**
      * Get a Gravatar URL from email.
@@ -109,19 +84,6 @@ if (!function_exists('gravatar')) {
  * With some adjustments
  * *****************************************************
  */
-
-if (!function_exists('e')) {
-    /**
-     * Escape HTML entities in a string.
-     *
-     * @param  string $value
-     * @return string
-     */
-    function e($value)
-    {
-        return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
-    }
-}
 
 if (!function_exists('preg_replace_sub')) {
     /**
@@ -199,7 +161,7 @@ if (!function_exists('ends_with')) {
      */
     function ends_with($haystack, $needles)
     {
-        if ($haystack === null || $haystack == '' || $needles === null || $needles == '') {
+        if (isNullOrEmpty($haystack) || isNullOrEmpty($needles)) {
             return false;
         }
 
@@ -222,7 +184,7 @@ if (!function_exists('starts_with')) {
      */
     function starts_with($haystack, $needles)
     {
-        if ($haystack === null || $haystack == '' || $needles === null || $needles == '') {
+        if (isNullOrEmpty($haystack) || isNullOrEmpty($needles)) {
             return false;
         }
 
@@ -476,4 +438,24 @@ function firstSegment($delimiter, $subject) : string
 function lastSegment($delimiter, $subject) : string
 {
     return segment($delimiter, -1, $subject);
+}
+
+/**
+ * Return true if $subject is null or empty string ('').
+ * @param $subject
+ * @return bool
+ */
+function isNullOrEmpty($subject) : bool
+{
+    return $subject === null || $subject == '';
+}
+
+/**
+ * Return true if $subject is not null and is not empty string ('').
+ * @param $subject
+ * @return bool
+ */
+function isNotNullOrEmpty($subject) : bool
+{
+    return !isNullOrEmpty($subject);
 }

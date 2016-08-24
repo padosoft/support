@@ -244,11 +244,11 @@ function roman_year(int $year = null): string
  */
 function partialsDateIso(string $date, string $segment = 'Y') : string
 {
-    if ($segment === null || $segment == '') {
+    if (isNullOrEmpty($segment)) {
         $segment = 'Y';
     }
 
-    if ($date === null || $date == '' || (!isDateIso($date) && !isDateTimeIso($date))) {
+    if (isNullOrEmpty($date) || (!isDateIso($date) && !isDateTimeIso($date))) {
         $date = '0000-00-00';
     }
 
@@ -276,7 +276,7 @@ function partialsDateIso(string $date, string $segment = 'Y') : string
  */
 function dateIsoToIta(string $date = "") : string
 {
-    if ($date === null || !isDateIso($date)) {
+    if (isNullOrEmpty($date) || !isDateIso($date)) {
         return '00/00/0000';
     }
     $arr_data = preg_split('[-]', $date);
@@ -291,7 +291,7 @@ function dateIsoToIta(string $date = "") : string
  */
 function dateItaToIso(string $date = "") : string
 {
-    if ($date === null || !isDateIso($date)) {
+    if (isNullOrEmpty($date) || !isDateIso($date)) {
         return '0000-00-00';
     }
     $arr_data = preg_split('/[\/.-]/', $date);
@@ -323,7 +323,7 @@ function monthFromNumber(int $monthNumber, bool $nameComplete = false) : string
  */
 function dateIsoToItaSpec(string $data = "", bool $ShowDayName = false, bool $ShortDayName = false) : string
 {
-    if ($data === null || $data == "" || !isDateIso($data)) {
+    if (isNullOrEmpty($data) || !isDateIso($data)) {
         return "00/00/0000";
     } else {
         $arr_data = explode('-', $data);
@@ -369,4 +369,38 @@ function getTimeFromDateTimeIso(string $dataTimeIso) : string
     }
 
     return substr($dataTimeIso, 10, 6);
+}
+
+/**
+ * Determine difference in year between two date.
+ *
+ * @param string $data1 date ('Y-m-d') or datetime ('Y-m-d H:i:s')
+ * @param string $data2 date ('Y-m-d') or datetime ('Y-m-d H:i:s')
+ *
+ * @return int
+ */
+function diff_in_year($data1, $data2 = '') : int
+{
+    if (isNullOrEmpty($data1)) {
+        return 0;
+    }
+    if (isNullOrEmpty($data2)) {
+        $data2 = date('Y-m-d');
+    }
+
+    $cdate1 = new DateTime(date('Y-m-d', strtotime($data1)));
+    $interval = $cdate1->diff($data2);
+    return $interval->y;
+}
+
+/**
+ * Determine the age by date Of Birthday.
+ *
+ * @param string $dateOfBirthday date ('Y-m-d') or datetime ('Y-m-d H:i:s') Date Of Birthday
+ *
+ * @return int
+ */
+function age($dateOfBirthday) : int
+{
+    return date_diff(date('Y-m-d'), $dateOfBirthday);
 }

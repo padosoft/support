@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.3.0-beta - 2016-08-24
+
+- ADD sanitize helpers.
+- ADD new validation helpers.
+- ADD new helpers.
+
 ## 1.2.0 - 2016-08-24
 
 - ADD IP helpers.
