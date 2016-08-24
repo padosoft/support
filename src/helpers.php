@@ -131,7 +131,7 @@ function bytes2HumanSize($bytes)
 /**
  * This function transforms the php.ini notation for numbers (like '2M')
  * to an integer (2*1024*1024 in this case)
- * @param $sSize
+ * @param string $sSize
  * @return int|string
  */
 function convertPHPSizeToBytes($sSize)
@@ -145,14 +145,19 @@ function convertPHPSizeToBytes($sSize)
     switch (strtoupper($sSuffix)) {
         case 'P':
             $iValue *= 1024;
+        //PB multiplier
         case 'T':
             $iValue *= 1024;
+        //TB multiplier
         case 'G':
             $iValue *= 1024;
+        //GB multiplier
         case 'M':
             $iValue *= 1024;
+        //MB multiplier
         case 'K':
             $iValue *= 1024;
+            //KB multiplier
             break;
     }
     return $iValue;
