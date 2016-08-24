@@ -206,7 +206,7 @@ function isMail($value) : bool
 }
 
 /**
- * isIPv4 check if is a valid IP v4
+ * isIPv4 check if a string is a valid IP v4
  * @param  string $IP2Check IP to check
  * @return bool
  */
@@ -216,32 +216,62 @@ function isIPv4($IP2Check) : bool
 }
 
 /**
- * Simple Check if a URL address syntax is valid (this regular expression also allows dashes in the URL).
- * Do not support ful URI and allow only popular scheme (http|https|ftp|mailto|file|data).
- * Require scheme protocol or www. i.e.: http://dummy.com and www.dummy.com return true but dummy.com return false.
+ * isIPv6 check if a string is a valid IP v6
+ * @param  string $IP2Check IP to check
+ * @return bool
+ */
+function isIPv6($IP2Check) : bool
+{
+    return !(filter_var($IP2Check, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false);
+}
+
+/**
+ * Check if a string is a valid IP (v4 or v6).
+ * @param  string $IP2Check IP to check
+ * @return bool
+ */
+function isIP($IP2Check) : bool
+{
+    return !(filter_var($IP2Check, FILTER_VALIDATE_IP) === false);
+}
+
+/**
+ * Check if a string has a URL address syntax is valid.
+ * It require scheme to be valide (http|https|ftp|mailto|file|data)
+ * i.e.: http://dummy.com and http://www.dummy.com is valid but www.dummy.and dummy.com return false.
  * @param $url
  * @return bool
  */
 function isUrl($url) : bool
 {
-    if (preg_match('/^(https?|ftp|mailto|file|data):\/\/\./i', $url) === 1) {
-        return false;
-    }
-    return preg_match('/\b(?:(?:https?|ftp|mailto|file|data):\/\/|www\.)[-a-z0-9+&@#\/%?=~_|!:,.;]*[-a-z0-9+&@#\/%=~_|]/i',
-        $url) === 1;
+    return filter_var($url, FILTER_VALIDATE_URL) !== false;
 }
 
 /**
- * Controlla partita IVA.
+ * Check if a string is valid hostname
+ * (dummy.com, www.dummy.com, , www.dummy.co.uk, , www.dummy-dummy.com, etc..).
+ * @param $value
+ * @return bool
+ */
+function isHostname($value) : bool
+{
+    return preg_match('/(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)/i', $value) === 1;
+}
+
+/**
+ * Controlla partita IVA Italiana.
  * @author Umberto Salsi <salsi@icosaedro.it>
+ * @author Lorenzo Padovani modified.
  * @version 2012-05-12
- * @param string $pi Partita IVA costituita da 11 cifre. Non sono ammessi
+ * @param string $pi Partita IVA Italiana è costituita da 11 cifre. Non sono ammessi
  * caratteri di spazio, per cui i campi di input dell'utente dovrebbero
  * essere trimmati preventivamente. La stringa vuota e' ammessa, cioe'
  * il dato viene considerato opzionale.
+ * @param bool $validateOnVIES default false. if se to true, first check algorithm then if it valid,
+ * try to check VIES service. If VIES return false or soap exception was thrown, return false.
  * @return bool
  */
-function isPiva(string $pi) : bool
+function isPiva(string $pi, bool $validateOnVIES = false) : bool
 {
     if ($pi === null || $pi === '' || strlen($pi) != 11 || preg_match("/^[0-9]+\$/", $pi) != 1) {
         return false;
@@ -257,7 +287,53 @@ function isPiva(string $pi) : bool
         }
         $s += $c;
     }
-    return !((10 - $s % 10) % 10 != ord($pi[10]) - ord('0'));
+    if ((10 - $s % 10) % 10 != ord($pi[10]) - ord('0')) {
+        return false;
+    }
+    if (!$validateOnVIES) {
+        return true;
+    }
+    //check vies
+    try {
+        return isVATNumber($pi);
+    } catch (SoapFault $e) {
+        return false;
+    }
+}
+
+/**
+ * Validate a European VAT number using the EU commission VIES service.
+ * If not $vatNumber starts with country code, a default $countryCodeDefault applied.
+ * @param string $vatNumber
+ * @param string $countryCodeDefault default 'IT'
+ * @return bool
+ * @throws SoapFault
+ */
+function isVATNumber(string $vatNumber, string $countryCodeDefault = 'IT') : bool
+{
+    if (strlen($vatNumber) < 3) {
+        return false;
+    }
+
+    $vatNumber = str_replace([' ', '-', '.', ','], '', strtoupper(trim($vatNumber)));
+    $countryCode = strtoupper(substr($vatNumber, 0, 2));
+
+    if (preg_match('/^[A-Za-z]{2}$/', $countryCode) === 1) {
+        $vatNumber = substr($vatNumber, 2);
+    } else {
+        $countryCode = $countryCodeDefault != '' ? strtoupper($countryCodeDefault) : 'IT';
+    }
+    try {
+        $serviceUrl = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl';
+        $client = new SoapClient($serviceUrl);
+        $response = $client->checkVat([
+            'countryCode' => $countryCode,
+            'vatNumber' => $vatNumber,
+        ]);
+        return $response->valid;
+    } catch (SoapFault $e) {
+        throw $e;
+    }
 }
 
 /**

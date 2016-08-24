@@ -338,6 +338,22 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @test
      * @param $val
      * @param $expected
+     * @dataProvider isHostnameProvider
+     */
+    public function isHostnameTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isHostname($val);
+        } else {
+            $this->assertEquals($expected, isHostname($val));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
      * @dataProvider isPivaProvider
      */
     public function isPivaTest($val, $expected)
@@ -363,6 +379,23 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             isCf($val);
         } else {
             $this->assertEquals($expected, isCf($val));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $countryCode
+     * @param $expected
+     * @dataProvider isVATNumberProvider
+     */
+    public function isVATNumberTest($val, $countryCode, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isVATNumber($val, $countryCode);
+        } else {
+            $this->assertEquals($expected, isVATNumber($val, $countryCode));
         }
     }
 }

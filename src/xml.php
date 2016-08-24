@@ -10,23 +10,13 @@
  */
 function xmlUrl2array(string $url, int $get_attributes = 1, string $priority = 'tag') : array
 {
-    $contents = "";
     if (!function_exists('xml_parser_create')) {
         return array();
     }
-    if (!($fp = @ fopen($url, 'rb'))) {
-        return array();
-    }
-    while (!feof($fp)) {
-        $contents .= fread($fp, 8192);
-    }
-    fclose($fp);
 
-    if (!$contents) {
-        return array();
-    }
+    $contents = file_get_contents($url);
 
-    return xmlUrl2array($contents, $get_attributes, $priority);
+    return xml2array($contents, $get_attributes, $priority);
 }
 
 /**
@@ -52,13 +42,10 @@ function xml2array(string $xml, int $get_attributes = 1, string $priority = 'tag
     xml_parser_set_option($parser, XML_OPTION_SKIP_WHITE, 1);
     xml_parse_into_struct($parser, trim($contents), $xml_values);
     xml_parser_free($parser);
-    if (!$xml_values) {
+    if (empty($xml_values)) {
         return array();
-    } //Hmm...
+    }
     $xml_array = array();
-    $parents = array();
-    $opened_tags = array();
-    $arr = array();
     $current = &$xml_array;
     $repeated_tag_index = array();
     foreach ($xml_values as $data) {
@@ -84,9 +71,9 @@ function xml2array(string $xml, int $get_attributes = 1, string $priority = 'tag
         }
         if ($type == "open") {
             $parent[$level - 1] = &$current;
-            if (!is_array($current) or (!in_array($tag, array_keys($current)))) {
+            if (!is_array($current) || (!in_array($tag, array_keys($current)))) {
                 $current[$tag] = $result;
-                if ($attributes_data) {
+                if (!empty($attributes_data)) {
                     $current[$tag . '_attr'] = $attributes_data;
                 }
                 $repeated_tag_index[$tag . '_' . $level] = 1;
@@ -113,13 +100,13 @@ function xml2array(string $xml, int $get_attributes = 1, string $priority = 'tag
             if (!isset ($current[$tag])) {
                 $current[$tag] = $result;
                 $repeated_tag_index[$tag . '_' . $level] = 1;
-                if ($priority == 'tag' && $attributes_data) {
+                if ($priority == 'tag' && !empty($attributes_data)) {
                     $current[$tag . '_attr'] = $attributes_data;
                 }
             } else {
                 if (is_array($current[$tag]) && isset ($current[$tag][0])) {
                     $current[$tag][$repeated_tag_index[$tag . '_' . $level]] = $result;
-                    if ($priority == 'tag' && $get_attributes && $attributes_data) {
+                    if ($priority == 'tag' && $get_attributes && !empty($attributes_data)) {
                         $current[$tag][$repeated_tag_index[$tag . '_' . $level] . '_attr'] = $attributes_data;
                     }
                     $repeated_tag_index[$tag . '_' . $level]++;

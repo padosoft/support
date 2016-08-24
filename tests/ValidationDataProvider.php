@@ -975,9 +975,11 @@ trait ValidationDataProvider
             '.dummy' => ['.dummy', false],
             '.dummy.com' => ['.dummy.com', false],
             'dummy.com' => ['dummy.com', false],
-            'www.dummy.com' => ['www.dummy.com', true],
+            'www.dummy.com' => ['www.dummy.com', false],
             'ftp.dummy.com' => ['ftp.dummy.com', false],
             'dummy.dummy.com' => ['dummy.dummy.com', false],
+            'dummy.dummy.co.uk' => ['dummy.dummy.co.uk', false],
+            'www.dummy.dummy.co.uk' => ['www.dummy.dummy.co.uk', false],
             'http://.dummy.com' => ['http://.dummy.com', false],
             'http://dummy.com' => ['http://dummy.com', true],
             'https://dummy.com' => ['https://dummy.com', true],
@@ -987,6 +989,42 @@ trait ValidationDataProvider
             'https://dummy.dummy.com' => ['https://dummy.dummy.com', true],
             'http://www.dummy-dummy.com' => ['http://www.dummy-dummy.com', true],
             'https://www.dummy-dummy.com' => ['https://www.dummy-dummy.com', true],
+            'https://www.dummy-dummy.co.uk' => ['https://www.dummy-dummy.co.uk', true],
+            'https://127.0.0.1' => ['https://127.0.0.1', true],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function isHostnameProvider()
+    {
+        return [
+            '' => ['', false],
+            ' ' => [' ', false],
+            'null' => [null, false],
+            '(9223372036854775807+10)' => [9223372036854775807 + 10, false],
+            '1234567890123456789' => ['1234567890123456789', false],
+            'zfsdgfsgfdg' => ['1234567890', false],
+            'dummy.' => ['dummy.', false],
+            '.dummy' => ['.dummy', false],
+            '.dummy.com' => ['.dummy.com', false],
+            'dummy.com' => ['dummy.com', true],
+            'www.dummy.com' => ['www.dummy.com', true],
+            'ftp.dummy.com' => ['ftp.dummy.com', true],
+            'dummy.dummy.com' => ['dummy.dummy.com', true],
+            'dummy-dummy.com' => ['dummy-dummy.com', true],
+            'dummy-dummy.co.uk' => ['dummy-dummy.co.uk', true],
+            'http://.dummy.com' => ['http://.dummy.com', false],
+            'http://dummy.com' => ['http://dummy.com', false],
+            'https://dummy.com' => ['https://dummy.com', false],
+            'http://www.dummy.com' => ['http://www.dummy.com', false],
+            'https://www.dummy.com' => ['https://www.dummy.com', false],
+            'http://dummy.dummy.com' => ['http://dummy.dummy.com', false],
+            'https://dummy.dummy.com' => ['https://dummy.dummy.com', false],
+            'http://www.dummy-dummy.com' => ['http://www.dummy-dummy.com', false],
+            'https://www.dummy-dummy.com' => ['https://www.dummy-dummy.com', false],
+            'https://127.0.0.1' => ['https://127.0.0.1', false],
         ];
     }
 
@@ -1004,6 +1042,25 @@ trait ValidationDataProvider
             '00000000001' => ['00000000001', false],
             '0' => ['0', false],
             '123456789012345678990' => ['123456789012345678990', false],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function isVATNumberProvider()
+    {
+        return [
+            '\'\', \'\'' => ['', '', false],
+            '\' \', \'\'' => [' ', '', false],
+            'null, \'\'' => [null, '', 'TypeError'],
+            '00000000000, \'\'' => ['00000000000', '', false],
+            '02361141209 (ICOSAEDRO.IT DI UMBERTO SALSI), \'\'' => ['02361141209','' , true],
+            '00885351007, \'\'' => ['00885351007','' , true],
+            'IT00885351007 (Generali), \'\'' => ['IT00885351007', '', true],
+            '00885351007 (Generali), \'\'' => ['00885351007', '', true],
+            'GB371057172 (Mcdonald\'s), \'\'' => ['GB371057172', '', true],
+            '371057172 (Mcdonald\'s), \'GB\'' => ['371057172', 'GB', true],
         ];
     }
 

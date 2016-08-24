@@ -19,9 +19,11 @@ All helpers function are splitted into these files:
 - Constants (generic usefull constants)
 - DateTime
 - Helpers (misc functions)
+- IP
 - Reflection
 - String
 - Validation
+- Xml
 
 ##Requires
   

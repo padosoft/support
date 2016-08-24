@@ -98,3 +98,113 @@ function isExecutedByCLI() : bool
 {
     return php_sapi_name() == 'cli';
 }
+
+/**
+ * Convert the output of PHP's filesize() function
+ * to a nice format with PB, TB, GB, MB, kB, bytes.
+ * @param $bytes
+ * @return string
+ */
+function bytes2HumanSize($bytes)
+{
+    if ($bytes >= 1125899906842624) {
+        $bytes = number_format($bytes / 1073741824, 2) . ' PB';
+    } elseif ($bytes >= 1099511627776) {
+        $bytes = number_format($bytes / 1073741824, 2) . ' TB';
+    } elseif ($bytes >= 1073741824) {
+        $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+    } elseif ($bytes >= 1048576) {
+        $bytes = number_format($bytes / 1048576, 2) . ' MB';
+    } elseif ($bytes >= 1024) {
+        $bytes = number_format($bytes / 1024, 2) . ' kB';
+    } elseif ($bytes > 1) {
+        $bytes .= ' bytes';
+    } elseif ($bytes == 1) {
+        $bytes .= ' byte';
+    } else {
+        $bytes = '0 bytes';
+    }
+
+    return $bytes;
+}
+
+/**
+ * This function transforms the php.ini notation for numbers (like '2M')
+ * to an integer (2*1024*1024 in this case)
+ * @param $sSize
+ * @return int|string
+ */
+function convertPHPSizeToBytes($sSize)
+{
+    if (is_numeric($sSize)) {
+        return $sSize;
+    }
+    $sSuffix = substr($sSize, -1);
+    $iValue = substr($sSize, 0, -1);
+
+    switch (strtoupper($sSuffix)) {
+        case 'P':
+            $iValue *= 1024;
+        case 'T':
+            $iValue *= 1024;
+        case 'G':
+            $iValue *= 1024;
+        case 'M':
+            $iValue *= 1024;
+        case 'K':
+            $iValue *= 1024;
+            break;
+    }
+    return $iValue;
+}
+
+/**
+ * Return the Max upload size in bytes.
+ * @param bool $humanFormat if set to true return size in human format (MB, kB, etc..) otherwise return in bytes.
+ * @return int
+ */
+function getMaximumFileUploadSize(bool $humanFormat = false)
+{
+    $size = min(convertPHPSizeToBytes(ini_get('post_max_size')), convertPHPSizeToBytes(ini_get('upload_max_filesize')));
+
+    if (!$humanFormat) {
+        return $size;
+    }
+
+    return bytes2HumanSize($size);
+}
+
+/**
+ * Encrypt string.
+ * @param string $string to encrypt.
+ * @param string $chiave the key to encrypt. if empty generate a random key on the fly.
+ * @return string
+ */
+function EncryptString(string $string, string $chiave = '')
+{
+    if ($chiave == '') {
+        $chiave = str_random(64);
+    }
+
+    $key = pack('H*', $chiave);
+
+    $plaintext = $string;
+
+    # create a random IV to use with CBC encoding
+    $iv_size = mcrypt_get_iv_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+    $iv = mcrypt_create_iv($iv_size, MCRYPT_RAND);
+
+    # creates a cipher text compatible with AES (Rijndael block size = 128)
+    # to keep the text confidential
+    # only suitable for encoded input that never ends with value 00h
+    # (because of default zero padding)
+    $ciphertext = mcrypt_encrypt(MCRYPT_RIJNDAEL_128, $key, $plaintext, MCRYPT_MODE_CBC, $iv);
+
+    # prepend the IV for it to be available for decryption
+    $ciphertext = $iv . $ciphertext;
+
+    # encode the resulting cipher text so it can be represented by a string
+    $ciphertext_base64 = base64_encode($ciphertext);
+
+    return $ciphertext_base64;
+}

@@ -221,7 +221,7 @@ function checkIp6($requestIp, $ip) : bool
     }
     $bytesAddr = unpack('n*', @inet_pton($address));
     $bytesTest = unpack('n*', @inet_pton($requestIp));
-    if (!$bytesAddr || !$bytesTest) {
+    if (empty($bytesAddr) || empty($bytesTest)) {
         return false;
     }
     for ($i = 1, $ceil = ceil($netmask / 16); $i <= $ceil; ++$i) {
@@ -243,5 +243,5 @@ function checkIp6($requestIp, $ip) : bool
  */
 function isFromTrustedProxy(array $trustedProxies, $ip)
 {
-    return $trustedProxies && checkIp($ip, $trustedProxies);
+    return !empty($trustedProxies) && checkIp($ip, $trustedProxies);
 }

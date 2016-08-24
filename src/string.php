@@ -11,21 +11,50 @@ function strip_nl($str)
 }
 
 /**
- * Generate random string from [0-9A-Za-z] charset.
- * You may extend charset by passing $extChars.
- * Ex.: $extChars='-_&$!+'
+ * Generate random string (password) from a different charset based on $secLevel.
+ * $secLevel=0 [a-z] charset.
+ * $secLevel=1 [a-z0-9] charset.
+ * $secLevel=2 [A-Za-z0-9] charset.
+ * $secLevel=3 [A-Za-z0-9-_$!+&%?=*#@] charset.
  * @param int $length
- * @param string $extChars
+ * @param int $secLevel
  * @return string
  */
-function generateRandomString(int $length = 10, string $extChars = '') : string
+function generateRandomPassword(int $length = 10, int $secLevel = 2) : string
+{
+    $charset = 'abcdefghijklmnopqrstuvwxyz';
+    if ($secLevel == 1) {
+        $charset = 'abcdefghijklmnopqrstuvwxyz1234567890';
+    } elseif ($secLevel == 2) {
+        $charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890';
+    } elseif ($secLevel >= 3) {
+        $charset = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890-_$!+&%?=*#@';
+    }
+
+    return generateRandomString($length, '', $charset);
+}
+
+/**
+ * Generate random string from [0-9A-Za-z] charset.
+ * You may extend charset by passing $extChars (i.e. add these chars to existing).
+ * Ex.: $extChars='-_$!' implies that the final charset is [0-9A-Za-z-_$!]
+ * If $newChars is set, the default charset are replaced by this and $extChars was ignored.
+ * Ex.: $newChars='0123456789' implies that the final charset is [0123456789]
+ * @param int $length
+ * @param string $extChars
+ * @param string $newChars
+ * @return string
+ */
+function generateRandomString(int $length = 10, string $extChars = '', string $newChars = '') : string
 {
     if ($length < 1) {
         $length = 1;
     }
 
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    if ($extChars !== null && $extChars != '') {
+    if ($newChars !== null && $newChars != '') {
+        $characters = $newChars;
+    } elseif ($extChars !== null && $extChars != '') {
         $characters .= $extChars;
     }
 
@@ -258,7 +287,7 @@ if (!function_exists('str_is')) {
         // to make it convenient to check if the strings starts with the given
         // pattern such as "library/*", making any string check convenient.
         $pattern = str_replace('\*', '.*', $pattern) . '\z';
-        return (bool)preg_match('#^' . $pattern . '#', $value);
+        return preg_match('#^' . $pattern . '#', $value) === 1;
     }
 }
 if (!function_exists('str_limit')) {
@@ -367,4 +396,84 @@ function dash2underscore(string $word) : string
     $word = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\1_\2', $word);
     $word = preg_replace('/([a-z])([A-Z])/', '\1_\2', $word);
     return str_replace('-', '_', strtolower($word));
+}
+
+/**
+ * Replace multiple spaces with one space.
+ * @param string $str
+ * @return string
+ */
+function str_replace_multiple_space(string $str) : string
+{
+    return preg_replace('/\s+/', ' ', $str);
+}
+
+/**
+ * Replace last occurrence ($search) of a string ($subject) with $replace string.
+ * @param string $search
+ * @param string $replace
+ * @param string $subject
+ * @return string
+ */
+function str_replace_last(string $search, string $replace, string $subject) : string
+{
+    if ($search == '') {
+        return $subject;
+    }
+    $position = strrpos($subject, $search);
+    if ($position === false) {
+        return $subject;
+    }
+    return substr_replace($subject, $replace, $position, strlen($search));
+}
+
+/**
+ * Get a segment from a string based on a delimiter.
+ * Returns an empty string when the offset doesn't exist.
+ * Use a negative index to start counting from the last element.
+ *
+ * @param string $delimiter
+ * @param int $index
+ * @param string $subject
+ *
+ * @return string
+ * @see https://github.com/spatie/string/blob/master/src/Str.php
+ */
+function segment($delimiter, $index, $subject)
+{
+    $segments = explode($delimiter, $subject);
+    if ($index < 0) {
+        $segments = array_reverse($segments);
+        $index = (int)abs($index) - 1;
+    }
+    $segment = isset($segments[$index]) ? $segments[$index] : '';
+    return $segment;
+}
+
+/**
+ * Get the first segment from a string based on a delimiter.
+ *
+ * @param string $delimiter
+ * @param string $subject
+ *
+ * @return string
+ * @see https://github.com/spatie/string/blob/master/src/Str.php
+ */
+function firstSegment($delimiter, $subject) : string
+{
+    return segment($delimiter, 0, $subject);
+}
+
+/**
+ * Get the last segment from a string based on a delimiter.
+ *
+ * @param string $delimiter
+ * @param string $subject
+ *
+ * @return string
+ * @see https://github.com/spatie/string/blob/master/src/Str.php
+ */
+function lastSegment($delimiter, $subject) : string
+{
+    return segment($delimiter, -1, $subject);
 }
