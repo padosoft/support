@@ -360,86 +360,97 @@ function dash2underscore(string $word) : string
     return str_replace('-', '_', strtolower($word));
 }
 
-/**
- * Replace multiple spaces with one space.
- * @param string $str
- * @return string
- */
-function str_replace_multiple_space(string $str) : string
-{
-    return preg_replace('/\s+/', ' ', $str);
-}
+if (!function_exists('str_replace_multiple_space')) {
 
-/**
- * Replace last occurrence ($search) of a string ($subject) with $replace string.
- * @param string $search
- * @param string $replace
- * @param string $subject
- * @return string
- */
-function str_replace_last(string $search, string $replace, string $subject) : string
-{
-    if ($search == '') {
-        return $subject;
+    /**
+     * Replace multiple spaces with one space.
+     * @param string $str
+     * @return string
+     */
+    function str_replace_multiple_space(string $str) : string
+    {
+        return preg_replace('/\s+/', ' ', $str);
     }
-    $position = strrpos($subject, $search);
-    if ($position === false) {
-        return $subject;
+}
+
+if (!function_exists('str_replace_last')) {
+    /**
+     * Replace last occurrence ($search) of a string ($subject) with $replace string.
+     * @param string $search
+     * @param string $replace
+     * @param string $subject
+     * @return string
+     */
+    function str_replace_last(string $search, string $replace, string $subject) : string
+    {
+        if ($search == '') {
+            return $subject;
+        }
+        $position = strrpos($subject, $search);
+        if ($position === false) {
+            return $subject;
+        }
+        return substr_replace($subject, $replace, $position, strlen($search));
     }
-    return substr_replace($subject, $replace, $position, strlen($search));
 }
+if (!function_exists('segment')) {
 
-/**
- * Get a segment from a string based on a delimiter.
- * Returns an empty string when the offset doesn't exist.
- * Use a negative index to start counting from the last element.
- *
- * @param string $delimiter
- * @param int $index
- * @param string $subject
- *
- * @return string
- * @see https://github.com/spatie/string/blob/master/src/Str.php
- */
-function segment($delimiter, $index, $subject)
-{
-    $segments = explode($delimiter, $subject);
-    if ($index < 0) {
-        $segments = array_reverse($segments);
-        $index = (int)abs($index) - 1;
+    /**
+     * Get a segment from a string based on a delimiter.
+     * Returns an empty string when the offset doesn't exist.
+     * Use a negative index to start counting from the last element.
+     *
+     * @param string $delimiter
+     * @param int $index
+     * @param string $subject
+     *
+     * @return string
+     * @see https://github.com/spatie/string/blob/master/src/Str.php
+     */
+    function segment($delimiter, $index, $subject)
+    {
+        $segments = explode($delimiter, $subject);
+        if ($index < 0) {
+            $segments = array_reverse($segments);
+            $index = (int)abs($index) - 1;
+        }
+        $segment = isset($segments[$index]) ? $segments[$index] : '';
+        return $segment;
     }
-    $segment = isset($segments[$index]) ? $segments[$index] : '';
-    return $segment;
+}
+if (!function_exists('firstSegment')) {
+
+    /**
+     * Get the first segment from a string based on a delimiter.
+     *
+     * @param string $delimiter
+     * @param string $subject
+     *
+     * @return string
+     * @see https://github.com/spatie/string/blob/master/src/Str.php
+     */
+    function firstSegment($delimiter, $subject) : string
+    {
+        return segment($delimiter, 0, $subject);
+    }
 }
 
-/**
- * Get the first segment from a string based on a delimiter.
- *
- * @param string $delimiter
- * @param string $subject
- *
- * @return string
- * @see https://github.com/spatie/string/blob/master/src/Str.php
- */
-function firstSegment($delimiter, $subject) : string
-{
-    return segment($delimiter, 0, $subject);
-}
+if (!function_exists('lastSegment')) {
 
-/**
- * Get the last segment from a string based on a delimiter.
- *
- * @param string $delimiter
- * @param string $subject
- *
- * @return string
- * @see https://github.com/spatie/string/blob/master/src/Str.php
- */
-function lastSegment($delimiter, $subject) : string
-{
-    return segment($delimiter, -1, $subject);
+    /**
+     * Get the last segment from a string based on a delimiter.
+     *
+     * @param string $delimiter
+     * @param string $subject
+     *
+     * @return string
+     * @see https://github.com/spatie/string/blob/master/src/Str.php
+     */
+    function lastSegment($delimiter, $subject) : string
+    {
+        return segment($delimiter, -1, $subject);
+    }
 }
-
 /**
  * Return true if $subject is null or empty string ('').
  * @param $subject

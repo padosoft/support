@@ -2,6 +2,10 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.3.1 - 2016-08-25
+
+- CHANGE add if(!function_exists()) for some existing laravel functions and others to skip conflict.
+
 ## 1.3.0 - 2016-08-24
 
 - ADD PHP 7.1 support.

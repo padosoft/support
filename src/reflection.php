@@ -1,37 +1,43 @@
 <?php
 
-/**
- * @param $object
- * @return string
- */
-function short_class_name($object): string
-{
-    $objectProperties = new \ReflectionClass($object);
+if (!function_exists('short_class_name')) {
 
-    return $objectProperties->getShortName();
+    /**
+     * @param $object
+     * @return string
+     */
+    function short_class_name($object): string
+    {
+        $objectProperties = new \ReflectionClass($object);
+
+        return $objectProperties->getShortName();
+    }
 }
 
-/**
- * Get all class constants that starts with $startsWithFilter
- * or if empty get all class constants.
- * @param $object
- * @param string $startsWithFilter
- * @return array
- * @see https://github.com/spatie-custom/blender/blob/master/app/Foundation/helpers.php
- */
-function class_constants($object, string $startsWithFilter = ''): array
-{
-    $objectProperties = new \ReflectionClass($object);
+if (!function_exists('class_constants')) {
 
-    $constants = $objectProperties->getConstants();
+    /**
+     * Get all class constants that starts with $startsWithFilter
+     * or if empty get all class constants.
+     * @param $object
+     * @param string $startsWithFilter
+     * @return array
+     * @see https://github.com/spatie-custom/blender/blob/master/app/Foundation/helpers.php
+     */
+    function class_constants($object, string $startsWithFilter = ''): array
+    {
+        $objectProperties = new \ReflectionClass($object);
 
-    if ($startsWithFilter == '') {
-        return $constants;
+        $constants = $objectProperties->getConstants();
+
+        if ($startsWithFilter == '') {
+            return $constants;
+        }
+
+        return array_filter($constants, function ($key) use ($startsWithFilter) {
+            return starts_with(strtolower($key), strtolower($startsWithFilter));
+        }, ARRAY_FILTER_USE_KEY);
     }
-
-    return array_filter($constants, function ($key) use ($startsWithFilter) {
-        return starts_with(strtolower($key), strtolower($startsWithFilter));
-    }, ARRAY_FILTER_USE_KEY);
 }
 
 if (!function_exists('class_uses_recursive')) {

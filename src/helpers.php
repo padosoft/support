@@ -1,19 +1,22 @@
 <?php
 
-/**
- * @param int $red
- * @param int $green
- * @param int $blue
- * @return string
- * @see https://github.com/spatie-custom/blender/blob/master/app/Foundation/helpers.php
- */
-function rgb2hex(int $red, int $green, int $blue):  string
-{
-    return '#' . collect([$red, $green, $blue])
-        ->map(function (int $decimal):  string {
-            return str_pad(dechex($decimal), 2, STR_PAD_LEFT);
-        })
-        ->implode('');
+if (!function_exists('rgb2hex')) {
+
+    /**
+     * @param int $red
+     * @param int $green
+     * @param int $blue
+     * @return string
+     * @see https://github.com/spatie-custom/blender/blob/master/app/Foundation/helpers.php
+     */
+    function rgb2hex(int $red, int $green, int $blue):  string
+    {
+        return '#' . collect([$red, $green, $blue])
+            ->map(function (int $decimal):  string {
+                return str_pad(dechex($decimal), 2, STR_PAD_LEFT);
+            })
+            ->implode('');
+    }
 }
 
 /**
@@ -37,18 +40,21 @@ function format_euro(float $val = 0) : string
     return format_money($val, 2, '&euro; ');
 }
 
-/**
- * Given a number, return the number + 'th' or 'rd' etc
- * @param $cdnl
- * @return string
- */
-function ordinal($cdnl)
-{
-    $test_c = abs($cdnl) % 10;
-    $ext = ((abs($cdnl) % 100 < 21 && abs($cdnl) % 100 > 4) ? 'th'
-        : (($test_c < 4) ? ($test_c < 3) ? ($test_c < 2) ? ($test_c < 1)
-            ? 'th' : 'st' : 'nd' : 'rd' : 'th'));
-    return $cdnl . $ext;
+if (!function_exists('ordinal')) {
+
+    /**
+     * Given a number, return the number + 'th' or 'rd' etc
+     * @param $cdnl
+     * @return string
+     */
+    function ordinal($cdnl)
+    {
+        $test_c = abs($cdnl) % 10;
+        $ext = ((abs($cdnl) % 100 < 21 && abs($cdnl) % 100 > 4) ? 'th'
+            : (($test_c < 4) ? ($test_c < 3) ? ($test_c < 2) ? ($test_c < 1)
+                ? 'th' : 'st' : 'nd' : 'rd' : 'th'));
+        return $cdnl . $ext;
+    }
 }
 
 if (!function_exists('value')) {
@@ -185,7 +191,7 @@ function getMaximumFileUploadSize(bool $humanFormat = false)
  * @param string $chiave the key to encrypt. if empty generate a random key on the fly.
  * @return string
  */
-function EncryptString(string $string, string $chiave = '')
+function encryptString(string $string, string $chiave = '')
 {
     if ($chiave == '') {
         $chiave = str_random(64);

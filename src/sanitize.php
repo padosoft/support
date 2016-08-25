@@ -1,28 +1,34 @@
 <?php
 
-/**
- * Strip new line breaks from a string
- * @param $str
- * @return string|array
- */
-function strip_nl($str)
-{
-    return str_replace("\n", "", str_replace("\r", "", $str));
+if (!function_exists('strip_nl')) {
+
+    /**
+     * Strip new line breaks from a string
+     * @param $str
+     * @return string|array
+     */
+    function strip_nl($str)
+    {
+        return str_replace("\n", "", str_replace("\r", "", $str));
+    }
 }
 
-/**
- * Javascript escape
- * @param string $str
- * @return string
- * @source https://github.com/rtconner/laravel-plusplus/blob/laravel-5/src/plus-functions.php
- */
-function jse(string $str) : string
-{
-    if (isNullOrEmpty($str)) {
-        return '';
+if (!function_exists('jse')) {
+
+    /**
+     * Javascript escape
+     * @param string $str
+     * @return string
+     * @source https://github.com/rtconner/laravel-plusplus/blob/laravel-5/src/plus-functions.php
+     */
+    function jse(string $str) : string
+    {
+        if (isNullOrEmpty($str)) {
+            return '';
+        }
+        $str = str_replace("\n", "", str_replace("\r", "", $str));
+        return addslashes($str);
     }
-    $str = str_replace("\n", "", str_replace("\r", "", $str));
-    return addslashes($str);
 }
 
 if (!function_exists('e')) {

@@ -160,50 +160,56 @@ function CleanUpArrayOfInt($array)
     return $result;
 }
 
-/**
- * Returns an array with two elements.
- *
- * Iterates over each value in the array passing them to the callback function.
- * If the callback function returns true, the current value from array is returned in the first
- * element of result array. If not, it is return in the second element of result array.
- *
- * Array keys are preserved.
- *
- * @param array $array
- * @param callable $callback
- * @return array
- * @see https://github.com/spatie/array-functions/blob/master/src/array_functions.php
- */
-function array_split_filter(array $array, callable $callback)
-{
-    $passesFilter = array_filter($array, $callback);
-    $negatedCallback = function ($item) use ($callback) {
-        return !$callback($item);
-    };
-    $doesNotPassFilter = array_filter($array, $negatedCallback);
-    return [$passesFilter, $doesNotPassFilter];
+if (!function_exists('array_split_filter')) {
+
+    /**
+     * Returns an array with two elements.
+     *
+     * Iterates over each value in the array passing them to the callback function.
+     * If the callback function returns true, the current value from array is returned in the first
+     * element of result array. If not, it is return in the second element of result array.
+     *
+     * Array keys are preserved.
+     *
+     * @param array $array
+     * @param callable $callback
+     * @return array
+     * @see https://github.com/spatie/array-functions/blob/master/src/array_functions.php
+     */
+    function array_split_filter(array $array, callable $callback)
+    {
+        $passesFilter = array_filter($array, $callback);
+        $negatedCallback = function ($item) use ($callback) {
+            return !$callback($item);
+        };
+        $doesNotPassFilter = array_filter($array, $negatedCallback);
+        return [$passesFilter, $doesNotPassFilter];
+    }
 }
 
-/**
- * Checks whether specific value exists in array of object.
- * For exampe, following code
- *  $exist = in_array_column([['id' => 1], ['id' => 2], ['id' => 3]], 3, 'id');
- * will produce 2
- * @author wapmorgan
- * @since 2015.05.19
- * @param array $haystack Source array
- * @param mixed $needle Needed value
- * @param string $column Column to perform search
- * @param bool $strict Should search be strict or not.
- * @return bool True if value exists in array, False otherwise.
- * @see modified from https://github.com/wapmorgan/php-functions-repository/blob/master/i/in_array_column.php
- */
-function in_array_column($haystack, $needle, $column, $strict = false)
-{
-    foreach ($haystack as $k => $elem) {
-        if ((!$strict && $elem[$column] == $needle) || ($strict && $elem[$column] === $needle)) {
-            return true;
+if (!function_exists('in_array_column')) {
+
+    /**
+     * Checks whether specific value exists in array of object.
+     * For exampe, following code
+     *  $exist = in_array_column([['id' => 1], ['id' => 2], ['id' => 3]], 3, 'id');
+     * will produce 2
+     * @author wapmorgan
+     * @since 2015.05.19
+     * @param array $haystack Source array
+     * @param mixed $needle Needed value
+     * @param string $column Column to perform search
+     * @param bool $strict Should search be strict or not.
+     * @return bool True if value exists in array, False otherwise.
+     * @see modified from https://github.com/wapmorgan/php-functions-repository/blob/master/i/in_array_column.php
+     */
+    function in_array_column($haystack, $needle, $column, $strict = false)
+    {
+        foreach ($haystack as $k => $elem) {
+            if ((!$strict && $elem[$column] == $needle) || ($strict && $elem[$column] === $needle)) {
+                return true;
+            }
         }
+        return false;
     }
-    return false;
 }
