@@ -21,6 +21,7 @@ All helpers function are splitted into these files:
 - Helpers (misc functions)
 - IP
 - Reflection
+- Sanitize
 - String
 - Validation
 - Xml
