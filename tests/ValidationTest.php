@@ -353,6 +353,23 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @param $val
+     * @param $checkMX
+     * @param $expected
+     * @dataProvider isMailProvider
+     */
+    public function isMailTest($val, $checkMX, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isMail($val, $checkMX);
+        } else {
+            $this->assertEquals($expected, isMail($val, $checkMX));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
      * @param $expected
      * @dataProvider isPivaProvider
      */

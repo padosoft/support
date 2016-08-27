@@ -1080,4 +1080,20 @@ trait ValidationDataProvider
             'bo' => ['bo', false],
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function isMailProvider()
+    {
+        return [
+            '\'\', \'\'' => ['', '', false],
+            '\' \', \'\'' => [' ', '', false],
+            'null, \'\'' => [null, '', false],
+            'user@gmail.com, false' => ['user@gmail.com', false, true],
+            'user@gmail.com, true' => ['user@gmail.com', true, true],
+            'user@veryLongAndNotExistingDomainName132435.com, false' => ['user@veryLongAndNotExistingDomainName132435.com', false, true],
+            'user@veryLongAndNotExistingDomainName132435.com, true' => ['user@veryLongAndNotExistingDomainName132435.com', true, false],
+        ];
+    }
 }

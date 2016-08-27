@@ -92,4 +92,142 @@ class StringTest extends \PHPUnit_Framework_TestCase
             }
         }
     }
+
+
+    /**
+     * Convert number to word.
+     */
+    public function test_numberToWord()
+    {
+        $number = '864210';
+        $word = numberToWord($number, 'EN');
+        $this->assertEquals(
+            'eight hundred and sixty-four thousand, two hundred and ten',
+            $word
+        );
+        $word = numberToWord($number);
+        $this->assertEquals(
+            'otto cento sessantaquattro mila, due cento dieci',
+            $word
+        );
+    }
+    /**
+     * Convert number of seconds to time.
+     */
+    public function test_secondsToText()
+    {
+        $seconds = 60*60*24*2;
+        $duration = secondsToText($seconds, false, 'EN');
+        $this->assertEquals(
+            '2 days',
+            $duration
+        );
+        $duration = secondsToText($seconds, false);
+        $this->assertEquals(
+            '2 giorni',
+            $duration
+        );
+
+        $seconds = 3610;
+        $duration = secondsToText($seconds, false, 'EN');
+        $this->assertEquals(
+            '1 hour and 10 seconds',
+            $duration
+        );
+        $duration = secondsToText($seconds, $returnAsWords = true, 'EN');
+        $this->assertEquals(
+            'one hour and ten seconds',
+            $duration
+        );
+
+        $duration = secondsToText($seconds, false);
+        $this->assertEquals(
+            '1 ora e 10 secondi',
+            $duration
+        );
+        $duration = secondsToText($seconds, $returnAsWords = true);
+        $this->assertEquals(
+            'uno ora e dieci secondi',
+            $duration
+        );
+    }
+    /**
+     * Convert number of minutes to time.
+     */
+    public function test_minutesToText()
+    {
+        $minutes = 60 * 24 * 2;
+        $duration = minutesToText($minutes, false, 'EN');
+        $this->assertEquals(
+            '2 days',
+            $duration
+        );
+        $duration = minutesToText($minutes, $returnAsWords = true, 'EN');
+        $this->assertEquals(
+            'two days',
+            $duration
+        );
+        $duration = minutesToText($minutes);
+        $this->assertEquals(
+            '2 giorni',
+            $duration
+        );
+        $duration = minutesToText($minutes, $returnAsWords = true);
+        $this->assertEquals(
+            'due giorni',
+            $duration
+        );
+    }
+    /**
+     * Convert hours to text.
+     */
+    public function test_hoursToText()
+    {
+        $hours = 4.2;
+        $duration = hoursToText($hours, false, 'EN');
+        $this->assertEquals(
+            '4 hours and 12 minutes',
+            $duration
+        );
+        $duration = hoursToText($hours, $returnAsWords = true, 'EN');
+        $this->assertEquals(
+            'four hours and twelve minutes',
+            $duration
+        );
+
+        $duration = hoursToText($hours);
+        $this->assertEquals(
+            '4 ore e 12 minuti',
+            $duration
+        );
+        $duration = hoursToText($hours, $returnAsWords = true);
+        $this->assertEquals(
+            'quattro ore e dodici minuti',
+            $duration
+        );
+    }
+
+    /**
+     * Shorten the string.
+     */
+    public function test_shortenString()
+    {
+        $string = 'The quick brown fox jumps over the lazy dog';
+        $shortenString = str_limit($string, 20);
+        $this->assertEquals(
+            'The quick brown fox...',
+            $shortenString
+        );
+        $shortenString = str_limit($string, 20, '');
+        $this->assertEquals(
+            'The quick brown fox',
+            $shortenString
+        );
+        $shortenString = str_limit($string, 23, '', true);
+        $this->assertEquals(
+            'The quick brown fox',
+            $shortenString
+        );
+    }
+
 }

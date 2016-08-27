@@ -238,11 +238,21 @@ function hasAgeInRange($dateOfBirthday, int $ageMin, int $ageMax) : bool
 
 /**
  * @param $value
+ * @param $checkMx
  * @return bool
  */
-function isMail($value) : bool
+function isMail($value, bool $checkMx = false) : bool
 {
-    return !(filter_var($value, FILTER_VALIDATE_EMAIL) === false);
+    if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
+        return false;
+    }
+    if ($checkMx) {
+        list(, $mailDomain) = explode('@', $value);
+        if (!checkdnsrr($mailDomain, 'MX')) {
+            return false;
+        }
+    }
+    return true;
 }
 
 /**

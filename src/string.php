@@ -58,26 +58,6 @@ function generateRandomString(int $length = 10, string $extChars = '', string $n
     return $randomString;
 }
 
-if (!function_exists('gravatar')) {
-    /**
-     * Get a Gravatar URL from email.
-     *
-     * @param string $email The email address
-     * @param int $size in pixels, defaults to 80px [ 1 - 2048 ]
-     * @param string $default imageset to use [ 404 | mm | identicon | monsterid | wavatar ]
-     * @param string $rating (inclusive) [ g | pg | r | x ]
-     * @return string
-     * @source http://gravatar.com/site/implement/images/php/
-     */
-    function gravatar($email, $size = 80, $default = 'mm', $rating = 'g')
-    {
-        $url = 'http://www.gravatar.com/avatar/';
-        $url .= md5(strtolower(trim($email)));
-        $url .= "?s=$size&d=$default&r=$rating";
-        return $url;
-    }
-}
-
 /**
  * *****************************************************
  * LARAVEL STRING HELPERS
@@ -258,15 +238,21 @@ if (!function_exists('str_limit')) {
      *
      * @param  string $value
      * @param  int $limit
-     * @param  string $end
+     * @param  string $end append in
      * @return string
      */
-    function str_limit($value, $limit = 100, $end = '...')
+    function str_limit(string $value, int $limit = 100, string $end = '...', bool $wordsafe = false) : string
     {
+        $limit = max($limit, 0);
         if (mb_strlen($value) <= $limit) {
             return $value;
         }
-        return rtrim(mb_substr($value, 0, $limit, 'UTF-8')) . $end;
+
+        $string = rtrim(mb_substr($value, 0, $limit, 'UTF-8'));
+        if ($wordsafe) {
+            $string = preg_replace('/\s+?(\S+)?$/', '', $string);
+        }
+        return $string . $end;
     }
 }
 
@@ -469,4 +455,152 @@ function isNullOrEmpty($subject) : bool
 function isNotNullOrEmpty($subject) : bool
 {
     return !isNullOrEmpty($subject);
+}
+
+
+/**
+ * Convert number to word representation.
+ *
+ * @param int $number number to convert to word
+ * @param string $locale default 'IT' support only IT or EN
+ *
+ * @return string converted string
+ * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
+ */
+function numberToWord(int $number, string $locale = 'IT') : string
+{
+    if (isNullOrEmpty($locale) || (strtoupper($locale) != 'IT' && strtoupper($locale) != 'EN')) {
+        $locale = 'IT';
+    } else {
+        $locale = strtoupper($locale);
+    }
+
+    $hyphen = $locale == 'EN' ? '-' : '';
+    $conjunction = $locale == 'EN' ? ' and ' : ' ';
+    $separator = ', ';
+    $negative = $locale == 'EN' ? 'negative ' : 'negativo ';
+    $decimal = $locale == 'EN' ? ' point ' : ' punto ';
+    $fraction = null;
+    $dictionary = $locale == 'EN' ? NUMBERS_EN_ARR : NUMBERS_ITA_ARR;
+    if (!is_numeric($number)) {
+        return '';
+    }
+    if (!isInteger($number, false, true)) {
+        trigger_error('numberToWord only accepts numbers between -' . PHP_INT_MAX . ' and ' . PHP_INT_MAX,
+            E_USER_WARNING);
+        return '';
+    }
+    if ($number < 0) {
+        return $negative . numberToWord(abs($number), $locale);
+    }
+    if (strpos($number, '.') !== false) {
+        list($number, $fraction) = explode('.', $number);
+    }
+    switch (true) {
+        case $number < 21:
+            $string = $dictionary[$number];
+            break;
+        case $number < 100:
+            $tens = ((int)($number / 10)) * 10;
+            $units = $number % 10;
+            $string = $dictionary[$tens];
+            if ($units) {
+                $string .= $hyphen . $dictionary[$units];
+            }
+            break;
+        case $number < 1000:
+            $hundreds = $number / 100;
+            $remainder = $number % 100;
+            $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
+            if ($remainder) {
+                $string .= $conjunction . numberToWord($remainder, $locale);
+            }
+            break;
+        default:
+            $baseUnit = pow(1000, floor(log($number, 1000)));
+            $numBaseUnits = (int)($number / $baseUnit);
+            $remainder = $number % $baseUnit;
+            $string = numberToWord($numBaseUnits, $locale) . ' ' . $dictionary[$baseUnit];
+            if ($remainder) {
+                $string .= $remainder < 100 ? $conjunction : $separator;
+                $string .= numberToWord($remainder, $locale);
+            }
+            break;
+    }
+    if (null !== $fraction && is_numeric($fraction)) {
+        $string .= $decimal;
+        $words = [];
+        foreach (str_split((string)$fraction) as $number) {
+            $words[] = $dictionary[$number];
+        }
+        $string .= implode(' ', $words);
+    }
+    return $string;
+}
+
+/**
+ * Convert seconds to real time.
+ *
+ * @param int $seconds time in seconds
+ * @param bool $returnAsWords return time in words (example one minute and 20 seconds) if value is True or (1 minute and 20 seconds) if value is false, default false
+ * @param string $locale 'IT' default, or 'EN'
+ *
+ * @return string
+ * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
+ */
+function secondsToText(int $seconds, bool $returnAsWords = false, string $locale = 'IT') : string
+{
+    $parts = [];
+    $arrPeriod = ($locale == 'EN' ? PERIOD_IN_SECONDS_EN_ARR : PERIOD_IN_SECONDS_ITA_ARR);
+    foreach ($arrPeriod as $name => $dur) {
+        $div = floor($seconds / $dur);
+        if ($div == 0) {
+            continue;
+        }
+        if ($div == 1) {
+            $parts[] = ($returnAsWords ? numberToWord($div, $locale) : $div) . ' ' . $name;
+        } else {
+            $parts[] = ($returnAsWords ? numberToWord($div,
+                    $locale) : $div) . ' ' . ($locale == 'EN' ? $name : PERIOD_SINGULAR_PLURAL_ITA_ARR[$name]) . (strtoupper($locale) == 'EN' ? 's' : '');
+        }
+        $seconds %= $dur;
+    }
+    $last = array_pop($parts);
+    if (isNullOrEmptyArray($parts)){
+        return $last;
+    }
+    return implode(', ', $parts) . (strtoupper($locale) == 'EN' ? ' and ' : ' e ') . $last;
+}
+
+
+/**
+ * Convert minutes to real time.
+ *
+ * @param float $minutes time in minutes
+ * @param bool $returnAsWords return time in words (example one hour and 20 minutes) if value is True or (1 hour and 20 minutes) if value is false, default false
+ * @param string $locale 'IT' (default) or 'EN'
+ *
+ * @return string
+ * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
+ */
+function minutesToText(float $minutes, bool $returnAsWords = false, string $locale = 'IT') : string
+{
+    $seconds = $minutes * 60;
+    return secondsToText($seconds, $returnAsWords, $locale);
+}
+
+/**
+ * Convert hours to real time.
+ *
+ * @param float $hours time in hours
+ * @param bool $returnAsWords return time in words (example one hour) if value is True or (1 hour) if value is false, default false
+ * @param string $locale 'IT' (default) or 'EN'
+ *
+ * @return string
+ * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
+ */
+function hoursToText(float $hours, bool $returnAsWords = false, string $locale = 'IT') : string
+{
+    $seconds = $hours * 3600;
+    return secondsToText($seconds, $returnAsWords, $locale);
 }

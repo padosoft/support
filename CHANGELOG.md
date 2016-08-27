@@ -2,6 +2,14 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.4.0 - 2016-08-27
+
+- ADD new functions: constants, objectToArray, getFaviconUrl, str_limit now have an option to preserve words, number to word and time to word functions, isMail now ha an option to check MX record is valid, .
+- ADD many unit test.
+- CHANGE small refactoring.
+- CHANGE readme: add a full list of functions and constants.
+- FIX rgb2hex.
+
 ## 1.3.1 - 2016-08-25
 
 - CHANGE add if(!function_exists()) for some existing laravel functions and others to skip conflict.

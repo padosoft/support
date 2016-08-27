@@ -18,7 +18,7 @@ if (!function_exists('get')) {
             return $array[$key];
         }
         foreach (explode('.', $key) as $segment) {
-            if (!is_array($array) || !array_key_exists($segment, $array)) {
+            if (!array_key_exists_safe($segment, $array)) {
                 return value($default);
             }
             $array = $array[$segment];
@@ -102,7 +102,7 @@ if (!function_exists('array_has')) {
             return true;
         }
         foreach (explode('.', $key) as $segment) {
-            if (!is_array($array) || !array_key_exists($segment, $array)) {
+            if (!array_key_exists_safe($segment, $array)) {
                 return false;
             }
             $array = $array[$segment];
@@ -129,7 +129,7 @@ if (!function_exists('array_get')) {
             return $array[$key];
         }
         foreach (explode('.', $key) as $segment) {
-            if (!is_array($array) || !array_key_exists($segment, $array)) {
+            if (!array_key_exists_safe($segment, $array)) {
                 return value($default);
             }
             $array = $array[$segment];
@@ -146,7 +146,7 @@ if (!function_exists('array_get')) {
 function CleanUpArrayOfInt($array)
 {
     $result = array();
-    if (!is_array($array) || count($array) < 1) {
+    if (isNullOrEmptyArray($array)) {
         return $result;
     }
     reset($array);
@@ -211,5 +211,107 @@ if (!function_exists('in_array_column')) {
             }
         }
         return false;
+    }
+}
+
+if (!function_exists('objectToArray')) {
+
+    /**
+     * Convert objecte to the array.
+     *
+     * @param $object
+     *
+     * @return array
+     * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
+     */
+    function objectToArray($object) : array
+    {
+        if (!is_object($object) && !is_array($object)) {
+            return [];
+        }
+        if (is_object($object)) {
+            $object = get_object_vars($object);
+        }
+        return array_map('objectToArray', $object);
+    }
+}
+
+if (!function_exists('arrayToObject')) {
+
+    /**
+     * Convert array to the object.
+     *
+     * @param array $array PHP array
+     *
+     * @return mixed
+     * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
+     */
+    function arrayToObject($array)
+    {
+        if (isNullOrEmptyArray($array)) {
+            return $array;
+        }
+
+        $object = new \stdClass();
+        foreach ($array as $name => $value) {
+            $object->$name = arrayToObject($value);
+        }
+        return $object;
+    }
+}
+
+if (!function_exists('arrayToString')) {
+
+    /**
+     * Convert Array to string
+     * expected output: <key1>="value1" <key2>="value2".
+     *
+     * @param array $array array to convert to string
+     *
+     * @return string
+     * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
+     */
+    function arrayToString(array $array = []) : string
+    {
+        if (isNullOrEmptyArray($array)) {
+            return '';
+        }
+
+        $string = '';
+        foreach ($array as $key => $value) {
+            $string .= $key . '="' . $value . '" ';
+        }
+        return rtrim($string, ' ');
+    }
+}
+
+if (!function_exists('array_key_exists_safe')) {
+
+    /**
+     * Check if a key exists in array
+     * @param array $array
+     * @param string $key
+     * @return bool
+     */
+    function array_key_exists_safe(array $array, string $key) : bool
+    {
+        if (isNullOrEmptyArray($array) || isNullOrEmpty($key)) {
+            return false;
+        }
+
+        return array_key_exists($key, $array);
+    }
+}
+
+if (!function_exists('isNullOrEmptyArray')) {
+
+    /**
+     * Check if array is null or empty.
+     * @param $array
+     * @return bool
+     */
+    function isNullOrEmptyArray($array):bool
+    {
+        return $array === null || !is_array($array) || count($array) < 1;
     }
 }
