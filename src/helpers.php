@@ -589,6 +589,7 @@ function expandShortUrl(string $shortURL) : string
     }
     $returnData = explode('=', $metaTags['refresh']['value']);
     if (!isset($returnData[1]) || empty($returnData[1])) {
+        return '';
     }
     return $returnData[1];
 }

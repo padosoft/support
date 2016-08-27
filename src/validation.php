@@ -837,7 +837,7 @@ function isJsonString($field) : bool
  * @param string $check Value to check
  * @return bool Success
  */
-function uuid($check)
+function isUuid($check)
 {
     $regex = '/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/';
     return preg_match($regex, $check) === 1;

@@ -253,7 +253,7 @@ $ composer require padosoft/support
 - hasFileExtension
 - isphoneNumber
 - isJsonString
-- uuid
+- isUuid
 - isGeoCoordinate
 - isLatitude
 - isLongitude
