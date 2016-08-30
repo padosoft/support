@@ -34,8 +34,20 @@ All helpers function are splitted into these files:
 ## Installation
 
 You can install the package via composer:
-``` bash
+```bash
 $ composer require padosoft/support
+```
+
+## Usage
+
+Create new php file, add composer autoload and start using functions.
+
+```php
+<?php
+
+require "vendor/autoload.php";
+
+var_dump(str_random(16));
 ```
 
 ## List of functions
@@ -55,52 +67,9 @@ $ composer require padosoft/support
 - arrayToString
 - array_key_exists_safe
 - isNullOrEmptyArray
-
-### Constants (generic usefull constants)
-- DS
-- NUMBERS_ITA_ARR
-- NUMBERS_EN_ARR
-- PERIOD_IN_SECONDS_ITA_ARR
-- PERIOD_SINGULAR_PLURAL_ITA_ARR
-- PERIOD_IN_SECONDS_EN_ARR
-- SECOND_IN_SECOND
-- MINUTE_IN_SECOND
-- HOUR_IN_SECOND
-- DAY_IN_SECOND
-- WEEK_IN_SECOND
-- MONTH_IN_SECOND
-- YEAR_IN_SECOND
-- DATE_TIME_FORMAT_ISO
-- DATE_TIME_FORMAT_ITA
-- DATE_FORMAT_ISO
-- DATE_FORMAT_ITA
-- TIME_FORMAT_ISO
-- TIME_FORMAT_ITA
-- SUNDAY
-- MONDAY
-- TUESDAY
-- WEDNESDAY
-- THURSDAY
-- FRIDAY
-- SATURDAY
-- DAYS_ITA_ARR
-- DAYS_ENG_ARR
-- GENNAIO
-- FEBBRAIO
-- MARZO
-- APRILE
-- MAGGIO
-- GIUGNO
-- LUGLIO
-- AGOSTO
-- SETTEMBRE
-- OTTOBRE
-- NOVEMBRE
-- DICEMBRE
-- MONTHS_ITA_ARR
-- MONTHS_ITA_ARR_1_BASED
-- MONTHS_SHORT_ITA_ARR
-- MONTHS_SHORT_ITA_ARR_1_BASED
+- isNotNullOrEmptyArray
+- isNullOrEmptyArrayKey
+- isNotNullOrEmptyArrayKey
 
 ### DateTime
 - carbonFromIsoDateTime
@@ -140,16 +109,32 @@ $ composer require padosoft/support
 - getQRcodeUrl
 - gravatarUrl
 - gravatar
-- isAjax
 - isNumberOdd
 - isNumberEven
-- getCurrentURL
-- isMobile
-- getBrowser
 - getTinyUrl
 - expandShortUrl
 - curl
+- curl_internal_server_behind_load_balancer
 - debug
+- isAjax
+- isMobile
+- getBrowser
+- getReferer
+- getCurrentURL
+- getCurrentUrlPageName
+- getCurrentUrlQuerystring
+- getCurrentUrlDirName
+- getCurrentUrlDirAbsName
+- isZlibOutputCompressionActive
+- isZlibLoaded
+- isClientAcceptGzipEncoding
+- compressHtmlPage
+- get_http_response_code
+- url_exists
+- startLayoutCapture
+- endLayoutCapture
+- get_var_dump_output
+- logToFile
 
 ### IP
 - getIPVisitor
@@ -190,9 +175,13 @@ $ composer require padosoft/support
 - snake_case
 - str_random
 - ends_with
+- ends_with_insensitive
 - starts_with
+- starts_with_insensitive
 - str_contains
+- str_contains_insensitive
 - str_finish
+- str_finish_insensitive
 - str_is
 - str_limit
 - str_replace_array
@@ -212,6 +201,7 @@ $ composer require padosoft/support
 - secondsToText
 - minutesToText
 - hoursToText
+- str_html_compress
 
 ### Validation
 
@@ -265,6 +255,52 @@ $ composer require padosoft/support
 - xml2array
 - array2xml
 - array2SimpleXMLElement
+
+### Constants (generic usefull constants)
+- DS
+- NUMBERS_ITA_ARR
+- NUMBERS_EN_ARR
+- PERIOD_IN_SECONDS_ITA_ARR
+- PERIOD_SINGULAR_PLURAL_ITA_ARR
+- PERIOD_IN_SECONDS_EN_ARR
+- SECOND_IN_SECOND
+- MINUTE_IN_SECOND
+- HOUR_IN_SECOND
+- DAY_IN_SECOND
+- WEEK_IN_SECOND
+- MONTH_IN_SECOND
+- YEAR_IN_SECOND
+- DATE_TIME_FORMAT_ISO
+- DATE_TIME_FORMAT_ITA
+- DATE_FORMAT_ISO
+- DATE_FORMAT_ITA
+- TIME_FORMAT_ISO
+- TIME_FORMAT_ITA
+- SUNDAY
+- MONDAY
+- TUESDAY
+- WEDNESDAY
+- THURSDAY
+- FRIDAY
+- SATURDAY
+- DAYS_ITA_ARR
+- DAYS_ENG_ARR
+- GENNAIO
+- FEBBRAIO
+- MARZO
+- APRILE
+- MAGGIO
+- GIUGNO
+- LUGLIO
+- AGOSTO
+- SETTEMBRE
+- OTTOBRE
+- NOVEMBRE
+- DICEMBRE
+- MONTHS_ITA_ARR
+- MONTHS_ITA_ARR_1_BASED
+- MONTHS_SHORT_ITA_ARR
+- MONTHS_SHORT_ITA_ARR_1_BASED
 
 ## Usage
 

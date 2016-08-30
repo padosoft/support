@@ -111,6 +111,66 @@ class StringTest extends \PHPUnit_Framework_TestCase
             $word
         );
     }
+
+    /**
+     * test_isNullOrEmpty
+     */
+    public function test_isNullOrEmpty()
+    {
+        $this->assertTrue(isNullOrEmpty(null, true));
+        $this->assertTrue(isNullOrEmpty('', true));
+        $this->assertTrue(isNullOrEmpty(' ', true));
+        $this->assertTrue(isNullOrEmpty('  ', true));
+        $this->assertFalse(isNullOrEmpty('eigh', true));
+        $this->assertTrue(isNullOrEmpty(null, false));
+        $this->assertTrue(isNullOrEmpty('', false));
+        $this->assertFalse(isNullOrEmpty(' ', false));
+        $this->assertFalse(isNullOrEmpty('  ', false));
+        $this->assertFalse(isNullOrEmpty('eigh', false));
+    }
+
+    /**
+     * test_isNotNullOrEmpty
+     */
+    public function test_isNotNullOrEmpty()
+    {
+        $this->assertFalse(isNotNullOrEmpty(null, true));
+        $this->assertFalse(isNotNullOrEmpty('', true));
+        $this->assertFalse(isNotNullOrEmpty(' ', true));
+        $this->assertFalse(isNotNullOrEmpty('  ', true));
+        $this->assertTrue(isNotNullOrEmpty('eigh', true));
+        $this->assertFalse(isNotNullOrEmpty(null, false));
+        $this->assertFalse(isNotNullOrEmpty('', false));
+        $this->assertTrue(isNotNullOrEmpty(' ', false));
+        $this->assertTrue(isNotNullOrEmpty('  ', false));
+        $this->assertTrue(isNotNullOrEmpty('eigh', false));
+    }
+
+    /**
+     * Convert number to word.
+     */
+    public function test_starts_with()
+    {
+        $this->assertTrue(starts_with('eight hundred','eigh'));
+        $this->assertTrue(starts_with('eight hundred','eight '));
+        $this->assertTrue(starts_with('eight hundred','e'));
+        $this->assertFalse(starts_with('eight hundred','EN'));
+        $this->assertFalse(starts_with('eight hundred','eight hundred pounds'));
+    }
+
+    /**
+     * Convert number to word.
+     */
+    public function test_starts_with_insensitive()
+    {
+        $this->assertTrue(starts_with_insensitive('eight hundred','eigh'));
+        $this->assertTrue(starts_with_insensitive('eight hundred','EiGh'));
+        $this->assertTrue(starts_with_insensitive('eight hundred','e'));
+        $this->assertTrue(starts_with_insensitive('eight hundred','E'));
+        $this->assertFalse(starts_with_insensitive('eight hundred','EN'));
+        $this->assertFalse(starts_with_insensitive('eight hundred','eight hundred pounds'));
+    }
+
     /**
      * Convert number of seconds to time.
      */
@@ -230,4 +290,31 @@ class StringTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * Compress.
+     */
+    public function test_str_html_compress()
+    {
+        $string = '
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+
+<title>HTML Page Title</title>
+
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+<body>
+    Hello Friend,
+</body>
+</html>';
+        $shortenString = str_html_compress($string);
+        $this->assertEquals(
+            '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>HTML Page Title</title><meta name="description" content=""><meta name="viewport" content="width=device-width, initial-scale=1.0"></head><body> Hello Friend,</body></html>',
+            $shortenString
+        );
+    }
 }

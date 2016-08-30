@@ -315,3 +315,46 @@ if (!function_exists('isNullOrEmptyArray')) {
         return $array === null || !is_array($array) || count($array) < 1;
     }
 }
+
+if (!function_exists('isNullOrEmptyArrayKey')) {
+
+    /**
+     * Check if an array key not exits or exists and is null or empty.
+     * @param $array
+     * @param string $key
+     * @param bool $withTrim if set to true (default) check if trim()!='' too.
+     * @return bool
+     */
+    function isNullOrEmptyArrayKey(array $array, string $key, bool $withTrim = true):bool
+    {
+        return !array_key_exists_safe($array, $key) || $array[$key]===null || isNullOrEmpty($array[$key], $withTrim);
+    }
+}
+
+if (!function_exists('isNotNullOrEmptyArray')) {
+
+    /**
+     * Check if array is not null and not empty.
+     * @param $array
+     * @return bool
+     */
+    function isNotNullOrEmptyArray($array):bool
+    {
+        return !isNullOrEmptyArray($array);
+    }
+}
+
+if (!function_exists('isNotNullOrEmptyArrayKey')) {
+
+    /**
+     * Check if an array key exists and is not null and not empty.
+     * @param $array
+     * @param string $key
+     * @param bool $withTrim if set to true (default) check if trim()!='' too.
+     * @return bool
+     */
+    function isNotNullOrEmptyArrayKey(array $array, string $key, bool $withTrim = true):bool
+    {
+        return !isNullOrEmptyArrayKey($array, $key, $withTrim);
+    }
+}

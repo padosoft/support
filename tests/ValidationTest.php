@@ -417,6 +417,7 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
                 $result = isVATNumber($val, $countryCode);
                 $this->assertEquals($expected, $result);
             } catch (SoapFault $e) {
+                $this->expectException('SoapFault');
                 $this->assertEquals(true, true);
             }
 

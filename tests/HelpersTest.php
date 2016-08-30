@@ -34,8 +34,9 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     public function test_getFaviconUrl()
     {
         $favIcon = getFaviconUrl('http://youtube.com/');
-        $this->assertEquals("http://www.google.com/s2/favicons?domain=youtube.com/",$favIcon);
+        $this->assertEquals("http://www.google.com/s2/favicons?domain=youtube.com/", $favIcon);
     }
+
     /**
      * GetFavicon Tests.
      */
@@ -47,6 +48,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
             $favIcon
         );
     }
+
     public function test_getFaviconImgTag_with_attributes()
     {
         $favIcon = getFaviconImgTag('http://youtube.com/', [
@@ -57,14 +59,16 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
             $favIcon
         );
     }
+
     /**
      * Get QRcode Tests.
      */
     public function test_getQRcodeUrl()
     {
         $QRcode = getQRcodeUrl('ngfw Recipe');
-        $this->assertEquals("http://chart.apis.google.com/chart?chs=150x150&cht=qr&chl=ngfw+Recipe",$QRcode);
+        $this->assertEquals("http://chart.apis.google.com/chart?chs=150x150&cht=qr&chl=ngfw+Recipe", $QRcode);
     }
+
     /**
      * Get QRcode Tests.
      */
@@ -76,6 +80,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
             $QRcode
         );
     }
+
     public function test_getQRcode_with_attributes()
     {
         $QRcode = getQRcode(
@@ -98,7 +103,8 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     public function test_getGravatarUrl()
     {
         $Gravatar = gravatarUrl('gejadze@gmail.com');
-        $this->assertEquals("http://www.gravatar.com/avatar.php?gravatar_id=9d9d478c3b65d4046a84cf84b4c8bf46&default=mm&size=80&rating=g",$Gravatar);
+        $this->assertEquals("http://www.gravatar.com/avatar.php?gravatar_id=9d9d478c3b65d4046a84cf84b4c8bf46&default=mm&size=80&rating=g",
+            $Gravatar);
     }
 
     /**
@@ -112,6 +118,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
             $Gravatar
         );
     }
+
     public function test_getGravatar_with_attributes()
     {
         $Gravatar = gravatar(
@@ -146,7 +153,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
      */
     public function test_rgb2hex()
     {
-        $hex = rgb2hex(123,123,123);
+        $hex = rgb2hex(123, 123, 123);
         $this->assertEquals(
             '#7b7b7b',
             $hex
@@ -160,20 +167,96 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
      */
     public function test_isHttps()
     {
-        $oldValue = false;
-        if(array_key_exists_safe($_SERVER, 'HTTPS')){
-            $oldValue = $_SERVER['HTTPS'];
-        }
-
-        $_SERVER['HTTPS'] = true;
-        $isHttps = isHttps();
-        $this->assertTrue($isHttps);
-
-        $_SERVER['HTTPS'] = false;
+        $_SERVER['HTTPS'] = 'On';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'Off';
         $isHttps = isHttps();
         $this->assertFalse($isHttps);
 
-        $_SERVER['HTTPS'] = $oldValue;
+        $_SERVER['HTTPS'] = 'On';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'On';
+        $isHttps = isHttps();
+        $this->assertTrue($isHttps);
+
+        $_SERVER['HTTPS'] = 'Off';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'Off';
+        $isHttps = isHttps();
+        $this->assertFalse($isHttps);
+
+        $_SERVER['HTTPS'] = 'Off';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = 'On';
+        $isHttps = isHttps();
+        $this->assertTrue($isHttps);
+
+        $_SERVER['HTTPS'] = 'Off';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = '';
+        $isHttps = isHttps();
+        $this->assertFalse($isHttps);
+
+        $_SERVER['HTTPS'] = 'On';
+        $_SERVER['HTTP_X_FORWARDED_PROTO'] = '';
+        $isHttps = isHttps();
+        $this->assertTrue($isHttps);
+
+        unset($_SERVER['HTTPS']);
+        unset($_SERVER['HTTP_X_FORWARDED_PROTO']);
+    }
+
+    public function test_getCurrentUrlPageName()
+    {
+        $old = $_SERVER['PHP_SELF'];
+        $this->assertEquals('phpunit', getCurrentUrlPageName());
+
+        $_SERVER['PHP_SELF'] = '/one/two/index.php';
+        $this->assertEquals('index.php', getCurrentUrlPageName());
+
+        $_SERVER['PHP_SELF'] = $old;
+    }
+
+    public function test_getCurrentUrlDirName()
+    {
+        $old = array_key_exists_safe($_SERVER, 'REQUEST_URI') ? $_SERVER['REQUEST_URI'] : '';
+        $old2 = array_key_exists_safe($_SERVER, 'PHP_SELF') ? $_SERVER['PHP_SELF'] : '';
+
+        $_SERVER['REQUEST_URI'] = '/one/two/index.php?a=1&b=2';
+        $_SERVER['PHP_SELF'] = '/one/two/index.php';
+        $this->assertEquals('/one/two', getCurrentUrlDirName());
+
+        $_SERVER['REQUEST_URI'] = '';
+        $_SERVER['PHP_SELF'] = '/one/two/index.php';
+        $this->assertEquals('/one/two', getCurrentUrlDirName());
+
+        $_SERVER['REQUEST_URI'] = '';
+        $_SERVER['PHP_SELF'] = '';
+        $this->assertEquals('', getCurrentUrlDirName());
+
+        $_SERVER['REQUEST_URI'] = $old;
+        $_SERVER['PHP_SELF'] = $old2;
+    }
+
+    public function test_getCurrentUrlDirAbsName()
+    {
+        $old = array_key_exists_safe($_SERVER, 'SCRIPT_FILENAME') ? $_SERVER['SCRIPT_FILENAME'] : '';
+
+        $_SERVER['SCRIPT_FILENAME'] = '/home/user/www/one/two/index.php';
+        $this->assertEquals('/home/user/www/one/two', getCurrentUrlDirAbsName());
+
+        $_SERVER['SCRIPT_FILENAME'] = '';
+        $this->assertEquals('', getCurrentUrlDirAbsName());
+
+        $_SERVER['SCRIPT_FILENAME'] = $old;
+    }
+
+    public function test_getCurrentUrlQuerystring()
+    {
+        $old = array_key_exists_safe($_SERVER, 'QUERY_STRING') ? $_SERVER['QUERY_STRING'] : '';
+
+        $_SERVER['QUERY_STRING'] = 'one=1&two=2';
+        $this->assertEquals('one=1&two=2', getCurrentUrlQuerystring());
+
+        $_SERVER['QUERY_STRING'] = '';
+        $this->assertEquals('', getCurrentUrlQuerystring());
+
+        $_SERVER['QUERY_STRING'] = $old;
     }
 
     /**
@@ -185,6 +268,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'xmlhttprequest';
         $isAjax = isAjax();
         $this->assertTrue($isAjax);
+        unset($_SERVER['HTTP_X_REQUESTED_WITH']);
     }
 
     /**
@@ -196,25 +280,30 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $isNumberOdd = isNumberOdd($number);
         $this->assertTrue($isNumberOdd);
     }
+
     public function test_isNumberEven()
     {
         $number = 8;
         $isNumberEven = isNumberEven($number);
         $this->assertTrue($isNumberEven);
     }
+
     /**
      * Current URL.
      */
     public function test_getCurrentURL()
     {
-        $_SERVER['HTTPS'] = true;
+        $_SERVER['HTTPS'] = 'On';
         $_SERVER['REQUEST_URI'] = 'example.com';
         $currentURL = getCurrentURL();
-        $this->assertEquals('https://example.com',$currentURL);
+        $this->assertEquals('https://example.com', $currentURL);
 
-        $_SERVER['HTTPS'] = false;
+        $_SERVER['HTTPS'] = 'Off';
         $currentURL = getCurrentURL();
-        $this->assertEquals('http://example.com',$currentURL);
+        $this->assertEquals('http://example.com', $currentURL);
+
+        unset($_SERVER['HTTPS']);
+        unset($_SERVER['REQUEST_URI']);
     }
 
     /**
@@ -225,7 +314,9 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7';
         $isMobile = isMobile();
         $this->assertTrue($isMobile);
+        unset($_SERVER['HTTP_USER_AGENT']);
     }
+
     /**
      * Detect user browser.
      */
@@ -234,6 +325,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7';
         $browser = getBrowser();
         $this->assertInternalType('string', $browser);
+        unset($_SERVER['HTTP_USER_AGENT']);
     }
 
     /**
@@ -242,22 +334,34 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     public function test_curl()
     {
         $testCurl = curl('https://api.ipify.org');
-        $ipCheck = filter_var($testCurl, FILTER_VALIDATE_IP)!==false;
+        $ipCheck = filter_var($testCurl, FILTER_VALIDATE_IP) !== false;
         $this->assertTrue($ipCheck);
+
         $testCurlPOST = curl('http://jsonplaceholder.typicode.com/posts', $method = 'POST', $data = [
-            'title'  => 'foo',
-            'body'   => 'bar',
+            'title' => 'foo',
+            'body' => 'bar',
             'userId' => 1,
         ]);
         $POST_obj = json_decode($testCurlPOST);
         $this->assertInternalType('object', $POST_obj);
-        $testCurlHeaderAndReturnInfo = curl('http://jsonplaceholder.typicode.com/posts', $method = 'GET', $data = false, $header = [
-            'Accept' => 'application/json',
-        ], $returnInfo = true);
+
+        $testCurlHeaderAndReturnInfo = curl('http://jsonplaceholder.typicode.com/posts', $method = 'GET', $data = false,
+            $header = [
+                'Accept' => 'application/json',
+            ], $returnInfo = true);
         $this->assertInternalType('array', $testCurlHeaderAndReturnInfo);
         $this->assertInternalType('array', $testCurlHeaderAndReturnInfo['info']);
         $this->assertInternalType('string', $testCurlHeaderAndReturnInfo['contents']);
+
+        $testCurlLog = curl('https://api.ipify.org','GET',false,[],false,'','',true,false,10,__DIR__.'/curl.log');
+        $this->assertFileExists(__DIR__.'/curl.log');
+        $this->assertContains($testCurlLog, file_get_contents(__DIR__.'/curl.log'));
+        unlink(__DIR__.'/curl.log');
+
+        $testCurlLog = curl('https://sdasdsadsadsada.org','GET',false,[],false,'','',true,false,1);
+        $this->assertFalse($testCurlLog);
     }
+
     /**
      * Expend shortened URLs.
      */
@@ -283,6 +387,65 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Test getReferer
+     */
+    public function test_getReferer()
+    {
+        $_SERVER['HTTP_REFERER'] = 'example.com';
+        $this->assertEquals('example.com', getReferer());
+        $_SERVER['HTTP_REFERER'] = '';
+        $this->assertEquals('', getReferer());
+        unset($_SERVER['HTTP_REFERER']);
+        $this->assertEquals('', getReferer());
+    }
+
+    /**
+     * Test isClientAcceptGzipEncoding
+     */
+    public function test_isClientAcceptGzipEncoding()
+    {
+        $_SERVER['HTTP_ACCEPT_ENCODING'] = 'gzip';
+        $this->assertEquals(true, isClientAcceptGzipEncoding());
+        $_SERVER['HTTP_ACCEPT_ENCODING'] = 'example.com';
+        $this->assertEquals(false, isClientAcceptGzipEncoding());
+        $_SERVER['HTTP_ACCEPT_ENCODING'] = '';
+        $this->assertEquals(false, isClientAcceptGzipEncoding());
+        unset($_SERVER['HTTP_ACCEPT_ENCODING']);
+        $this->assertEquals(false, isClientAcceptGzipEncoding());
+    }
+
+    /**
+     * Test get_http_response_code
+     */
+    public function test_get_http_response_code()
+    {
+        $this->assertTrue(get_http_response_code('https://www.google.com')<400);
+        $this->assertEquals(999, get_http_response_code(''));
+        $this->assertEquals(999, get_http_response_code(' '));
+        $this->assertEquals(999, get_http_response_code('https://www.asdsdsae.com'));
+    }
+
+    /**
+     * Test test_url_exists
+     */
+    public function test_url_exists()
+    {
+        $this->assertTrue(url_exists('https://www.google.com'));
+        $this->assertFalse(url_exists(''));
+        $this->assertFalse(url_exists(' '));
+        $this->assertFalse(url_exists('https://www.asdsdsae.com'));
+    }
+
+    /**
+     * Test test_get_var_dump_output
+     */
+    public function test_get_var_dump_output()
+    {
+        $this->assertInternalType('string', get_var_dump_output('dummy'));
+        $this->assertContains('string(5) "dummy"', get_var_dump_output('dummy'));
+    }
+
+    /**
      * Custom Debug.
      */
     public function test_debug()
@@ -292,5 +455,6 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         debug($string);
         $debug = ob_get_clean();
         $this->assertInternalType('string', $debug);
+        $this->assertContains('Test me', $debug);
     }
 }

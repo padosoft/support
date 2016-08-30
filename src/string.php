@@ -154,6 +154,27 @@ if (!function_exists('ends_with')) {
     }
 }
 
+if (!function_exists('ends_with_insensitive')) {
+    /**
+     * Determine if a given string ends with a given substring (case insensitive).
+     *
+     * @param  string $haystack
+     * @param  string|array $needles
+     * @return bool
+     */
+    function ends_with_insensitive($haystack, $needles)
+    {
+        if (isNullOrEmpty($haystack) || isNullOrEmpty($needles)) {
+            return false;
+        }
+
+        $haystack = strtolower($haystack);
+        $needles = strtolower($needles);
+
+        return ends_with($haystack, $needles);
+    }
+}
+
 if (!function_exists('starts_with')) {
     /**
      * Determine if a given string starts with a given substring.
@@ -177,6 +198,27 @@ if (!function_exists('starts_with')) {
     }
 }
 
+if (!function_exists('starts_with_insensitive')) {
+    /**
+     * Determine if a given string starts with a given substring (case insensitive).
+     *
+     * @param  string $haystack
+     * @param  string|array $needles
+     * @return bool
+     */
+    function starts_with_insensitive($haystack, $needles)
+    {
+        if (isNullOrEmpty($haystack) || isNullOrEmpty($needles)) {
+            return false;
+        }
+
+        $haystack = strtolower($haystack);
+        $needles = strtolower($needles);
+
+        return starts_with($haystack, $needles);
+    }
+}
+
 if (!function_exists('str_contains')) {
     /**
      * Determine if a given string contains a given substring.
@@ -185,14 +227,44 @@ if (!function_exists('str_contains')) {
      * @param  string|array $needles
      * @return bool
      */
-    function str_contains($haystack, $needles)
+    function str_contains(string $haystack, $needles)
     {
+        if (isNullOrEmpty($haystack)) {
+            return false;
+        }
+        if ((is_array($needles) && isNullOrEmptyArray($needles))
+            || (!is_array($needles) && isNullOrEmpty($needles))
+        ) {
+            return false;
+        }
+
         foreach ((array)$needles as $needle) {
             if ($needle != '' && strpos($haystack, $needle) !== false) {
                 return true;
             }
         }
         return false;
+    }
+}
+
+if (!function_exists('str_contains_insensitive')) {
+    /**
+     * Determine if a given string contains a given substring (case insensitive).
+     *
+     * @param  string $haystack
+     * @param  string|array $needles
+     * @return bool
+     */
+    function str_contains_insensitive($haystack, $needles)
+    {
+        if (isNullOrEmpty($haystack) || isNullOrEmpty($needles)) {
+            return false;
+        }
+
+        $haystack = strtolower($haystack);
+        $needles = strtolower($needles);
+
+        return str_contains($haystack, $needles);
     }
 }
 
@@ -206,8 +278,33 @@ if (!function_exists('str_finish')) {
      */
     function str_finish($value, $cap)
     {
+        if (isNullOrEmpty($value) || isNullOrEmpty($cap)) {
+            return false;
+        }
+
         $quoted = preg_quote($cap, '/');
         return preg_replace('/(?:' . $quoted . ')+$/', '', $value) . $cap;
+    }
+}
+
+if (!function_exists('str_finish_insensitive')) {
+    /**
+     * Cap a string with a single instance of a given value (Case Insensitive).
+     *
+     * @param  string $value
+     * @param  string $cap
+     * @return string
+     */
+    function str_finish_insensitive($value, $cap)
+    {
+        if (isNullOrEmpty($value) || isNullOrEmpty($cap)) {
+            return false;
+        }
+
+        $value = strtolower($value);
+        $cap = strtolower($cap);
+
+        return str_finish($value, $cap);
     }
 }
 
@@ -239,6 +336,7 @@ if (!function_exists('str_limit')) {
      * @param  string $value
      * @param  int $limit
      * @param  string $end append in
+     * @param  bool $wordsafe if set to true, remove any truncated word in the end of string.
      * @return string
      */
     function str_limit(string $value, int $limit = 100, string $end = '...', bool $wordsafe = false) : string
@@ -440,21 +538,23 @@ if (!function_exists('lastSegment')) {
 /**
  * Return true if $subject is null or empty string ('').
  * @param $subject
+ * @param bool $withTrim if set to true (default) check if trim()!='' too.
  * @return bool
  */
-function isNullOrEmpty($subject) : bool
+function isNullOrEmpty($subject, bool $withTrim = true) : bool
 {
-    return $subject === null || $subject == '';
+    return $subject === null || $subject == '' || ($withTrim == true && trim($subject) == '');
 }
 
 /**
  * Return true if $subject is not null and is not empty string ('').
  * @param $subject
+ * @param bool $withTrim if set to true (default) check if trim()!='' too.
  * @return bool
  */
-function isNotNullOrEmpty($subject) : bool
+function isNotNullOrEmpty($subject, bool $withTrim = true) : bool
 {
-    return !isNullOrEmpty($subject);
+    return !isNullOrEmpty($subject, $withTrim);
 }
 
 
@@ -566,7 +666,7 @@ function secondsToText(int $seconds, bool $returnAsWords = false, string $locale
         $seconds %= $dur;
     }
     $last = array_pop($parts);
-    if (isNullOrEmptyArray($parts)){
+    if (isNullOrEmptyArray($parts)) {
         return $last;
     }
     return implode(', ', $parts) . (strtoupper($locale) == 'EN' ? ' and ' : ' e ') . $last;
@@ -603,4 +703,17 @@ function hoursToText(float $hours, bool $returnAsWords = false, string $locale =
 {
     $seconds = $hours * 3600;
     return secondsToText($seconds, $returnAsWords, $locale);
+}
+
+if (!function_exists('str_html_compress')) {
+
+    /**
+     * Removes whitespace from html and compact it.
+     * @param string $value
+     * @return string
+     */
+    function str_html_compress(string $value) : string
+    {
+        return preg_replace(array('/\>[^\S ]+/s', '/[^\S ]+\</s', '/(\s)+/s'), array('>', '<', '\\1'), $value);
+    }
 }

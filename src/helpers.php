@@ -211,7 +211,7 @@ function getMaximumFileUploadSize(bool $humanFormat = false)
 }
 
 /**
- * Encrypt string.
+ * Encrypt string in asymmetrical way.
  * @param string $string to encrypt.
  * @param string $chiave the key to encrypt. if empty generate a random key on the fly.
  * @return string
@@ -285,12 +285,17 @@ function getFaviconImgTag($url, array $attributes = []) : string
 
 /**
  * Check to see if the current page is being server over SSL or not.
+ * Support HTTP_X_FORWARDED_PROTO to check ssl over proxy/load balancer.
  *
  * @return bool
  */
 function isHttps()
 {
-    return isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    $key = 'HTTPS';
+    if (isNotNullOrEmptyArrayKey($_SERVER, 'HTTP_X_FORWARDED_PROTO')) {
+        $key = 'HTTP_X_FORWARDED_PROTO';
+    }
+    return isNotNullOrEmptyArrayKey($_SERVER, $key) && strtolower($_SERVER[$key]) !== 'off';
 }
 
 /**
@@ -381,8 +386,8 @@ if (!function_exists('isAjax')) {
      */
     function isAjax()
     {
-        return $_SERVER !== null && array_key_exists_safe($_SERVER,
-            'HTTP_X_REQUESTED_WITH') && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+        return isNotNullOrEmptyArrayKey($_SERVER, 'HTTP_X_REQUESTED_WITH')
+        && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
     }
 }
 
@@ -418,11 +423,72 @@ if (!function_exists('isNumberEven')) {
     }
 }
 
+if (!function_exists('getCurrentUrlPageName')) {
+
+    /**
+     * Returns The Current URL PHP File Name.
+     * Ex.: http://www.dummy.com/one/two/index.php?one=1&two=2 return index.php
+     *
+     * @return string
+     */
+    function getCurrentUrlPageName() : string
+    {
+        return isNotNullOrEmptyArrayKey($_SERVER, 'PHP_SELF') ? basename($_SERVER['PHP_SELF']) : '';
+    }
+}
+
+if (!function_exists('getCurrentUrlQuerystring')) {
+
+}
+/**
+ * Returns The Current URL querystring.
+ * Ex.: http://www.dummy.com/one/two/index.php?one=1&two=2 return one=1&two=2
+ *
+ * @return string
+ */
+function getCurrentUrlQuerystring() : string
+{
+    return isNotNullOrEmptyArrayKey($_SERVER, 'QUERY_STRING') ? $_SERVER['QUERY_STRING'] : '';
+}
+
+if (!function_exists('getCurrentUrlDirName')) {
+
+    /**
+     * Returns The Current URL Path Name.
+     * Ex.: http://www.dummy.com/one/two/index.php?one=1&two=2 return /one/two
+     *
+     * @return string
+     */
+    function getCurrentUrlDirName() : string
+    {
+        if (isNotNullOrEmptyArrayKey($_SERVER, 'REQUEST_URI')) {
+            return dirname($_SERVER['REQUEST_URI']);
+        }
+        return isNotNullOrEmptyArrayKey($_SERVER, 'PHP_SELF') ? dirname($_SERVER['PHP_SELF']) : '';
+    }
+}
+
+if (!function_exists('getCurrentUrlDirAbsName')) {
+
+    /**
+     * Returns The Current URL Absolute Path Name.
+     * Ex.: http://www.dummy.com/one/two/index.php?one=1&two=2 return /home/user/www/one/two
+     *
+     * @return string
+     */
+    function getCurrentUrlDirAbsName() : string
+    {
+        return isNotNullOrEmptyArrayKey($_SERVER, 'SCRIPT_FILENAME') ? dirname($_SERVER['SCRIPT_FILENAME']) : '';
+    }
+}
+
 if (!function_exists('getCurrentURL')) {
 
     /**
      * Return the current URL.
-     *
+     * Ex.: http://www.dummy.com/one/two/index.php?one=1&two=2
+     * Or
+     * Ex.: https://username:passwd@www.dummy.com:443/one/two/index.php?one=1&two=2
      * @return string
      * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
      */
@@ -602,14 +668,82 @@ if (!function_exists('curl')) {
      * @param string $url URL to curl
      * @param string $method GET or POST, Default GET
      * @param mixed $data Data to post, Default false
-     * @param mixed $headers Additional headers, example: array ("Accept: application/json")
+     * @param array $headers Additional headers, example: array ("Accept: application/json")
      * @param bool $returnInfo Whether or not to retrieve curl_getinfo()
+     * @param string $user
+     * @param string $password
+     * @param bool $sslNotVerifyHostAndPeer is set to true do not check SSL certificate.
+     * @param bool $followLocation
+     * @param int $timeout
+     * @param string $logPath if not empty write log to this file
+     * @param string $referer
+     * @param string $userAgent default 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0'
+     * and ignore $returnInfo (i.e. call curl_getinfo even if $returnInfo is set to false).
      *
      * @return string|array if $returnInfo is set to True, array is returned with two keys, contents (will contain response) and info (information regarding a specific transfer), otherwise response content is returned
      * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
      */
-    function curl($url, $method = 'GET', $data = false, $headers = false, $returnInfo = false)
-    {
+    function curl(
+        $url,
+        $method = 'GET',
+        $data = false,
+        array $headers = [],
+        bool $returnInfo = false,
+        string $user = '',
+        string $password = '',
+        bool $sslNotVerifyHostAndPeer = false,
+        bool $followLocation = false,
+        int $timeout = 10,
+        string $logPath = '',
+        string $referer = '',
+        string $userAgent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0'
+    ) {
+        $log = false;
+        if (isNotNullOrEmpty($logPath)) {
+            $log = true;
+            $msg = "REQUEST_URI: " . (isNotNullOrEmptyArrayKey($_SERVER,
+                    'REQUEST_URI') ? $_SERVER['REQUEST_URI'] : '') . "\r\n"
+                . "SCRIPT_NAME: " . (isNotNullOrEmptyArrayKey($_SERVER,
+                    'SCRIPT_NAME') ? $_SERVER['SCRIPT_NAME'] : '') . "\r\n"
+                . "REMOTE ADDR: " . (isNotNullOrEmptyArrayKey($_SERVER,
+                    'REMOTE_ADDR') ? $_SERVER['REMOTE_ADDR'] : '') . "\r\n"
+                . "HTTP_HOST: " . (isNotNullOrEmptyArrayKey($_SERVER,
+                    'HTTP_HOST') ? $_SERVER['HTTP_HOST'] : '') . "\r\n"
+                . "SERVER_NAME: " . (isNotNullOrEmptyArrayKey($_SERVER,
+                    'SERVER_NAME') ? $_SERVER['SERVER_NAME'] : '') . "\r\n"
+                . "HTTP_X_FORWARDED_FOR: " . (isNotNullOrEmptyArrayKey($_SERVER,
+                    'HTTP_X_FORWARDED_FOR') ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '') . "\r\n"
+                . "SERVER_ADDR: " . (isNotNullOrEmptyArrayKey($_SERVER,
+                    'SERVER_ADDR') ? $_SERVER['SERVER_ADDR'] : '') . "\r\n"
+                . "REMOTE_PORT: " . (isNotNullOrEmptyArrayKey($_SERVER,
+                    'REMOTE_PORT') ? $_SERVER['REMOTE_PORT'] : '') . "\r\n"
+                . "HTTPS: " . (isNotNullOrEmptyArrayKey($_SERVER, 'HTTPS') ? $_SERVER['HTTPS'] : '') . "\r\n"
+                . "HTTP_X_FORWARDED_PROTO: " . (isNotNullOrEmptyArrayKey($_SERVER,
+                    'HTTP_X_FORWARDED_PROTO') ? $_SERVER['HTTP_X_FORWARDED_PROTO'] : '') . "\r\n"
+                . "data: " . get_var_dump_output($data) . "\r\n"
+                . "headers: " . get_var_dump_output($headers) . "\r\n"
+                . "returnInfo: " . $returnInfo . "\r\n"
+                . "url: " . $url . "\r\n"
+                . "method: " . $method . "\r\n"
+                . "user: " . $user . "\r\n"
+                . "password: " . (strlen($password) > 2 ? substr($password, 0, 2) . str_repeat('x',
+                        10) . substr($password, -1) : 'xx') . "\r\n"
+                . "sslNotVerifyHostAndPeer: " . $sslNotVerifyHostAndPeer . "\r\n"
+                . "followLocation: " . $followLocation . "\r\n"
+                . "timeout: " . $timeout . "\r\n"
+                . "logPath: " . $logPath . "\r\n"
+                . "referer: " . $referer . "\r\n"
+                . "userAgent: " . $userAgent . "\r\n"
+                . "\r\n";
+            logToFile($logPath, $msg);
+        }
+        if (!function_exists('curl_init') || isNullOrEmpty($url)) {
+            if ($log) {
+                logToFile($logPath,
+                    isNullOrEmpty($url) ? 'url is empty.curl abort.' : 'curl_init not exists.Probabily CURL is not installed.');
+            }
+            return '';
+        }
         $ch = curl_init();
         $info = null;
         if (strtoupper($method) == 'POST') {
@@ -625,22 +759,177 @@ if (!function_exists('curl')) {
                 }
                 $data = implode('&', $dataTokens);
             }
-            $url .= '?' . $data;
+            $url .= (strpos($url, '?') === false ? '&' : '?') . $data;
         }
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-        if ($headers !== false) {
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $followLocation ? true : false);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout <= 1 ? 10 : $timeout);
+        if ($sslNotVerifyHostAndPeer && starts_with($url, 'https://')) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        }
+        if (isNotNullOrEmptyArray($headers)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
-        $contents = curl_exec($ch);
-        if ($returnInfo) {
-            $info = curl_getinfo($ch);
+        if (isNotNullOrEmpty($user) && isNotNullOrEmpty($password)) {
+            curl_setopt($ch, CURLOPT_USERPWD, $user . ':' . $password);
         }
+        if (isNotNullOrEmpty($referer)) {
+            curl_setopt($ch, CURLOPT_REFERER, $referer);
+        }
+        if (isNotNullOrEmpty($userAgent)) {
+            curl_setopt($ch, CURLOPT_USERAGENT, $userAgent);
+        }
+
+        if ($log) {
+            logToFile($logPath, date('Y-m-d H:i:s') . "Start curl\r\n");
+        }
+        $contents = curl_exec($ch);
+        if ($log) {
+            logToFile($logPath, date('Y-m-d H:i:s') . "FINISH curl\r\n");
+        }
+
+        if ($returnInfo || $log || $contents === false || curl_errno($ch) > 0) {
+            $info = curl_getinfo($ch);
+            if ($log) {
+                logToFile($logPath, $info, true);
+            }
+        }
+
+        if ($contents === false || curl_errno($ch) > 0
+            || !array_key_exists_safe($info === null ? [] : $info, 'http_code') || $info['http_code'] != 200
+        ) {
+            if ($log) {
+                logToFile($logPath, "Error during exec CURL \r\n curl_error: " . curl_error($ch)
+                    . "\r\n curl_errno: " . curl_errno($ch) . "\r\n");
+            }
+        } elseif ($log) {
+            logToFile($logPath, "CURL IS OK\r\n RESPONSE: \r\n" . $contents);
+        }
+
         curl_close($ch);
         return ($returnInfo ? ['contents' => $contents, 'info' => $info] : $contents);
+    }
+}
+
+
+if (!function_exists('curl_internal_server_behind_load_balancer')) {
+
+    /**
+     * Make Curl call to one of the server behinds load balancer.
+     *
+     * @param string $url URL to curl
+     * @param string $server_name. The host name of the domain from the call will start.
+     * if empty try to resolve from SERVER_NAME
+     * @param string $localServerIpAddress the IP of one server to call that behinds load balancer.
+     * if empty try to resolve from SERVER_ADDR
+     * @param string $method GET or POST, Default GET
+     * @param mixed $data Data to post, Default false
+     * @param array $headers Additional headers, example: array ("Accept: application/json")
+     * @param bool $returnInfo Whether or not to retrieve curl_getinfo()
+     * @param string $user
+     * @param string $password
+     * @param bool $sslNotVerifyHostAndPeer is set to true do not check SSL certificate.
+     * @param bool $followLocation
+     * @param int $timeout
+     * @param string $logPath if not empty write log to this file
+     * @param string $referer
+     * @param string $userAgent default 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0'
+     * and ignore $returnInfo (i.e. call curl_getinfo even if $returnInfo is set to false).
+     *
+     * @return string|array if $returnInfo is set to True, array is returned with two keys, contents (will contain response) and info (information regarding a specific transfer), otherwise response content is returned
+     */
+    function curl_internal_server_behind_load_balancer(
+        $url,
+        $server_name = '',
+        $localServerIpAddress = '',
+        $method = 'GET',
+        $data = false,
+        array $headers = [],
+        bool $returnInfo = false,
+        string $user = '',
+        string $password = '',
+        bool $sslNotVerifyHostAndPeer = false,
+        bool $followLocation = false,
+        int $timeout = 10,
+        string $logPath = '',
+        string $referer = '',
+        string $userAgent = 'Mozilla/5.0 (Windows NT 6.2; WOW64; rv:17.0) Gecko/20100101 Firefox/17.0'
+    ) {
+        if (isNullOrEmpty($server_name) && isNotNullOrEmptyArrayKey($_SERVER, 'SERVER_NAME')) {
+            $server_name = $_SERVER['SERVER_NAME'];
+        }
+
+        if (isNullOrEmpty($server_name) && isNotNullOrEmpty($logPath)) {
+            $msg = 'No server name given for calling curl ' . $url . ' behind proxy or LB';
+            logToFile($logPath, $msg);
+            return false;
+        }
+
+        if (isNullOrEmpty($localServerIpAddress) && isNotNullOrEmptyArrayKey($_SERVER, 'SERVER_ADDR')) {
+            $localServerIpAddress = $_SERVER['SERVER_ADDR'];
+        }
+
+        if (isNullOrEmpty($localServerIpAddress) && isNotNullOrEmpty($logPath)) {
+            $msg = 'No localIPAddress given for calling curl ' . $url . ' behind proxy or LB';
+            logToFile($logPath, $msg);
+            return false;
+        }
+
+        $url = str_replace($server_name, $localServerIpAddress, $url);
+
+        //Using the host header to bypass a load balancer
+        if (!is_array($headers)) {
+            $headers = array();
+        }
+        $headers[] = 'Host: ' . $server_name;
+
+        return curl($url, $method, $data, $headers, $returnInfo, $user, $password, $sslNotVerifyHostAndPeer,
+            $followLocation, $timeout, $logPath, $referer, $userAgent);
+    }
+}
+
+if (!function_exists('startLayoutCapture')) {
+
+    /**
+     * Turn On the output buffering.
+     * @return bool
+     */
+    function startLayoutCapture() : bool
+    {
+        return ob_start();
+    }
+}
+
+if (!function_exists('endLayoutCapture')) {
+
+    /**
+     * Get the buffer contents for the topmost buffer and clean it.
+     * @return string
+     */
+    function endLayoutCapture() : string
+    {
+        $data = ob_get_contents();
+        ob_end_clean();
+        return $data === false ? '' : $data;
+    }
+}
+
+if (!function_exists('get_var_dump_output')) {
+
+    /**
+     * Capture var dump $var output and return it.
+     * @param $var
+     * @return string
+     */
+    function get_var_dump_output($var)
+    {
+        startLayoutCapture();
+        $myfunc = "var_dump";
+        $myfunc($var);
+        return endLayoutCapture();
     }
 }
 
@@ -656,9 +945,7 @@ if (!function_exists('debug')) {
      */
     function debug($variable)
     {
-        ob_start();
-        var_dump($variable);
-        $output = ob_get_clean();
+        $output = get_var_dump_output($variable);
         $maps = [
             'string' => "/(string\((?P<length>\d+)\)) (?P<value>\"(?<!\\\).*\")/i",
             'array' => "/\[\"(?P<key>.+)\"(?:\:\"(?P<class>[a-z0-9_\\\]+)\")?(?:\:(?P<scope>public|protected|private))?\]=>/Ui",
@@ -706,5 +993,148 @@ if (!function_exists('debug')) {
             $header = '<h4 style="border-bottom:1px solid #bbb;font-weight:bold;margin:0 0 10px 0;padding:3px 0 10px 0">' . $debugfile['file'] . '</h4>';
         }
         echo '<pre style="background-color: #CDDCF4;border: 1px solid #bbb;border-radius: 4px;-moz-border-radius:4px;-webkit-border-radius\:4px;font-size:12px;line-height:1.4em;margin:30px;padding:7px">' . $header . $output . '</pre>';
+    }
+}
+
+if (!function_exists('getReferer')) {
+
+    /**
+     * Return referer page if exists otherwise return empty string.
+     *
+     * @return string
+     */
+    function getReferer() : string
+    {
+        return isNotNullOrEmptyArrayKey($_SERVER, 'HTTP_REFERER') ? $_SERVER['HTTP_REFERER'] : '';
+    }
+}
+
+if (!function_exists('isZlibOutputCompressionActive')) {
+
+    /**
+     * Check if zlib output compression was active
+     * @return bool
+     */
+    function isZlibOutputCompressionActive() : bool
+    {
+        return ini_get('zlib.output_compression') == 'On'
+        || ini_get('zlib.output_compression_level') > 0
+        || ini_get('output_handler') == 'ob_gzhandler';
+    }
+}
+
+if (!function_exists('isZlibLoaded')) {
+
+    /**
+     * Check if zlib extension was loaded
+     * @return bool
+     */
+    function isZlibLoaded() : bool
+    {
+        return extension_loaded('zlib');
+    }
+}
+
+if (!function_exists('isClientAcceptGzipEncoding')) {
+
+    /**
+     * Check if client accept gzip encoding
+     * @return bool
+     */
+    function isClientAcceptGzipEncoding() : bool
+    {
+        return isNotNullOrEmptyArrayKey($_SERVER, 'HTTP_ACCEPT_ENCODING')
+        && strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false;
+    }
+}
+
+if (!function_exists('compressHtmlPage')) {
+
+    /**
+     * Captures output via ob_get_contents(), tries to enable gzip,
+     * removes whitespace from captured output and echos back
+     *
+     * @return string whitespace stripped output
+     * @see https://github.com/ngfw/Recipe/
+     */
+    function compressHtmlPage() : string
+    {
+        register_shutdown_function(function () {
+            $buffer = str_html_compress(ob_get_contents());
+            ob_end_clean();
+            if (!isZlibOutputCompressionActive() &&
+                isClientAcceptGzipEncoding() &&
+                isZlibLoaded()
+            ) {
+                ob_start('ob_gzhandler');
+            }
+            echo $buffer;
+        });
+    }
+}
+
+if (!function_exists('get_http_response_code')) {
+
+    /**
+     * @param string $theURL
+     * @param bool $useGet if set to true use a GET request, otherwise use a HEAD request (more fast).
+     * @return int return the http status or 999 if it fails.
+     */
+    function get_http_response_code(string $theURL, bool $useGet = false) : int
+    {
+        if (isNullOrEmpty($theURL)) {
+            return 999;
+        }
+        if (!$useGet) {
+            // By default get_headers uses a GET request to fetch the headers. If you
+            // want to send a HEAD request instead, you can do so using a stream context:
+            stream_context_set_default(
+                array(
+                    'http' => array(
+                        'method' => 'HEAD'
+                    )
+                )
+            );
+        }
+        $headers = @get_headers($theURL);
+
+        if ($headers === false || isNullOrEmptyArray($headers) || strlen($headers[0]) < 12) {
+            return 999;
+        }
+        $status = substr($headers[0], 9, 3);
+        return isInteger($status) ? $status : 999;
+    }
+}
+
+if (!function_exists('url_exists')) {
+
+    /**
+     * Check if URL exists (return http status code <400
+     * @param string $url
+     * @return bool
+     */
+    function url_exists(string $url) : bool
+    {
+        return get_http_response_code($url) < 400;
+    }
+}
+
+if (!function_exists('logToFile')) {
+
+    /**
+     * Log variable into log file.
+     * @param string $pathFile full path with file name.
+     * @param mixed $value value to log
+     * @param bool $varDump default false. if set to true,
+     * grab var dump output of $value and write it to log, otherwise append it to log.
+     */
+    function logToFile(string $pathFile, $value, bool $varDump = false)
+    {
+        if ($varDump) {
+            $value = get_var_dump_output($value);
+        }
+        $f = fopen($pathFile, 'a');
+        fwrite($f, date(DATE_RFC822) . "\r\n" . $value . "\r\n----------------------------------------------\r\n");
+        fclose($f);
     }
 }
