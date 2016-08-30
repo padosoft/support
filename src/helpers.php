@@ -439,16 +439,16 @@ if (!function_exists('getCurrentUrlPageName')) {
 
 if (!function_exists('getCurrentUrlQuerystring')) {
 
-}
-/**
- * Returns The Current URL querystring.
- * Ex.: http://www.dummy.com/one/two/index.php?one=1&two=2 return one=1&two=2
- *
- * @return string
- */
-function getCurrentUrlQuerystring() : string
-{
-    return isNotNullOrEmptyArrayKey($_SERVER, 'QUERY_STRING') ? $_SERVER['QUERY_STRING'] : '';
+    /**
+     * Returns The Current URL querystring.
+     * Ex.: http://www.dummy.com/one/two/index.php?one=1&two=2 return one=1&two=2
+     *
+     * @return string
+     */
+    function getCurrentUrlQuerystring() : string
+    {
+        return isNotNullOrEmptyArrayKey($_SERVER, 'QUERY_STRING') ? $_SERVER['QUERY_STRING'] : '';
+    }
 }
 
 if (!function_exists('getCurrentUrlDirName')) {
@@ -668,7 +668,7 @@ if (!function_exists('curl')) {
      * @param string $url URL to curl
      * @param string $method GET or POST, Default GET
      * @param mixed $data Data to post, Default false
-     * @param array $headers Additional headers, example: array ("Accept: application/json")
+     * @param string[] $headers Additional headers, example: array ("Accept: application/json")
      * @param bool $returnInfo Whether or not to retrieve curl_getinfo()
      * @param string $user
      * @param string $password
@@ -821,7 +821,7 @@ if (!function_exists('curl_internal_server_behind_load_balancer')) {
      * Make Curl call to one of the server behinds load balancer.
      *
      * @param string $url URL to curl
-     * @param string $server_name. The host name of the domain from the call will start.
+     * @param string $server_name The host name of the domain from the call will start.
      * if empty try to resolve from SERVER_NAME
      * @param string $localServerIpAddress the IP of one server to call that behinds load balancer.
      * if empty try to resolve from SERVER_ADDR

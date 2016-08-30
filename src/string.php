@@ -543,7 +543,7 @@ if (!function_exists('lastSegment')) {
  */
 function isNullOrEmpty($subject, bool $withTrim = true) : bool
 {
-    return $subject === null || $subject == '' || ($withTrim == true && trim($subject) == '');
+    return $subject === null || $subject == '' || ($withTrim === true && trim($subject) == '');
 }
 
 /**
