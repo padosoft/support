@@ -53,12 +53,11 @@ var_dump(str_random(16));
 ## List of functions
 
 ### Array
-- get
-- set
 - head
 - last
 - array_has
 - array_get
+- array_set
 - CleanUpArrayOfInt
 - array_split_filter
 - in_array_column
@@ -66,6 +65,7 @@ var_dump(str_random(16));
 - arrayToObject
 - arrayToString
 - array_key_exists_safe
+- array_get_key_value_safe
 - isNullOrEmptyArray
 - isNotNullOrEmptyArray
 - isNullOrEmptyArrayKey
@@ -87,6 +87,12 @@ var_dump(str_random(16));
 - getTimeFromDateTimeIso
 - diff_in_year
 - age
+- ampm
+- ampm2Number
+- fuzzySpan
+- unixTimestamp2dos
+- dos2unixTimestamp
+
 
 ### Helpers (misc functions)
 - rgb2hex
@@ -135,6 +141,8 @@ var_dump(str_random(16));
 - endLayoutCapture
 - get_var_dump_output
 - logToFile
+- isImageExtension
+- getImageExtensions
 
 ### IP
 - getIPVisitor

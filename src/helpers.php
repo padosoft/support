@@ -1138,3 +1138,33 @@ if (!function_exists('logToFile')) {
         fclose($f);
     }
 }
+
+/**
+ * Check if an extension is an image type.
+ * @param  string $ext  extension to check
+ * @return boolean
+ * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Mime.php
+ */
+function isImageExtension($ext)
+{
+    return in_array(strtolower($ext), getImageExtensions());
+}
+/**
+ * Get a list of common image extensions. Only types that can be read by
+ * PHP's internal image methods are included!
+ * @return array
+ */
+function getImageExtensions()
+{
+    return [
+        'bmp',
+        'gif',
+        'jpeg',
+        'jpg',
+        'png',
+        'tif',
+        'tiff',
+        'swf',
+    ];
+}
+

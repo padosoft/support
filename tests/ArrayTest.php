@@ -104,4 +104,13 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(isNotNullOrEmptyArrayKey(['1' => 1,'2' => ' ','3' => 3,'4' => 4],'2',false));
         $this->assertFalse(isNotNullOrEmptyArrayKey(['1' => 1,'2' => ' ','3' => 3,'4' => 4],'2',true));
     }
+
+    public function test_array_get_key_value_safe()
+    {
+        $this->assertEquals('default', array_get_key_value_safe([],'2','default'));
+        $this->assertEquals('default', array_get_key_value_safe([''],'2','default'));
+        $this->assertEquals('default', array_get_key_value_safe([' '],'2','default'));
+        $this->assertEquals(3, array_get_key_value_safe([1,2,3,4],'2','default'));
+        $this->assertEquals(2, array_get_key_value_safe(['1' => 1,'2' => 2,'3' => 3,'4' => 4],'2',2));
+    }
 }

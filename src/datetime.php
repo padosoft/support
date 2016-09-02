@@ -404,3 +404,166 @@ function age($dateOfBirthday) : int
 {
     return date_diff(date('Y-m-d'), $dateOfBirthday);
 }
+
+/**
+ * Returns AM or PM, based on a given hour (in 24 hour format).
+ *
+ *     $type = Date::ampm(12); // PM
+ *     $type = Date::ampm(1);  // AM
+ *
+ * @param   integer $hour   number of the hour
+ * @return  string
+ * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
+ */
+function ampm($hour)
+{
+    // Always integer
+    $hour = (int) $hour;
+    return ($hour > 11) ? 'PM' : 'AM';
+}
+
+/**
+ * Adjusts a non-24-hour number into a 24-hour number.
+ *
+ *     $hour = Date::adjust(3, 'pm'); // 15
+ *
+ * @param   integer $hour   hour to adjust
+ * @param   string  $ampm   AM or PM
+ * @return  string
+ * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
+ */
+function ampm2Number($hour, $ampm)
+{
+    $hour = (int) $hour;
+    $ampm = strtolower($ampm);
+    switch ($ampm) {
+        case 'am':
+            if ($hour == 12) {
+                $hour = 0;
+            }
+            break;
+        case 'pm':
+            if ($hour < 12) {
+                $hour += 12;
+            }
+            break;
+    }
+    return sprintf('%02d', $hour);
+}
+
+/**
+ * Returns the difference between a time and now in a "fuzzy" way.
+ * Displaying a fuzzy time instead of a date is usually faster to read and understand.
+ *
+ *     $span = Date::fuzzy_span(time() - 10); // "moments ago"
+ *     $span = Date::fuzzy_span(time() + 20); // "in moments"
+ *
+ * A second parameter is available to manually set the "local" timestamp,
+ * however this parameter shouldn't be needed in normal usage and is only
+ * included for unit tests
+ *
+ * @param   integer $timestamp          "remote" timestamp
+ * @param   integer $local_timestamp    "local" timestamp, defaults to time()
+ * @return  string $locale default 'IT' otherwise 'EN'
+ * @return  string
+ * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
+ */
+function fuzzySpan($timestamp, $local_timestamp = null, $locale='IT')
+{
+    $local_timestamp = ($local_timestamp === null) ? time() : (int) $local_timestamp;
+    // Determine the difference in seconds
+    $offset = abs($local_timestamp - $timestamp);
+    if ($offset <= MINUTE_IN_SECOND) {
+        $span = $locale=='EN' ? 'moments' : 'attimi';
+    } elseif ($offset < (MINUTE_IN_SECOND * 20)) {
+        $span = $locale=='EN' ? 'a few minutes' : 'qualche minuto';
+    } elseif ($offset < HOUR_IN_SECOND) {
+        $span = $locale=='EN' ? 'less than an hour' : 'meno di un ora';
+    } elseif ($offset < (HOUR_IN_SECOND * 4)) {
+        $span = $locale=='EN' ? 'a couple of hours' : 'un paio di ore';
+    } elseif ($offset < DAY_IN_SECOND) {
+        $span = $locale=='EN' ? 'less than a day' : 'meno di un giorno';
+    } elseif ($offset < (DAY_IN_SECOND * 2)) {
+        $span = $locale=='EN' ? 'about a day' : 'circa un giorno';
+    } elseif ($offset < (DAY_IN_SECOND * 4)) {
+        $span = $locale=='EN' ? 'a couple of days' : 'un paio di giorni';
+    } elseif ($offset < WEEK_IN_SECOND) {
+        $span = $locale=='EN' ? 'less than a week' : 'meno di una settimana';
+    } elseif ($offset < (WEEK_IN_SECOND * 2)) {
+        $span = $locale=='EN' ? 'about a week' : 'circa una settimana';
+    } elseif ($offset < MONTH_IN_SECOND) {
+        $span = $locale=='EN' ? 'less than a month' : 'meno di un mese';
+    } elseif ($offset < (MONTH_IN_SECOND * 2)) {
+        $span = $locale=='EN' ? 'about a month' : 'circa un mese';
+    } elseif ($offset < (MONTH_IN_SECOND * 4)) {
+        $span = $locale=='EN' ? 'a couple of months' : 'un paio di mesi';
+    } elseif ($offset < YEAR_IN_SECOND) {
+        $span = $locale=='EN' ? 'less than a year' : 'meno di un anno';
+    } elseif ($offset < (YEAR_IN_SECOND * 2)) {
+        $span = $locale=='EN' ? 'about a year' : 'circa un anno';
+    } elseif ($offset < (YEAR_IN_SECOND * 4)) {
+        $span = $locale=='EN' ? 'a couple of years' : 'un paio di anni';
+    } elseif ($offset < (YEAR_IN_SECOND * 8)) {
+        $span = $locale=='EN' ? 'a few years' : 'qualche anno';
+    } elseif ($offset < (YEAR_IN_SECOND * 12)) {
+        $span = $locale=='EN' ? 'about a decade' : 'circa un decennio';
+    } elseif ($offset < (YEAR_IN_SECOND * 24)) {
+        $span = $locale=='EN' ? 'a couple of decades' : 'una coppia di decenni';
+    } elseif ($offset < (YEAR_IN_SECOND * 64)) {
+        $span = $locale=='EN' ? 'several decades' : 'diversi decenni';
+    } else {
+        $span = $locale=='EN' ? 'a long time' : 'un lungo periodo';
+    }
+    if ($timestamp <= $local_timestamp) {
+        // This is in the past
+        return $span . ($locale=='EN' ? ' ago' : ' fà');
+    } else {
+        // This in the future
+        return ($locale=='EN' ? 'in ' : 'fra ') . $span;
+    }
+}
+/**
+ * Converts a UNIX timestamp to DOS format. There are very few cases where
+ * this is needed, but some binary formats use it (eg: zip files.)
+ * Converting the other direction is done using {@link Date::dos2unix}.
+ *
+ *     $dos = Date::unix2dos($unix);
+ *
+ * @param   integer $timestamp  UNIX timestamp
+ * @return  integer
+ * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
+ */
+function unixTimestamp2dos($timestamp = null)
+{
+    $timestamp = getdate($timestamp);
+    if ($timestamp['year'] < 1980) {
+        return (1 << 21 | 1 << 16);
+    }
+    $timestamp['year'] -= 1980;
+    // What voodoo is this? I have no idea... Geert can explain it though,
+    // and that's good enough for me.
+    return ($timestamp['year']    << 25 | $timestamp['mon']     << 21 |
+        $timestamp['mday']    << 16 | $timestamp['hours']   << 11 |
+        $timestamp['minutes'] << 5  | $timestamp['seconds'] >> 1);
+}
+/**
+ * Converts a DOS timestamp to UNIX format.There are very few cases where
+ * this is needed, but some binary formats use it (eg: zip files.)
+ * Converting the other direction is done using {@link Date::unix2dos}.
+ *
+ *     $unix = Date::dos2unix($dos);
+ *
+ * @param  integer|bool $timestamp  DOS timestamp
+ * @return  integer
+ * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
+ */
+function dos2unixTimestamp($timestamp = false)
+{
+    $sec  = 2 * ($timestamp & 0x1f);
+    $min  = ($timestamp >>  5) & 0x3f;
+    $hrs  = ($timestamp >> 11) & 0x1f;
+    $day  = ($timestamp >> 16) & 0x1f;
+    $mon  = ($timestamp >> 21) & 0x0f;
+    $year = ($timestamp >> 25) & 0x7f;
+    return mktime($hrs, $min, $sec, $mon, $day, $year + 1980);
+}
