@@ -2,6 +2,19 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.4.1 - 2016-09-02
+ADD functions:
+ ### datetime:
+- ampm
+- ampm2Number
+- fuzzySpan
+- unixTimestamp2dos
+- dos2unixTimestamp
+
+### helpers:
+- isImageExtension
+- getImageExtensions
+
 ## 1.4.0 - 2016-08-27
 
 - ADD new functions: constants, objectToArray, getFaviconUrl, str_limit now have an option to preserve words, number to word and time to word functions, isMail now ha an option to check MX record is valid, .

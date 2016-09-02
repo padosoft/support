@@ -1145,16 +1145,16 @@ if (!function_exists('logToFile')) {
  * @return boolean
  * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Mime.php
  */
-function isImageExtension($ext)
+function isImageExtension(string $ext) : bool
 {
     return in_array(strtolower($ext), getImageExtensions());
 }
 /**
  * Get a list of common image extensions. Only types that can be read by
  * PHP's internal image methods are included!
- * @return array
+ * @return string[]
  */
-function getImageExtensions()
+function getImageExtensions() : array
 {
     return [
         'bmp',
