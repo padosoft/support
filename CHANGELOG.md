@@ -2,7 +2,7 @@
 
 All Notable changes to `support` will be documented in this file
 
-## 1.4.1 - 2016-09-02
+## 1.4.2 - 2016-09-02
 ADD functions:
  ### datetime:
 - ampm
@@ -14,6 +14,42 @@ ADD functions:
 ### helpers:
 - isImageExtension
 - getImageExtensions
+
+## 1.4.1 - 2016-08-30
+
+### ADD these new functions:
+
+- starts_with_insensitive
+- str_contains_insensitive
+- str_finish_insensitive
+- ends_with_insensitive
+- getReferer
+- getCurrentUrlPageName
+- getCurrentUrlQuerystring
+- getCurrentUrlDirName
+- etCurrentUrlDirAbsName
+- str_html_compress
+- isZlibOutputCompressionActive
+- isZlibLoaded
+- isClientAcceptGzipEncoding
+- compressHtmlPage
+- get_http_response_code
+- url_exists
+- isNullOrEmptyArrayKey
+- isNotNullOrEmptyArrayKey
+- isNotNullOrEmptyArray
+- startLayoutCapture
+- endLayoutCapture
+- get_var_dump_output
+- logToFile
+- curl_internal_server_behind_load_balancer
+
+### CHANGES
+
+- isHttps now support HTTP_X_FORWARDED_PROTO
+- isNullOrEmpty now have a withTrim option
+- isNotNullOrEmpty now have a withTrim option
+- curl(): add more power to curl function!
 
 ## 1.4.0 - 2016-08-27
 
