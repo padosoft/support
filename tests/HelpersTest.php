@@ -34,7 +34,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     public function test_getFaviconUrl()
     {
         $favIcon = getFaviconUrl('http://youtube.com/');
-        $this->assertEquals("http://www.google.com/s2/favicons?domain=youtube.com/", $favIcon);
+        $this->assertEquals("https://www.google.com/s2/favicons?domain=youtube.com/", $favIcon);
     }
 
     /**
@@ -44,7 +44,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     {
         $favIcon = getFaviconImgTag('http://youtube.com/');
         $this->assertEquals(
-            '<img src="http://www.google.com/s2/favicons?domain=youtube.com/"  />',
+            '<img src="https://www.google.com/s2/favicons?domain=youtube.com/"  />',
             $favIcon
         );
     }
@@ -55,7 +55,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
             'class' => 'favImg',
         ]);
         $this->assertEquals(
-            '<img src="http://www.google.com/s2/favicons?domain=youtube.com/" class="favImg" />',
+            '<img src="https://www.google.com/s2/favicons?domain=youtube.com/" class="favImg" />',
             $favIcon
         );
     }
