@@ -255,12 +255,7 @@ function encryptString(string $string, string $chiave = '')
  */
 function getFaviconUrl($url) : string
 {
-    $protocol = 'http://';
-    if (isHttps()) {
-        $protocol = 'https://';
-    }
-
-    $apiUrl = $protocol . 'www.google.com/s2/favicons?domain=';
+    $apiUrl = 'https://www.google.com/s2/favicons?domain=';
     if (strpos($url, 'http') !== false) {
         $url = str_replace('http://', '', $url);
     }
