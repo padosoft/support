@@ -3,7 +3,7 @@
 namespace Padosoft\Support\Test;
 
 
-trait DatetimeDataProvider
+trait DateTimeDataProvider
 {
     /**
      * @return array
