@@ -2,6 +2,14 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.4.3 - 2016-09-07
+ADD functions:
+ ### datetime:
+- cal_days_in_month
+- cal_days_in_current_month
+- days_in_month
+- days_in_current_month
+
 ## 1.4.2 - 2016-09-02
 ADD functions:
  ### datetime:

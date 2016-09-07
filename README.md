@@ -92,6 +92,10 @@ var_dump(str_random(16));
 - fuzzySpan
 - unixTimestamp2dos
 - dos2unixTimestamp
+- cal_days_in_month
+- cal_days_in_current_month
+- days_in_month
+- days_in_current_month
 
 
 ### Helpers (misc functions)

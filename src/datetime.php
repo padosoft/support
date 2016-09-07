@@ -5,6 +5,19 @@
  * **************************
  */
 
+if (!defined('CAL_GREGORIAN')) {
+    define('CAL_GREGORIAN', 0);
+}
+if (!defined('CAL_JULIAN')) {
+    define('CAL_JULIAN', 1);
+}
+if (!defined('CAL_JEWISH')) {
+    define('CAL_JEWISH', 2);
+}
+if (!defined('CAL_FRENCH')) {
+    define('CAL_FRENCH', 3);
+}
+
 /**
  * SECONDS SHART CUTS
  */
@@ -411,14 +424,14 @@ function age($dateOfBirthday) : int
  *     $type = Date::ampm(12); // PM
  *     $type = Date::ampm(1);  // AM
  *
- * @param   integer $hour   number of the hour
+ * @param   integer $hour number of the hour
  * @return  string
  * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
  */
 function ampm($hour)
 {
     // Always integer
-    $hour = (int) $hour;
+    $hour = (int)$hour;
     return ($hour > 11) ? 'PM' : 'AM';
 }
 
@@ -427,14 +440,14 @@ function ampm($hour)
  *
  *     $hour = Date::adjust(3, 'pm'); // 15
  *
- * @param   integer $hour   hour to adjust
- * @param   string  $ampm   AM or PM
+ * @param   integer $hour hour to adjust
+ * @param   string $ampm AM or PM
  * @return  string
  * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
  */
 function ampm2Number($hour, $ampm)
 {
-    $hour = (int) $hour;
+    $hour = (int)$hour;
     $ampm = strtolower($ampm);
     switch ($ampm) {
         case 'am':
@@ -462,66 +475,67 @@ function ampm2Number($hour, $ampm)
  * however this parameter shouldn't be needed in normal usage and is only
  * included for unit tests
  *
- * @param   integer $timestamp          "remote" timestamp
- * @param   integer $local_timestamp    "local" timestamp, defaults to time()
+ * @param   integer $timestamp "remote" timestamp
+ * @param   integer $local_timestamp "local" timestamp, defaults to time()
  * @return  string $locale default 'IT' otherwise 'EN'
  * @return  string
  * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
  */
-function fuzzySpan($timestamp, $local_timestamp = null, $locale='IT')
+function fuzzySpan($timestamp, $local_timestamp = null, $locale = 'IT')
 {
-    $local_timestamp = ($local_timestamp === null) ? time() : (int) $local_timestamp;
+    $local_timestamp = ($local_timestamp === null) ? time() : (int)$local_timestamp;
     // Determine the difference in seconds
     $offset = abs($local_timestamp - $timestamp);
     if ($offset <= MINUTE_IN_SECOND) {
-        $span = $locale=='EN' ? 'moments' : 'attimi';
+        $span = $locale == 'EN' ? 'moments' : 'attimi';
     } elseif ($offset < (MINUTE_IN_SECOND * 20)) {
-        $span = $locale=='EN' ? 'a few minutes' : 'qualche minuto';
+        $span = $locale == 'EN' ? 'a few minutes' : 'qualche minuto';
     } elseif ($offset < HOUR_IN_SECOND) {
-        $span = $locale=='EN' ? 'less than an hour' : 'meno di un ora';
+        $span = $locale == 'EN' ? 'less than an hour' : 'meno di un ora';
     } elseif ($offset < (HOUR_IN_SECOND * 4)) {
-        $span = $locale=='EN' ? 'a couple of hours' : 'un paio di ore';
+        $span = $locale == 'EN' ? 'a couple of hours' : 'un paio di ore';
     } elseif ($offset < DAY_IN_SECOND) {
-        $span = $locale=='EN' ? 'less than a day' : 'meno di un giorno';
+        $span = $locale == 'EN' ? 'less than a day' : 'meno di un giorno';
     } elseif ($offset < (DAY_IN_SECOND * 2)) {
-        $span = $locale=='EN' ? 'about a day' : 'circa un giorno';
+        $span = $locale == 'EN' ? 'about a day' : 'circa un giorno';
     } elseif ($offset < (DAY_IN_SECOND * 4)) {
-        $span = $locale=='EN' ? 'a couple of days' : 'un paio di giorni';
+        $span = $locale == 'EN' ? 'a couple of days' : 'un paio di giorni';
     } elseif ($offset < WEEK_IN_SECOND) {
-        $span = $locale=='EN' ? 'less than a week' : 'meno di una settimana';
+        $span = $locale == 'EN' ? 'less than a week' : 'meno di una settimana';
     } elseif ($offset < (WEEK_IN_SECOND * 2)) {
-        $span = $locale=='EN' ? 'about a week' : 'circa una settimana';
+        $span = $locale == 'EN' ? 'about a week' : 'circa una settimana';
     } elseif ($offset < MONTH_IN_SECOND) {
-        $span = $locale=='EN' ? 'less than a month' : 'meno di un mese';
+        $span = $locale == 'EN' ? 'less than a month' : 'meno di un mese';
     } elseif ($offset < (MONTH_IN_SECOND * 2)) {
-        $span = $locale=='EN' ? 'about a month' : 'circa un mese';
+        $span = $locale == 'EN' ? 'about a month' : 'circa un mese';
     } elseif ($offset < (MONTH_IN_SECOND * 4)) {
-        $span = $locale=='EN' ? 'a couple of months' : 'un paio di mesi';
+        $span = $locale == 'EN' ? 'a couple of months' : 'un paio di mesi';
     } elseif ($offset < YEAR_IN_SECOND) {
-        $span = $locale=='EN' ? 'less than a year' : 'meno di un anno';
+        $span = $locale == 'EN' ? 'less than a year' : 'meno di un anno';
     } elseif ($offset < (YEAR_IN_SECOND * 2)) {
-        $span = $locale=='EN' ? 'about a year' : 'circa un anno';
+        $span = $locale == 'EN' ? 'about a year' : 'circa un anno';
     } elseif ($offset < (YEAR_IN_SECOND * 4)) {
-        $span = $locale=='EN' ? 'a couple of years' : 'un paio di anni';
+        $span = $locale == 'EN' ? 'a couple of years' : 'un paio di anni';
     } elseif ($offset < (YEAR_IN_SECOND * 8)) {
-        $span = $locale=='EN' ? 'a few years' : 'qualche anno';
+        $span = $locale == 'EN' ? 'a few years' : 'qualche anno';
     } elseif ($offset < (YEAR_IN_SECOND * 12)) {
-        $span = $locale=='EN' ? 'about a decade' : 'circa un decennio';
+        $span = $locale == 'EN' ? 'about a decade' : 'circa un decennio';
     } elseif ($offset < (YEAR_IN_SECOND * 24)) {
-        $span = $locale=='EN' ? 'a couple of decades' : 'una coppia di decenni';
+        $span = $locale == 'EN' ? 'a couple of decades' : 'una coppia di decenni';
     } elseif ($offset < (YEAR_IN_SECOND * 64)) {
-        $span = $locale=='EN' ? 'several decades' : 'diversi decenni';
+        $span = $locale == 'EN' ? 'several decades' : 'diversi decenni';
     } else {
-        $span = $locale=='EN' ? 'a long time' : 'un lungo periodo';
+        $span = $locale == 'EN' ? 'a long time' : 'un lungo periodo';
     }
     if ($timestamp <= $local_timestamp) {
         // This is in the past
-        return $span . ($locale=='EN' ? ' ago' : ' fà');
+        return $span . ($locale == 'EN' ? ' ago' : ' fà');
     } else {
         // This in the future
-        return ($locale=='EN' ? 'in ' : 'fra ') . $span;
+        return ($locale == 'EN' ? 'in ' : 'fra ') . $span;
     }
 }
+
 /**
  * Converts a UNIX timestamp to DOS format. There are very few cases where
  * this is needed, but some binary formats use it (eg: zip files.)
@@ -529,7 +543,7 @@ function fuzzySpan($timestamp, $local_timestamp = null, $locale='IT')
  *
  *     $dos = Date::unix2dos($unix);
  *
- * @param   integer $timestamp  UNIX timestamp
+ * @param   integer $timestamp UNIX timestamp
  * @return  integer
  * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
  */
@@ -542,10 +556,11 @@ function unixTimestamp2dos($timestamp = null)
     $timestamp['year'] -= 1980;
     // What voodoo is this? I have no idea... Geert can explain it though,
     // and that's good enough for me.
-    return ($timestamp['year']    << 25 | $timestamp['mon']     << 21 |
-        $timestamp['mday']    << 16 | $timestamp['hours']   << 11 |
-        $timestamp['minutes'] << 5  | $timestamp['seconds'] >> 1);
+    return ($timestamp['year'] << 25 | $timestamp['mon'] << 21 |
+        $timestamp['mday'] << 16 | $timestamp['hours'] << 11 |
+        $timestamp['minutes'] << 5 | $timestamp['seconds'] >> 1);
 }
+
 /**
  * Converts a DOS timestamp to UNIX format.There are very few cases where
  * this is needed, but some binary formats use it (eg: zip files.)
@@ -553,17 +568,85 @@ function unixTimestamp2dos($timestamp = null)
  *
  *     $unix = Date::dos2unix($dos);
  *
- * @param  integer|bool $timestamp  DOS timestamp
+ * @param  integer|bool $timestamp DOS timestamp
  * @return  integer
  * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Date.php
  */
 function dos2unixTimestamp($timestamp = false)
 {
-    $sec  = 2 * ($timestamp & 0x1f);
-    $min  = ($timestamp >>  5) & 0x3f;
-    $hrs  = ($timestamp >> 11) & 0x1f;
-    $day  = ($timestamp >> 16) & 0x1f;
-    $mon  = ($timestamp >> 21) & 0x0f;
+    $sec = 2 * ($timestamp & 0x1f);
+    $min = ($timestamp >> 5) & 0x3f;
+    $hrs = ($timestamp >> 11) & 0x1f;
+    $day = ($timestamp >> 16) & 0x1f;
+    $mon = ($timestamp >> 21) & 0x0f;
     $year = ($timestamp >> 25) & 0x7f;
     return mktime($hrs, $min, $sec, $mon, $day, $year + 1980);
 }
+
+if (!function_exists('cal_days_in_month')) {
+    /**
+     * Return the number of days in a month for a given year and calendar
+     * If cal_days_in_month() is not defined return the number of days
+     * in a month for a given year in CAL_GREGORIAN calendar.
+     * If an error occourred return 0.
+     * @param $calendar
+     * @param int $month
+     * @param int $year
+     * @return int
+     */
+    function cal_days_in_month($calendar = CAL_GREGORIAN, $month, $year) : int
+    {
+        if ($month < 1 || $month > 12 || $year < 1) {
+            return 0;
+        }
+        $dim = date('t', mktime(0, 0, 0, $month, 1, $year));
+        return is_int($dim) ? (int)$dim : 0;
+    }
+}
+
+if (!function_exists('cal_days_in_current_month')) {
+    /**
+     * Return the number of days in a current month and calendar
+     * If cal_days_in_month() is not defined return the number of days
+     * in a current month in CAL_GREGORIAN calendar.
+     * If $calendar is null or empty or not is integer, use CAL_GREGORIAN.
+     * @param $calendar
+     * @return int
+     */
+    function cal_days_in_current_month($calendar = CAL_GREGORIAN) : int
+    {
+        if(!isInteger($calendar)){
+            $calendar = CAL_GREGORIAN;
+        }
+        if (function_exists('cal_days_in_month')) {
+            return (int)cal_days_in_month($calendar, date('m'), date('Y'));
+        }
+
+        return (int)date('t');
+    }
+}
+
+if (!function_exists('days_in_month')) {
+    /**
+     * Return the number of days for a given month and year (using CAL_GREGORIAN calendar).
+     * @param int $month
+     * @param int $year
+     * @return int
+     */
+    function days_in_month(int $month, int $year) : int
+    {
+        return cal_days_in_month(CAL_GREGORIAN, $month, $year);
+    }
+}
+
+if (!function_exists('days_in_current_month')) {
+    /**
+     * Return the number of days in a current month (using CAL_GREGORIAN calendar).
+     * @return int
+     */
+    function days_in_current_month() : int
+    {
+        return cal_days_in_current_month(CAL_GREGORIAN);
+    }
+}
+
