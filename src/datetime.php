@@ -613,11 +613,8 @@ if (!function_exists('cal_days_in_current_month')) {
      * @param $calendar
      * @return int
      */
-    function cal_days_in_current_month($calendar = CAL_GREGORIAN) : int
+    function cal_days_in_current_month(int $calendar = CAL_GREGORIAN) : int
     {
-        if(!isInteger($calendar)){
-            $calendar = CAL_GREGORIAN;
-        }
         if (function_exists('cal_days_in_month')) {
             return (int)cal_days_in_month($calendar, date('m'), date('Y'));
         }

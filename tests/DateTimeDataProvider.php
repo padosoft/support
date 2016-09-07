@@ -36,9 +36,9 @@ trait DateTimeDataProvider
     public function cal_days_in_current_monthProvider()
     {
         return [
-            'null, '.cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y')) => [null, cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'))],
-            '\'\', '.cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y')) => ['', cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'))],
-            '\' \', '.cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y')) => [' ', cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'))],
+            'null, '.cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y')) => [null, 'TypeError'],
+            '\'\', '.cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y')) => ['', 'TypeError'],
+            '\' \', '.cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y')) => [' ', 'TypeError'],
             '0' => [0, cal_days_in_month(0, date('m'), date('Y'))],
             'CAL_GREGORIAN' => [CAL_GREGORIAN, cal_days_in_month(CAL_GREGORIAN, date('m'), date('Y'))],
             'CAL_JULIAN, 1, 2016' => [CAL_JULIAN, cal_days_in_month(CAL_JULIAN, date('m'), date('Y'))],
