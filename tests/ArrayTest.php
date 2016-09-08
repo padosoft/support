@@ -47,6 +47,21 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         ];
         $obj = arrayToObject($array);
         $this->assertInternalType('object', $obj);
+        $this->assertEquals('bar', $obj->foo);
+        $this->assertEquals('qux', $obj->baz);
+
+        $array = [
+            'foo' => 'bar',
+            'baz' => [ 'foo2' => 'bar2',
+                        'baz2' => 'ok',
+            ],
+        ];
+        $obj = arrayToObject($array);
+        $this->assertInternalType('object', $obj);
+        $this->assertEquals('bar', $obj->foo);
+        $this->assertInternalType('object', $obj->baz);
+        $this->assertEquals('bar2', $obj->baz->foo2);
+        $this->assertEquals('ok', $obj->baz->baz2);
     }
     public function test_arrayToString()
     {

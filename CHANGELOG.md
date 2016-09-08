@@ -2,6 +2,11 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.4.4 - 2016-09-08
+CHANGES functions:
+ ### array:
+- refactor of arrayToObject and arrayToObject tests.
+
 ## 1.4.3 - 2016-09-07
 ADD functions:
  ### datetime:

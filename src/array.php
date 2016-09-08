@@ -243,18 +243,23 @@ if (!function_exists('arrayToObject')) {
      *
      * @param array $array PHP array
      *
-     * @return mixed
+     * @return stdClass (object)
      * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
      */
-    function arrayToObject($array)
+    function arrayToObject(array $array = []) : \stdClass
     {
-        if (isNullOrEmptyArray($array)) {
-            return $array;
+        $object = new \stdClass();
+
+        if (!is_array($array) || count($array) < 1) {
+            return $object;
         }
 
-        $object = new \stdClass();
         foreach ($array as $name => $value) {
-            $object->$name = arrayToObject($value);
+            if (is_array($value)) {
+                $object->$name = arrayToObject($value);
+                continue;
+            }
+            $object->{$name} = $value;
         }
         return $object;
     }
@@ -348,7 +353,7 @@ if (!function_exists('isNullOrEmptyArrayKey')) {
      */
     function isNullOrEmptyArrayKey(array $array, string $key, bool $withTrim = true):bool
     {
-        return !array_key_exists_safe($array, $key) || $array[$key]===null || isNullOrEmpty($array[$key], $withTrim);
+        return !array_key_exists_safe($array, $key) || $array[$key] === null || isNullOrEmpty($array[$key], $withTrim);
     }
 }
 
