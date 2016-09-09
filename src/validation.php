@@ -114,6 +114,30 @@ function isDouble($value, $dec = 2, $unsigned = true, $exactDec = false) : bool
 }
 
 /**
+ * Check if a string is a percent 0%-100%
+ * @param $value
+ * @param bool $withDecimal if set to true accept decimal values.
+ * @param bool $withPercentChar if set to true require % char, otherwise if find a % char return false.
+ * @return bool
+ */
+function isPercent($value, bool $withDecimal = true, bool $withPercentChar = false) : bool
+{
+    if (isNullOrEmpty($value)) {
+        return false;
+    }
+    $contains_perc = str_contains($value, '%');
+    if ( ($withPercentChar && !$contains_perc)
+        || (!$withPercentChar && $contains_perc)
+        || (substr_count($value, '%') > 1) //only one %
+    ) {
+        return false;
+    }
+    $value = trim(str_replace('%', '', $value));
+
+    return $withDecimal ? isDouble($value, '', true) : isInteger($value, true);
+}
+
+/**
  * @param float $value
  * @param float $leftRange
  * @param float $rightRange
@@ -262,7 +286,7 @@ function isMonth(int $value, int $year, int $calendar = CAL_GREGORIAN) : bool
  */
 function isDay(int $value, int $month = 0, int $year = 0, int $calendar = CAL_GREGORIAN) : bool
 {
-    if ($month!=0 && !isMonth($month,$year,$calendar)) {
+    if ($month != 0 && !isMonth($month, $year, $calendar)) {
         return false;
     }
     if (!isInRange($year, 0, PHP_INT_MAX)) {
@@ -330,13 +354,13 @@ function hasAgeInRange($dateOfBirthday, int $ageMin, int $ageMax) : bool
  * @param bool $strict if set to false (default) check >=min and <=max otherwise check >min and <max.
  * @return bool
  */
-function betweenDateIso(string $date, string $minDate, string $maxDate, bool $strict=false) : bool
+function betweenDateIso(string $date, string $minDate, string $maxDate, bool $strict = false) : bool
 {
-    if(!isDateIso($date) || !isDateIso($minDate) || !isDateIso($maxDate)){
+    if (!isDateIso($date) || !isDateIso($minDate) || !isDateIso($maxDate)) {
         return false;
     }
 
-    if(!$strict){
+    if (!$strict) {
         return ($date >= $minDate) && ($date <= $maxDate);
     }
     return ($date > $minDate) && ($date < $maxDate);
@@ -350,9 +374,9 @@ function betweenDateIso(string $date, string $minDate, string $maxDate, bool $st
  * @param bool $strict if set to false (default) check >=min and <=max otherwise check >min and <max.
  * @return bool
  */
-function betweenDateIta(string $date, string $minDate, string $maxDate, bool $strict=false) : bool
+function betweenDateIta(string $date, string $minDate, string $maxDate, bool $strict = false) : bool
 {
-    if(!isDateIta($date) || !isDateIta($minDate) || !isDateIta($maxDate)){
+    if (!isDateIta($date) || !isDateIta($minDate) || !isDateIta($maxDate)) {
         return false;
     }
 

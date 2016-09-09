@@ -320,6 +320,24 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @param $value
+     * @param $withDecimal
+     * @param $withPercentChar
+     * @param $expected
+     * @dataProvider isPercentProvider
+     */
+    public function isPercentTest($value, $withDecimal, $withPercentChar, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isPercent($value, $withDecimal, $withPercentChar);
+        } else {
+            $this->assertEquals($expected, isPercent($value, $withDecimal, $withPercentChar));
+        }
+    }
+
+    /**
+     * @test
      * @param $val
      * @param $expected
      * @dataProvider isUrlProvider

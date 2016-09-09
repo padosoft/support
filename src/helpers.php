@@ -1136,7 +1136,7 @@ if (!function_exists('logToFile')) {
 
 /**
  * Check if an extension is an image type.
- * @param  string $ext  extension to check
+ * @param  string $ext extension to check
  * @return boolean
  * @see https://github.com/kohana/ohanzee-helpers/blob/master/src/Mime.php
  */
@@ -1144,6 +1144,7 @@ function isImageExtension(string $ext) : bool
 {
     return in_array(strtolower($ext), getImageExtensions());
 }
+
 /**
  * Get a list of common image extensions. Only types that can be read by
  * PHP's internal image methods are included!
@@ -1163,3 +1164,81 @@ function getImageExtensions() : array
     ];
 }
 
+/**
+ * Very simple 'template' parser. Replaces (for example) {name} with the value of $vars['name'] in strings
+ *
+ * @param        $str
+ * @param array $vars
+ * @param string $openDelimiter
+ * @param string $closeDelimiter
+ *
+ * @return string
+ * @see https://github.com/laradic/support/blob/master/src/Util.php
+ * @example
+ * <?php
+ * $result = Util::template('This is the best template parser. Created by {developerName}', ['developerName' => 'Radic']);
+ * echo $result; // This is the best template parser. Created by Radic
+ */
+function template($str, array $vars = [], $openDelimiter = '{', $closeDelimiter = '}')
+{
+    foreach ($vars as $k => $var) {
+        if (is_array($var)) {
+            $str = template($str, $var);
+        } elseif (is_string($var)) {
+            $str = Str::replace($str, $openDelimiter . $k . $closeDelimiter, $var);
+        }
+    }
+    return $str;
+}
+
+/**
+ * @param int $percent
+ * @return bool
+ * @see https://github.com/laradic/support/blob/master/src/Util.php
+ */
+function randomChance(int $percent = 50) : bool
+{
+    return random_int(0, 100) > 100 - $percent;
+}
+
+/**
+ * @param Throwable $exception
+ * @return string
+ */
+function getExceptionTraceAsString(\Throwable $exception)
+{
+    $rtn = "";
+    $count = 0;
+    foreach ($exception->getTrace() as $frame) {
+        $args = "";
+        if (isset($frame['args'])) {
+            $args = [];
+            foreach ($frame['args'] as $arg) {
+                if (is_string($arg)) {
+                    $args[] = "'" . $arg . "'";
+                } elseif (is_array($arg)) {
+                    $args[] = "Array";
+                } elseif (is_null($arg)) {
+                    $args[] = 'NULL';
+                } elseif (is_bool($arg)) {
+                    $args[] = ($arg) ? "true" : "false";
+                } elseif (is_object($arg)) {
+                    $args[] = get_class($arg);
+                } elseif (is_resource($arg)) {
+                    $args[] = get_resource_type($arg);
+                } else {
+                    $args[] = $arg;
+                }
+            }
+            $args = implode(", ", $args);
+        }
+        $rtn .= sprintf("#%s %s(%s): %s(%s)\n",
+            $count,
+            isset($frame['file']) ? $frame['file'] : '',
+            isset($frame['line']) ? $frame['line'] : '',
+            $frame['function'],
+            $args);
+        $count++;
+    }
+    return $rtn;
+}

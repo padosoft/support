@@ -44,6 +44,84 @@ if (!function_exists('e')) {
     }
 }
 
+if (!function_exists('csse')) {
+    /**
+     * Escape CSS entities in a string.
+     *
+     * @param  string $value
+     * @return string
+     * @see https://github.com/auraphp/Aura.Html/blob/2.x/src/Escaper/CssEscaper.php
+     */
+    function csse($value)
+    {
+        // pre-empt replacement
+        if ($value === '' || ctype_digit($value)) {
+            return $value;
+        }
+        return preg_replace_callback(
+            '/[^a-z0-9]/iSu',
+            function ($matches) {
+                // get the character
+                $chr = $matches[0];
+                // is it UTF-8?
+                if (strlen($chr) == 1) {
+                    // yes
+                    $ord = ord($chr);
+                    return sprintf('\\%X ', $ord);
+                }
+            },
+            $value
+        );
+    }
+}
+
+if (!function_exists('attre')) {
+    /**
+     * Escape HTML Attribute entities in a string.
+     *
+     * @param  string $value
+     * @return string
+     * @see https://github.com/auraphp/Aura.Html/blob/2.x/src/Escaper/AttrEscaper.php
+     */
+    function attre($value)
+    {
+        // pre-empt replacement
+        if ($value === '' || ctype_digit($value)) {
+            return $value;
+        }
+        return preg_replace_callback(
+            '/[^a-z0-9,\.\-_]/iSu',
+            function ($matches) {
+                $chr = $matches[0];
+                $ord = ord($chr);
+                if (($ord <= 0x1f && $chr != "\t" && $chr != "\n" && $chr != "\r")
+                    || ($ord >= 0x7f && $ord <= 0x9f)
+                ) {
+                    // use the Unicode replacement char
+                    return '&#xFFFD;';
+                }
+                $entities = array(
+                    34 => '&quot;',
+                    38 => '&amp;',
+                    60 => '&lt;',
+                    62 => '&gt;',
+                );
+                // is this a mapped entity?
+                if (isset($entities[$ord])) {
+                    return $entities[$ord];
+                }
+                // is this an upper-range hex entity?
+                if ($ord > 255) {
+                    return sprintf('&#x%04X;', $ord);
+                }
+                // everything else
+                return sprintf('&#x%02X;', $ord);
+            },
+            $value
+        );
+    }
+}
+
 /**
  * Normalize the texts before.
  * The following function removes all diacritics (marks like accents) from a given UTF8-encoded

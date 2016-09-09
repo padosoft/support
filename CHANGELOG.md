@@ -2,13 +2,30 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.6.0 - 2016-09-09
+ADDED functions:
+### helper:
+- template
+- randomChance
+- getExceptionTraceAsString
+### sanitize:
+- csse
+- attre
+### validation:
+- isPercent
+
+### reflection:
+- getClassNameFromFile
+- getNamespaceFromFile
+- getPhpDefinitionsFromFile
+
 ## 1.5.0 - 2016-09-09
 FIXED:
- ### validation:
+### validation:
 - dateItaToIso
 
 ADDED functions:
- ### validation:
+### validation:
 - isInRange
 - isDay
 - isMonth

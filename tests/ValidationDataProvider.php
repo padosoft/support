@@ -962,6 +962,54 @@ trait ValidationDataProvider
     /**
      * @return array
      */
+    public function isPercentProvider()
+    {
+        return [
+            '\'\', true, false' => ['', true, false, false],
+            '\'\', false, false' => ['', false, false, false],
+            '\'\', false, true' => ['', false, true, false],
+            '\'\', true, true' => ['', true, true, false],
+            '\' \', true, false' => [' ', true, false, false],
+            '\' \', false, false' => [' ', false, false, false],
+            '\' \', false, true' => [' ', false, true, false],
+            '\' \', true, true' => [' ', true, true, false],
+            'null, true, false' => [null, true, false, false],
+            'null, true, true' => [null, true, true, false],
+            'null, false, true' => [null, false, true, false],
+            'null, false, false' => [null, false, false, false],
+            '1, true, false' => ['1', true, false, true],
+            '1, true, true' => ['1', true, true, false],
+            '1, false, true' => ['1', false, true, false],
+            '1, false, false' => ['1', false, false, true],
+            '1%, true, false' => ['1%', true, false, false],
+            '1%, true, true' => ['1%', true, true, true],
+            '1%, false, true' => ['1%', false, true, true],
+            '1%, false, false' => ['1%', false, false, false],
+            '0, true, false' => ['0', true, false, true],
+            '0, true, true' => ['0', true, true, false],
+            '0, false, true' => ['0', false, true, false],
+            '0, false, false' => ['0', false, false, true],
+            '0%, true, false' => ['0%', true, false, false],
+            '0%, true, true' => ['0%', true, true, true],
+            '0%, false, true' => ['0%', false, true, true],
+            '0%, false, false' => ['0%', false, false, false],
+            '15.00, true, false' => ['15.00', true, false, true],
+            '15.00, true, true' => ['15.00', true, true, false],
+            '15.00, false, true' => ['15.00', false, true, false],
+            '15.00, false, false' => ['15.00', false, false, false],
+            '15.00%, true, false' => ['15.00%', true, false, false],
+            '15.00%, true, true' => ['15.00%', true, true, true],
+            '15.00%, false, true' => ['15.00%', false, true, false],
+            '15.00%, false, false' => ['15.00%', false, false, false],
+            '15%%, false, true' => ['15%%', false, true, false],
+            '15 %, false, true' => ['15 %', false, true, true],
+            '15  %, false, true' => ['15  %', false, true, true],
+        ];
+    }
+
+    /**
+     * @return array
+     */
     public function isUrlProvider()
     {
         return [

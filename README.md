@@ -147,6 +147,9 @@ var_dump(str_random(16));
 - logToFile
 - isImageExtension
 - getImageExtensions
+- template
+- randomChance
+- getExceptionTraceAsString
 
 ### IP
 - getIPVisitor
@@ -164,11 +167,16 @@ var_dump(str_random(16));
 - class_constants
 - class_uses_recursive
 - class_basename
+- getClassNameFromFile
+- getNamespaceFromFile
+- getPhpDefinitionsFromFile
 
 ### Sanitize
 - strip_nl
 - jse
 - e
+- csse
+- attre
 - normalizeUtf8String
 - sanitize_filename
 - sanitize_pathname
@@ -224,6 +232,7 @@ var_dump(str_random(16));
 - isIntegerFloatingPoint
 - isFloatingPoint
 - isDouble
+- isPercent
 - isDateIta
 - isDateIso
 - isDateTimeIso
@@ -395,9 +404,6 @@ echo roman_year(2016);//MMXVI
 /**
 * String
  */
-echo str_random(16);
-echo str_random(16);
-echo str_random(16);
 echo str_random(16);
 
 ```
