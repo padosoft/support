@@ -423,4 +423,161 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
 
         }
     }
+
+    /**
+     * @test
+     * @param $value
+     * @param $leftRange
+     * @param $rightRange
+     * @param $expected
+     * @dataProvider isInRangeProvider
+     */
+    public function isInRangeTest($value, $leftRange, $rightRange, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isInRange($value, $leftRange, $rightRange);
+        } else {
+                $this->assertEquals($expected, isInRange($value, $leftRange, $rightRange));
+        }
+    }
+
+    /**
+     * @test
+     * @param $value
+     * @param $expected
+     * @dataProvider isDayProvider
+     */
+    public function isDayTest($value, $month, $year, $calendar, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isDay($value, $month, $year, $calendar);
+        } else {
+                $this->assertEquals($expected, isDay($value, $month, $year, $calendar));
+        }
+    }
+
+    /**
+     * @test
+     * @param $value
+     * @param $year
+     * @param $calendar
+     * @param $expected
+     * @dataProvider isMonthProvider
+     */
+    public function isMonthTest($value, $year, $calendar, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isMonth($value, $year, $calendar);
+        } else {
+                $this->assertEquals($expected, isMonth($value, $year, $calendar));
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function isJewishLeapYearTest()
+    {
+        $this->assertFalse(isJewishLeapYear(2000));
+        $this->assertTrue(isJewishLeapYear(2001));
+        $this->assertFalse(isJewishLeapYear(2002));
+        $this->assertTrue(isJewishLeapYear(2003));
+        $this->assertFalse(isJewishLeapYear(2004));
+        $this->assertFalse(isJewishLeapYear(2005));
+        $this->assertTrue(isJewishLeapYear(2006));
+        $this->assertFalse(isJewishLeapYear(2007));
+        $this->assertFalse(isJewishLeapYear(2008));
+        $this->assertTrue(isJewishLeapYear(2009));
+        $this->assertFalse(isJewishLeapYear(2010));
+        $this->assertFalse(isJewishLeapYear(2011));
+    }
+
+    /**
+     * @test
+     */
+    public function betweenDateIsoTest()
+    {
+        $this->assertFalse(betweenDateIso('', '', '', false));
+        $this->assertFalse(betweenDateIso('33515313', '', '', false));
+        $this->assertFalse(betweenDateIso('2016-01-01', 'dfgdfgfd', '', false));
+        $this->assertFalse(betweenDateIso('2016-01-01', '2016-01-01', 'dfgdfgfd', false));
+        $this->assertTrue(betweenDateIso('2016-01-01', '2016-01-01', '2016-01-01', false));
+        $this->assertFalse(betweenDateIso('2016-01-01', '2016-01-01', '2016-01-01', true));
+        $this->assertFalse(betweenDateIso('2016-01-10', '2016-01-09', '2016-01-10', true));
+        $this->assertFalse(betweenDateIso('2016-01-10', '2016-01-10', '2016-01-11', true));
+        $this->assertTrue(betweenDateIso('2016-01-10', '2016-01-09', '2016-01-11', true));
+        $this->assertTrue(betweenDateIso('2016-01-10', '2016-01-09', '2016-01-10', false));
+        $this->assertTrue(betweenDateIso('2016-01-10', '2016-01-10', '2016-01-11', false));
+        $this->assertTrue(betweenDateIso('2016-01-10', '2016-01-09', '2016-01-11', false));
+        $this->assertFalse(betweenDateIso('2016-01-10', '2016-02-09', '2016-02-11', false));
+        $this->assertFalse(betweenDateIso('2017-01-10', '2016-02-09', '2016-02-11', false));
+        $this->assertFalse(betweenDateIso('2016-01-10', '2016-02-09', '2016-02-11', true));
+        $this->assertFalse(betweenDateIso('2017-01-10', '2016-02-09', '2016-02-11', true));
+
+        $this->expectException('TypeError');
+        $this->assertFalse(betweenDateIso(null, '', '', false));
+    }
+
+    /**
+     * @test
+     */
+    public function betweenDateItaTest()
+    {
+        $this->assertFalse(betweenDateIta('', '', '', false));
+        $this->assertFalse(betweenDateIta('33515313', '', '', false));
+        $this->assertFalse(betweenDateIta('01/01/2016', 'dfgdfgfd', '', false));
+        $this->assertFalse(betweenDateIta('01/01/2016', '01/01/2016', 'dfgdfgfd', false));
+        $this->assertTrue(betweenDateIta('01/01/2016', '01/01/2016', '01/01/2016', false));
+        $this->assertFalse(betweenDateIta('01/01/2016', '01/01/2016', '01/01/2016', true));
+        $this->assertFalse(betweenDateIta('10/01/2016', '09/01/2016', '10/01/2016', true));
+        $this->assertFalse(betweenDateIta('10/01/2016', '10/01/2016', '11/01/2016', true));
+        $this->assertTrue(betweenDateIta('10/01/2016', '09/01/2016', '11/01/2016', true));
+        $this->assertTrue(betweenDateIta('10/01/2016', '09/01/2016', '10/01/2016', false));
+        $this->assertTrue(betweenDateIta('10/01/2016', '10/01/2016', '11/01/2016', false));
+        $this->assertTrue(betweenDateIta('10/01/2016', '09/01/2016', '11/01/2016', false));
+        $this->assertFalse(betweenDateIta('10/01/2016', '09/02/2016', '11/02/2016', false));
+        $this->assertFalse(betweenDateIta('10/01/2017', '09/02/2016', '11/02/2016', false));
+        $this->assertFalse(betweenDateIta('10/01/2016', '09/02/2016', '11/02/2016', true));
+        $this->assertFalse(betweenDateIta('10/01/2017', '09/02/2016', '11/02/2016', true));
+
+        $this->expectException('TypeError');
+        $this->assertFalse(betweenDateIta(null, '', '', false));
+    }
+
+    /**
+     * @test
+     */
+    public function dateIsoToItaTest()
+    {
+        $this->assertEquals('00/00/0000', dateIsoToIta(''));
+        $this->assertEquals('00/00/0000', dateIsoToIta('545646536'));
+        $this->assertEquals('00/00/0000', dateIsoToIta('16/06/2016'));
+        $this->assertEquals('00/00/0000', dateIsoToIta('2016-01-1'));
+        $this->assertEquals('00/00/0000', dateIsoToIta('2016-1-01'));
+        $this->assertEquals('00/00/0000', dateIsoToIta('16-01-01'));
+        $this->assertEquals('01/01/2016', dateIsoToIta('2016-01-01'));
+
+        $this->expectException('TypeError');
+        $this->assertFalse(dateIsoToIta(null));
+    }
+
+    /**
+     * @test
+     */
+    public function dateItaToIsoTest()
+    {
+        $this->assertEquals('0000-00-00', dateItaToIso(''));
+        $this->assertEquals('0000-00-00', dateItaToIso('545646536'));
+        $this->assertEquals('0000-00-00', dateItaToIso('2016-01-01'));
+        $this->assertEquals('0000-00-00', dateItaToIso('1/01/2016'));
+        $this->assertEquals('0000-00-00', dateItaToIso('01/1/2016'));
+        $this->assertEquals('0000-00-00', dateItaToIso('01/01/16'));
+        $this->assertEquals('2016-01-01', dateItaToIso('01/01/2016'));
+
+        $this->expectException('TypeError');
+        $this->assertFalse(dateItaToIso(null));
+    }
 }

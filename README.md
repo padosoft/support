@@ -233,6 +233,12 @@ var_dump(str_random(16));
 - hasMinAge
 - hasMaxAge
 - hasAgeInRange
+- isInRange
+- isDay
+- isMonth
+- isJewishLeapYear
+- betweenDateIso
+- betweenDateIta
 - isMail
 - isIPv4
 - isIPv6

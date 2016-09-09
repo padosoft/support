@@ -304,7 +304,7 @@ function dateIsoToIta(string $date = "") : string
  */
 function dateItaToIso(string $date = "") : string
 {
-    if (isNullOrEmpty($date) || !isDateIso($date)) {
+    if (isNullOrEmpty($date) || !isDateIta($date)) {
         return '0000-00-00';
     }
     $arr_data = preg_split('/[\/.-]/', $date);
@@ -596,7 +596,7 @@ if (!function_exists('cal_days_in_month')) {
      */
     function cal_days_in_month($calendar = CAL_GREGORIAN, $month, $year) : int
     {
-        if ($month < 1 || $month > 12 || $year < 1) {
+        if (!isInRange($month, 1, 12) || $year < 1) {
             return 0;
         }
         $dim = date('t', mktime(0, 0, 0, $month, 1, $year));

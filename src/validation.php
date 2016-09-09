@@ -114,6 +114,17 @@ function isDouble($value, $dec = 2, $unsigned = true, $exactDec = false) : bool
 }
 
 /**
+ * @param float $value
+ * @param float $leftRange
+ * @param float $rightRange
+ * @return bool
+ */
+function isInRange(float $value, float $leftRange = 0, float $rightRange = 0) : bool
+{
+    return ($value <= $rightRange && $value >= $leftRange);
+}
+
+/**
  * Check if string is dd/mm/YYYY
  * @param $value
  * @return bool
@@ -197,6 +208,81 @@ function isTimeIta($value)
 }
 
 /**
+ * Check if year ia a leap year in jewish calendar.
+ * @param int $year
+ * @return bool
+ */
+function isJewishLeapYear(int $year) : bool
+{
+    if ($year % 19 == 0 || $year % 19 == 3 || $year % 19 == 6 ||
+        $year % 19 == 8 || $year % 19 == 11 || $year % 19 == 14 ||
+        $year % 19 == 17
+    ) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+/**
+ * Check if a number is a valid month.
+ * More params you passed (year, calendar), more accurate is the check.
+ * If passed a not valid year return false.
+ * @param int $value
+ * @param int $year
+ * @param int $calendar
+ * @return bool
+ */
+function isMonth(int $value, int $year, int $calendar = CAL_GREGORIAN) : bool
+{
+    if (!isInRange($year, 0, PHP_INT_MAX)) {
+        return false;
+    }
+
+    $maxMonths = 12;
+
+    if ($calendar == 3
+        || ($year > 0 && $calendar == 2 && isJewishLeapYear($year))
+    ) {
+        $maxMonths = 13;
+    }
+
+    return isInRange($value, 1, $maxMonths);
+}
+
+/**
+ * Check if a number is a valid day.
+ * More params you passed (month, year, calendar), more accurate is the check.
+ * If passed a not valid year or month return false.
+ * @param int $value
+ * @param int $month
+ * @param int $year
+ * @param int $calendar
+ * @return bool
+ */
+function isDay(int $value, int $month = 0, int $year = 0, int $calendar = CAL_GREGORIAN) : bool
+{
+    if ($month!=0 && !isMonth($month,$year,$calendar)) {
+        return false;
+    }
+    if (!isInRange($year, 0, PHP_INT_MAX)) {
+        return false;
+    }
+
+    $maxDays = 31;
+
+    if ($year > 0 && $month > 0) {
+        $maxDays = cal_days_in_month($calendar, $month, $year);
+    } elseif (in_array($month, [11, 4, 6, 9])) {
+        $maxDays = 30;
+    } elseif ($month == 2) {
+        $maxDays = 28;
+    }
+
+    return isInRange($value, 1, $maxDays);
+}
+
+/**
  * Determine if the provided input meets age requirement (ISO 8601).
  *
  * @param string $dateOfBirthday date ('Y-m-d') or datetime ('Y-m-d H:i:s') Date Of Birthday
@@ -234,6 +320,47 @@ function hasMaxAge($dateOfBirthday, int $age) : bool
 function hasAgeInRange($dateOfBirthday, int $ageMin, int $ageMax) : bool
 {
     return hasMinAge($dateOfBirthday, $ageMin) && hasMaxAge($dateOfBirthday, $ageMax);
+}
+
+/**
+ * Check if a date in iso format is in range
+ * @param string $date iso format
+ * @param string $minDate iso format
+ * @param string $maxDate iso format
+ * @param bool $strict if set to false (default) check >=min and <=max otherwise check >min and <max.
+ * @return bool
+ */
+function betweenDateIso(string $date, string $minDate, string $maxDate, bool $strict=false) : bool
+{
+    if(!isDateIso($date) || !isDateIso($minDate) || !isDateIso($maxDate)){
+        return false;
+    }
+
+    if(!$strict){
+        return ($date >= $minDate) && ($date <= $maxDate);
+    }
+    return ($date > $minDate) && ($date < $maxDate);
+}
+
+/**
+ * Check if a date in ita format is in range
+ * @param string $date ita format
+ * @param string $minDate ita format
+ * @param string $maxDate ita format
+ * @param bool $strict if set to false (default) check >=min and <=max otherwise check >min and <max.
+ * @return bool
+ */
+function betweenDateIta(string $date, string $minDate, string $maxDate, bool $strict=false) : bool
+{
+    if(!isDateIta($date) || !isDateIta($minDate) || !isDateIta($maxDate)){
+        return false;
+    }
+
+    $date = dateItaToIso($date);
+    $minDate = dateItaToIso($minDate);
+    $maxDate = dateItaToIso($maxDate);
+
+    return betweenDateIso($date, $minDate, $maxDate, $strict);
 }
 
 /**

@@ -2,6 +2,21 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.5.0 - 2016-09-09
+FIXED:
+ ### validation:
+- dateItaToIso
+
+ADDED functions:
+ ### validation:
+- isInRange
+- isDay
+- isMonth
+- isJewishLeapYear
+- betweenDateIso
+- betweenDateIta
+add more tests.
+
 ## 1.4.4 - 2016-09-08
 CHANGES functions:
  ### array:
