@@ -82,12 +82,13 @@ if (!function_exists('class_basename')) {
 function getClassNameFromFile($filePath)
 {
     $tokens = token_get_all(file_get_contents($filePath));
-    for ($i = 0; $i < count($tokens); $i++) {
+    $iMax = count($tokens);
+    for ($i = 0; $i < $iMax; $i++) {
         if ($tokens[$i][0] === T_TRAIT || $tokens[$i][0] === T_INTERFACE) {
             return;
         }
         if ($tokens[$i][0] === T_CLASS) {
-            for ($j = $i + 1; $j < count($tokens); $j++) {
+            for ($j = $i + 1; $j < $iMax; $j++) {
                 if ($tokens[$j] === '{') {
                     return $tokens[$i + 2][1];
                 }
@@ -109,9 +110,10 @@ function getNamespaceFromFile($filePath)
 {
     $namespace = '';
     $tokens = token_get_all(file_get_contents($filePath));
-    for ($i = 0; $i < count($tokens); $i++) {
+    $iMax = count($tokens);
+    for ($i = 0; $i < $iMax; $i++) {
         if ($tokens[$i][0] === T_NAMESPACE) {
-            for ($j = $i + 1; $j < count($tokens); $j++) {
+            for ($j = $i + 1; $j < $iMax; $j++) {
                 if ($tokens[$j][0] === T_STRING) {
                     $namespace .= '\\' . $tokens[$j][1];
                 } else {
@@ -139,7 +141,7 @@ function getPhpDefinitionsFromFile($filePath)
     $traits = [];
     $interfaces = [];
     $fp = fopen($filePath, 'r');
-    $trait = $interface = $class = $namespace = $buffer = '';
+    $class = $namespace = $buffer = '';
     $i = 0;
     while (!$class) {
         if (feof($fp)) {
@@ -150,9 +152,10 @@ function getPhpDefinitionsFromFile($filePath)
         if (strpos($buffer, '{') === false) {
             continue;
         }
-        for (; $i < count($tokens); $i++) {
+        $iMax = count($tokens);
+        for (; $i < $iMax; $i++) {
             if ($tokens[$i][0] === T_NAMESPACE) {
-                for ($j = $i + 1; $j < count($tokens); $j++) {
+                for ($j = $i + 1; $j < $iMax; $j++) {
                     if ($tokens[$j][0] === T_STRING) {
                         $namespace .= '\\' . $tokens[$j][1];
                     } else {
@@ -163,7 +166,7 @@ function getPhpDefinitionsFromFile($filePath)
                 }
             }
             if ($tokens[$i][0] === T_CLASS) {
-                for ($j = $i + 1; $j < count($tokens); $j++) {
+                for ($j = $i + 1; $j < $iMax; $j++) {
                     if ($tokens[$j] === '{') {
                         $class = $tokens[$i + 2][1];
                         $classes[] = $class;
@@ -171,7 +174,7 @@ function getPhpDefinitionsFromFile($filePath)
                 }
             }
             if ($tokens[$i][0] === T_INTERFACE) {
-                for ($j = $i + 1; $j < count($tokens); $j++) {
+                for ($j = $i + 1; $j < $iMax; $j++) {
                     if ($tokens[$j] === '{') {
                         $interface = $tokens[$i + 2][1];
                         $interfaces[] = $interface;
@@ -179,7 +182,7 @@ function getPhpDefinitionsFromFile($filePath)
                 }
             }
             if ($tokens[$i][0] === T_TRAIT) {
-                for ($j = $i + 1; $j < count($tokens); $j++) {
+                for ($j = $i + 1; $j < $iMax; $j++) {
                     if ($tokens[$j] === '{') {
                         $trait = $tokens[$i + 2][1];
                         $traits[] = $trait;
