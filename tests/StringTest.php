@@ -32,16 +32,17 @@ class StringTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @param $val
+     * @param $withNbSp
      * @param $expected
      * @dataProvider str_replace_multiple_spaceProvider
      */
-    public function str_replace_multiple_spaceTest($val, $expected)
+    public function str_replace_multiple_spaceTest($val, $withNbSp, $expected)
     {
         if ($this->expectedIsAnException($expected)) {
             $this->expectException($expected);
-            str_replace_multiple_space($val);
+            str_replace_multiple_space($val, $withNbSp);
         } else {
-            $this->assertEquals($expected, str_replace_multiple_space($val));
+            $this->assertEquals($expected, str_replace_multiple_space($val, $withNbSp));
         }
     }
 

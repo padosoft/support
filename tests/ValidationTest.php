@@ -49,6 +49,22 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @test
      * @param $val
      * @param $expected
+     * @dataProvider isDateTimeOrDateTimeZeroIsoProvider
+     */
+    public function isDateTimeOrDateTimeZeroIsoTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isDateTimeOrDateTimeZeroIso($val);
+        } else {
+            $this->assertEquals($expected, isDateTimeOrDateTimeZeroIso($val));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
      * @dataProvider dateTimeItaValidateProvider
      */
     public function isDateTimeItaTest($val, $expected)
@@ -74,6 +90,22 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             isDateIso($val);
         } else {
             $this->assertEquals($expected, isDateIso($val));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider isDateOrDateZeroIsoProvider
+     */
+    public function isDateOrDateZeroIsoTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isDateOrDateZeroIso($val);
+        } else {
+            $this->assertEquals($expected, isDateOrDateZeroIso($val));
         }
     }
 

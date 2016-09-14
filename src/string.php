@@ -336,7 +336,7 @@ if (!function_exists('str_limit')) {
      * @param  string $value
      * @param  int $limit
      * @param  string $end append in
-     * @param  bool $wordsafe if set to true, remove any truncated word in the end of string.
+     * @param  bool $wordsafe if set to true, remove any truncated word in the end of string so the result no breaking words.
      * @return string
      */
     function str_limit(string $value, int $limit = 100, string $end = '...', bool $wordsafe = false) : string
@@ -448,11 +448,16 @@ if (!function_exists('str_replace_multiple_space')) {
 
     /**
      * Replace multiple spaces with one space.
+     * If $withNbsp replaces "&nbsp;" with a single space before converts multiple sequential spaces.
      * @param string $str
+     * @param bool $withNbsp
      * @return string
      */
-    function str_replace_multiple_space(string $str) : string
+    function str_replace_multiple_space(string $str, bool $withNbsp = false) : string
     {
+        if ($withNbsp) {
+            $str = str_replace('&nbsp;', ' ', $str);
+        }
         return preg_replace('/\s+/', ' ', $str);
     }
 }

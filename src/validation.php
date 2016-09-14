@@ -126,7 +126,7 @@ function isPercent($value, bool $withDecimal = true, bool $withPercentChar = fal
         return false;
     }
     $contains_perc = str_contains($value, '%');
-    if ( ($withPercentChar && !$contains_perc)
+    if (($withPercentChar && !$contains_perc)
         || (!$withPercentChar && $contains_perc)
         || (substr_count($value, '%') > 1) //only one %
     ) {
@@ -164,6 +164,56 @@ function isDateIta($value) : bool
     } catch (Exception $e) {
         return false;
     }
+}
+
+/**
+ * Check if string is 0000-00-00
+ * @param $value
+ * @return bool
+ */
+function isDateZeroIso($value) : bool
+{
+    return $value == '0000-00-00';
+}
+
+/**
+ * Check if string is 00:00:00
+ * @param $value
+ * @return bool
+ */
+function isTimeZeroIso($value) : bool
+{
+    return $value == '00:00:00';
+}
+
+/**
+ * Check if string is '0000-00-00 00:00:00'
+ * @param $value
+ * @return bool
+ */
+function isDateTimeZeroIso($value) : bool
+{
+    return $value == '0000-00-00 00:00:00';
+}
+
+/**
+ * Check if string is YYYY-mm-dd and valid date or 0000-00-00
+ * @param $value
+ * @return bool
+ */
+function isDateOrDateZeroIso($value) : bool
+{
+    return isDateIso($value) || isDateZeroIso($value);
+}
+
+/**
+ * Check if string is 'YYYY-mm-dd HH:ii:ss' and valid date or '0000-00-00 00:00:00'
+ * @param $value
+ * @return bool
+ */
+function isDateTimeOrDateTimeZeroIso($value) : bool
+{
+    return isDateTimeIso($value) || isDateTimeZeroIso($value);
 }
 
 /**
@@ -218,7 +268,11 @@ function isDateTimeIta($value) : bool
 function isTimeIso($value) : bool
 {
     $strRegExp = '/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/';
-    return preg_match($strRegExp, $value) === 1;
+    if(!(preg_match($strRegExp, $value) === 1)){
+        return false;
+    }
+    list($HH, $ii, $ss) = explode(':', $value);
+    return isInRange((int)$HH, 0, 23) && isInRange((int)$ii, 0, 59) && isInRange((int)$ss, 0, 59);
 }
 
 /**

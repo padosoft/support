@@ -11,13 +11,14 @@ trait StringDataProvider
     public function str_replace_multiple_spaceProvider()
     {
         return [
-            'null' => [null, 'TypeError'],
-            '\'\'' => ['', ''],
-            '\' \'' => [' ', ' '],
-            '\'  \'' => ['  ', ' '],
-            '\'   \'' => ['   ', ' '],
-            '\'I am   Lorenzo.\'' => ['I am   Lorenzo.', 'I am Lorenzo.'],
-            '\'I   am   Lorenzo.\'' => ['I   am   Lorenzo.', 'I am Lorenzo.'],
+            'null, false' => [null, false, 'TypeError'],
+            '\'\', false' => ['', false, ''],
+            '\' \', false' => [' ', false, ' '],
+            '\'  \', false' => ['  ', false, ' '],
+            '\'   \', false' => ['   ', false, ' '],
+            '\'I am   Lorenzo.\', false' => ['I am   Lorenzo.', false, 'I am Lorenzo.'],
+            '\'I   am   Lorenzo.\', false' => ['I   am   Lorenzo.', false, 'I am Lorenzo.'],
+            '\'I &nbsp;am&nbsp;&nbsp;Lorenzo.\', true' => ['I &nbsp;am&nbsp;&nbsp;Lorenzo.', true, 'I am Lorenzo.'],
         ];
     }
 

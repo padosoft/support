@@ -2,6 +2,21 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.7.0 - 2016-09-14
+### CHANGES:
+STRING:
+- str_replace_multiple_space now accept new optional argument to replace &nbsp;
+VALIDATION:
+- isTimeIso: check if string format is ok but number is out of range of valid date (i.e.: 24:88:99 is now return false). 
+
+### ADDED:
+VALIDATION:
+- isDateZeroIso
+- isTimeZeroIso
+- isDateTimeZeroIso
+- isDateOrDateZeroIso
+- isDateTimeOrDateTimeZeroIso
+
 ## 1.6.0 - 2016-09-09
 ADDED functions:
 ### helper:
