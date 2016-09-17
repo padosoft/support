@@ -53,6 +53,27 @@ if (!function_exists('last')) {
     }
 }
 
+if (!function_exists('insert_at_top')) {
+
+    /**
+     * Insert element in top of array and return $count element.
+     * @param $my_arr
+     * @param $elem
+     * @param int $count
+     * @return bool
+     * @see https://github.com/ifsnop/lpsf/blob/master/src/Ifsnop/functions.inc.php
+     */
+    function insert_at_top(&$my_arr, $elem, int $count = 10) : bool
+    {
+        if (!is_array($my_arr) || is_null($elem)) {
+            return false;
+        }
+        array_splice($my_arr, $count - 1);
+        array_unshift($my_arr, $elem);    // Shift every element down one, and insert new at top
+        return true;
+    }
+}
+
 if (!function_exists('array_has')) {
     /**
      * Check if an item exists in an array using "dot" notation.

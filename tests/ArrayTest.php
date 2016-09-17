@@ -128,4 +128,14 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(3, array_get_key_value_safe([1,2,3,4],'2','default'));
         $this->assertEquals(2, array_get_key_value_safe(['1' => 1,'2' => 2,'3' => 3,'4' => 4],'2',2));
     }
+
+    public function test_insert_at_top()
+    {
+        $test_arr = array('a','b','c','d');
+        $test_arr_result = array(99,98,97,96,95,94,93,92,91,90);
+        for($i=0;$i<100; $i++) {
+            insert_at_top($test_arr, $i, 10);
+        }
+        $this->assertEquals($test_arr, $test_arr_result);
+    }
 }

@@ -2,6 +2,15 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.8.0 - 2016-09-17
+### ADDEDD:
+STRING:
+- str_word_count_utf8
+ARRAY:
+- insert_at_top
+HELPER:
+- windows_os
+
 ## 1.7.0 - 2016-09-14
 ### CHANGES:
 STRING:

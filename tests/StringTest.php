@@ -152,11 +152,28 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function test_starts_with()
     {
-        $this->assertTrue(starts_with('eight hundred','eigh'));
-        $this->assertTrue(starts_with('eight hundred','eight '));
-        $this->assertTrue(starts_with('eight hundred','e'));
-        $this->assertFalse(starts_with('eight hundred','EN'));
-        $this->assertFalse(starts_with('eight hundred','eight hundred pounds'));
+        $this->assertTrue(starts_with('eight hundred', 'eigh'));
+        $this->assertTrue(starts_with('eight hundred', 'eight '));
+        $this->assertTrue(starts_with('eight hundred', 'e'));
+        $this->assertFalse(starts_with('eight hundred', 'EN'));
+        $this->assertFalse(starts_with('eight hundred', 'eight hundred pounds'));
+    }
+
+    /**
+     * Convert number to word.
+     */
+    public function test_str_word_count_utf8()
+    {
+        $this->assertEquals(0, str_word_count_utf8(''));
+        $this->assertEquals(1, str_word_count_utf8('one'));
+        $this->assertEquals(2, str_word_count_utf8('one,two'));
+        $this->assertEquals(2, str_word_count_utf8('one, two'));
+        $this->assertEquals(3, str_word_count_utf8('one, two, three'));
+        $this->assertEquals(4, str_word_count_utf8('one, two, three, four'));
+        $this->assertEquals(3, str_word_count_utf8('one' . PHP_EOL . ', two, three'));
+        $this->assertEquals(3, str_word_count_utf8('one' . PHP_EOL . ', two, ,three'));
+        $this->assertEquals(3, str_word_count_utf8('one' . PHP_EOL . ', two, ,, three'));
+        $this->assertEquals(3, str_word_count_utf8('one' . PHP_EOL . ', two, , , three'));
     }
 
     /**
@@ -164,12 +181,12 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function test_starts_with_insensitive()
     {
-        $this->assertTrue(starts_with_insensitive('eight hundred','eigh'));
-        $this->assertTrue(starts_with_insensitive('eight hundred','EiGh'));
-        $this->assertTrue(starts_with_insensitive('eight hundred','e'));
-        $this->assertTrue(starts_with_insensitive('eight hundred','E'));
-        $this->assertFalse(starts_with_insensitive('eight hundred','EN'));
-        $this->assertFalse(starts_with_insensitive('eight hundred','eight hundred pounds'));
+        $this->assertTrue(starts_with_insensitive('eight hundred', 'eigh'));
+        $this->assertTrue(starts_with_insensitive('eight hundred', 'EiGh'));
+        $this->assertTrue(starts_with_insensitive('eight hundred', 'e'));
+        $this->assertTrue(starts_with_insensitive('eight hundred', 'E'));
+        $this->assertFalse(starts_with_insensitive('eight hundred', 'EN'));
+        $this->assertFalse(starts_with_insensitive('eight hundred', 'eight hundred pounds'));
     }
 
     /**
@@ -177,7 +194,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function test_secondsToText()
     {
-        $seconds = 60*60*24*2;
+        $seconds = 60 * 60 * 24 * 2;
         $duration = secondsToText($seconds, false, 'EN');
         $this->assertEquals(
             '2 days',
@@ -212,6 +229,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
             $duration
         );
     }
+
     /**
      * Convert number of minutes to time.
      */
@@ -239,6 +257,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
             $duration
         );
     }
+
     /**
      * Convert hours to text.
      */

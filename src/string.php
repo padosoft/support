@@ -722,3 +722,19 @@ if (!function_exists('str_html_compress')) {
         return preg_replace(array('/\>[^\S ]+/s', '/[^\S ]+\</s', '/(\s)+/s'), array('>', '<', '\\1'), $value);
     }
 }
+
+if (!function_exists('str_word_count_utf8')) {
+
+    /**
+     * Count number of words in string.
+     * Return zero if an error occourred.
+     * @param string $str
+     * @return int
+     * @see https://github.com/ifsnop/lpsf/blob/master/src/Ifsnop/functions.inc.php
+     */
+    function str_word_count_utf8(string $str) : int
+    {
+        $result = preg_match_all("/\p{L}[\p{L}\p{Mn}\p{Pd}'\x{2019}]*/u", $str, $matches);
+        return $result===false ? 0 : $result;
+    }
+}

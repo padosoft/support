@@ -55,6 +55,7 @@ var_dump(str_random(16));
 ### Array
 - head
 - last
+- insert_at_top
 - array_has
 - array_get
 - array_set
@@ -150,6 +151,7 @@ var_dump(str_random(16));
 - template
 - randomChance
 - getExceptionTraceAsString
+- windows_os
 
 ### IP
 - getIPVisitor
@@ -222,6 +224,7 @@ var_dump(str_random(16));
 - minutesToText
 - hoursToText
 - str_html_compress
+- str_word_count_utf8
 
 ### Validation
 
