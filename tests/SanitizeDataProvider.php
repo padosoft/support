@@ -38,7 +38,7 @@ trait SanitizeDataProvider
             '.htaccess' => ['.htaccess', '.htaccess'],
             'dummy..txt' => ['dummy..txt', 'dummy..txt'],
             'du..mmy..txt' => ['du..mmy..txt', 'du..mmy..txt'],
-            'du..txt..' => ['du..txt.', 'du..txt'],
+            'du..txt..' => ['du..txt..', 'du..txt'],
             'du..txt.' => ['du..txt.', 'du..txt'],
             '.' => ['.', ''],
             '..' => ['..', ''],
@@ -81,7 +81,7 @@ trait SanitizeDataProvider
             '.htaccess' => ['.htaccess', '.htaccess'],
             'dummy..txt' => ['dummy..txt', 'dummy..txt'],
             'du..mmy..txt' => ['du..mmy..txt', 'du..mmy..txt'],
-            'du..txt..' => ['du..txt.', 'du..txt'],
+            'du..txt..' => ['du..txt..', 'du..txt'],
             'du..txt.' => ['du..txt.', 'du..txt'],
             '.' => ['.', ''],
             '..' => ['..', ''],
@@ -101,6 +101,104 @@ trait SanitizeDataProvider
             '..%255chtaccess' => ['..%255chtaccess', 'htaccess'],
             '..%c0%afhtaccess' => ['..%c0%afhtaccess', 'htaccess'],
             '..%c1%9chtaccess' => ['..%c1%9chtaccess', 'htaccess'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function sanitize_pathnameProvider()
+    {
+        return [
+            'null' => [null, 'TypeError'],
+            '\'\'' => ['', ''],
+            '\' \'' => [' ', '_'],
+            '\'  \'' => ['  ', '__'],
+            'ľščťžýáíéČÁŽÝ.txt' => ['ľščťžýáíéČÁŽÝ.txt', 'lsctzyaieCAZY.txt'],
+            'ľ š č ť ž ý á í é Č Á Ž Ý.txt' => ['ľ š č ť ž ý á í é Č Á Ž Ý.txt', 'l_s_c_t_z_y_a_i_e_C_A_Z_Y.txt'],
+            'èéùòìù.txt' => ['èéùòìù.txt', 'eeuoiu.txt'],
+            'èéùò?ìù.txt' => ['èéùò?ìù.txt', 'eeuoiu.txt'],
+            '.htaccess' => ['.htaccess', '.htaccess'],
+            'dummy..txt' => ['dummy..txt', 'dummy..txt'],
+            'du..mmy..txt' => ['du..mmy..txt', 'du..mmy..txt'],
+            'du..txt..' => ['du..txt..', 'du..txt'],
+            'du..txt.' => ['du..txt.', 'du..txt'],
+            '.' => ['.', ''],
+            '..' => ['..', ''],
+            // avoid direcory traversal https://www.owasp.org/index.php/Path_Traversal
+            '..\.htaccess' => ['..\.htaccess', '.htaccess'],
+            '..\..\.htaccess' => ['..\..\.htaccess', '.htaccess'],
+            '../.htaccess' => ['../.htaccess', '.htaccess'],
+            '../../.htaccess' => ['../../.htaccess', '.htaccess'],
+            './.htaccess' => ['./.htaccess', '.htaccess'],
+            './..htaccess' => ['./..htaccess', 'htaccess'],
+            '..%2fhtaccess' => ['..%2fhtaccess', 'htaccess'],
+            '%2e%2e/htaccess' => ['%2e%2e/htaccess', 'htaccess'],
+            '%2e%2e%2fhtaccess' => ['%2e%2e%2fhtaccess', 'htaccess'],
+            '..%5chtaccess' => ['..%5chtaccess', 'htaccess'],
+            '%2e%2e%5chtaccess' => ['%2e%2e%5chtaccess', 'htaccess'],
+            '%252e%252e%255chtaccess' => ['%252e%252e%255chtaccess', 'htaccess'],
+            '..%255chtaccess' => ['..%255chtaccess', 'htaccess'],
+            '..%c0%afhtaccess' => ['..%c0%afhtaccess', 'htaccess'],
+            '..%c1%9chtaccess' => ['..%c1%9chtaccess', 'htaccess'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function sheProvider()
+    {
+        if(windows_os()){
+            return $this->sheProviderWindows();
+        }else{
+            return $this->sheProviderLinux();
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function sheProviderWindows()
+    {
+        return [
+            'null' => [null, 'TypeError'],
+            '\'\'' => ['', '""'],
+            '\' \'' => [' ', '" "'],
+            '\'  \'' => ['  ', '"  "'],
+            '.htaccess' => ['.htaccess', '".htaccess"'],
+            'dummy..txt' => ['dummy..txt', '"dummy..txt"'],
+            'du..mmy..txt' => ['du..mmy..txt', '"du..mmy..txt"'],
+            'du..txt..' => ['du..txt..', '"du..txt.."'],
+            'du..txt.' => ['du..txt.', '"du..txt."'],
+            '.' => ['.', '"."'],
+            '..' => ['..', '".."'],
+            '..\.htaccess' => ['..\.htaccess', '"..\\\\.htaccess"'],
+            '%2e%2e%5chtaccess' => ['%2e%2e%5chtaccess', '"%2e%2e%5chtaccess"'],
+            'he\'s mine' => ['he\'s mine', '"he\'s mine"'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function sheProviderLinux()
+    {
+        return [
+            'null' => [null, 'TypeError'],
+            '\'\'' => ['', '\'\''],
+            '\' \'' => [' ', '\' \''],
+            '\'  \'' => ['  ', '\'  \''],
+            '.htaccess' => ['.htaccess', '\'.htaccess\''],
+            'dummy..txt' => ['dummy..txt', '\'dummy..txt\''],
+            'du..mmy..txt' => ['du..mmy..txt', '\'du..mmy..txt\''],
+            'du..txt..' => ['du..txt..', '\'du..txt..\''],
+            'du..txt.' => ['du..txt.', '\'du..txt.\''],
+            '.' => ['.', '\'.\''],
+            '..' => ['..', '\'..\''],
+            '..\.htaccess' => ['..\.htaccess', '\'..\\.htaccess\''],
+            '%2e%2e%5chtaccess' => ['%2e%2e%5chtaccess', '\'%2e%2e%5chtaccess\''],
+            'he\'s mine' => ['he\'s mine', '\'he\'\\\'\'s mine\''],
         ];
     }
 }

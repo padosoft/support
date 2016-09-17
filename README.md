@@ -175,10 +175,11 @@ var_dump(str_random(16));
 
 ### Sanitize
 - strip_nl
-- jse
-- e
-- csse
-- attre
+- jse : Escape javascript argument.
+- e : Escape html argument.
+- csse : Escape css argument.
+- attre : Escape html attribute argument.
+- she() : Escape shell argument.
 - normalizeUtf8String
 - sanitize_filename
 - sanitize_pathname

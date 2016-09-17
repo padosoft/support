@@ -122,6 +122,23 @@ if (!function_exists('attre')) {
     }
 }
 
+if (!function_exists('she')) {
+
+    /**
+     * Escape Shell argument.
+     * @param string $input
+     * @return string
+     */
+    function she(string $input) : string
+    {
+        if (windows_os()) {
+            return '"' . addcslashes($input, '\\"') . '"';
+        }
+
+        return escapeshellarg($input);
+    }
+}
+
 /**
  * Normalize the texts before.
  * The following function removes all diacritics (marks like accents) from a given UTF8-encoded

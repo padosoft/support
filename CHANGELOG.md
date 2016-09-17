@@ -2,6 +2,15 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.9.0 - 2016-09-17
+
+### ADDEDD:
+SANITIZE:
+- she() : Escape Shell argument.
+
+### FIX
+- one unit test.
+
 ## 1.8.0 - 2016-09-17
 ### ADDEDD:
 STRING:

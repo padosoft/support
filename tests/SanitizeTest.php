@@ -78,6 +78,7 @@ class SanitizeTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @test
      * @param $val
      * @param $expected
      * @dataProvider sanitize_pathnameProvider
@@ -89,6 +90,22 @@ class SanitizeTest extends \PHPUnit_Framework_TestCase
             sanitize_pathname($val, '_');
         } else {
             $this->assertEquals($expected, sanitize_pathname($val, '_'));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider sheProvider
+     */
+    public function sheTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            she($val);
+        } else {
+            $this->assertEquals($expected, she($val));
         }
     }
 }
