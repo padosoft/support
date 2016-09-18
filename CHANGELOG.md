@@ -2,6 +2,13 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.9.1 - 2016-09-18
+
+### FIX:
+- starts_with
+- starts_with_insensitive
+- array_get
+
 ## 1.9.0 - 2016-09-17
 
 ### ADDEDD:

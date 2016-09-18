@@ -118,7 +118,7 @@ if (!function_exists('array_get')) {
             return $array[$key];
         }
         foreach (explode('.', $key) as $segment) {
-            if (!array_key_exists_safe($segment, $array)) {
+            if (!is_array($segment) || !array_key_exists_safe($segment, $array)) {
                 return value($default);
             }
             $array = $array[$segment];

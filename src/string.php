@@ -185,7 +185,7 @@ if (!function_exists('starts_with')) {
      */
     function starts_with($haystack, $needles)
     {
-        if (isNullOrEmpty($haystack) || isNullOrEmpty($needles)) {
+        if (isNullOrEmpty($haystack) || (!is_array($needles) && isNullOrEmpty($needles))) {
             return false;
         }
 
@@ -208,7 +208,7 @@ if (!function_exists('starts_with_insensitive')) {
      */
     function starts_with_insensitive($haystack, $needles)
     {
-        if (isNullOrEmpty($haystack) || isNullOrEmpty($needles)) {
+        if (isNullOrEmpty($haystack) || (!is_array($needles) && isNullOrEmpty($needles))) {
             return false;
         }
 

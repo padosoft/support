@@ -152,6 +152,8 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function test_starts_with()
     {
+        $this->assertFalse(starts_with('eight hundred', null));
+        $this->assertFalse(starts_with('eight hundred', ''));
         $this->assertTrue(starts_with('eight hundred', 'eigh'));
         $this->assertTrue(starts_with('eight hundred', 'eight '));
         $this->assertTrue(starts_with('eight hundred', 'e'));
@@ -181,6 +183,8 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function test_starts_with_insensitive()
     {
+        $this->assertFalse(starts_with_insensitive('eight hundred', null));
+        $this->assertFalse(starts_with_insensitive('eight hundred', ''));
         $this->assertTrue(starts_with_insensitive('eight hundred', 'eigh'));
         $this->assertTrue(starts_with_insensitive('eight hundred', 'EiGh'));
         $this->assertTrue(starts_with_insensitive('eight hundred', 'e'));
