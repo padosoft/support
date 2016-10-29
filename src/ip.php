@@ -31,16 +31,76 @@ function getIPVisitor(array $server = []) : string
 }
 
 /**
- * anonimizeIp masquerade last 3 digit of IP address
+ * anonimizeIp masquerade last digit of IP address.
+ * With bad ip argument return 0.0.0.0
+ * Support IPv4, Ipv6 and IPv4 Compatibility.
  * @param  string $ip
  * @return string  masked IP
  */
 function anonimizeIp(string $ip) : string
 {
-    if (isNullOrEmpty($ip) || strlen($ip) < 2 || strrpos($ip, ".") === false) {
-        return $ip;
+    if (isIPv4($ip)) {
+        return anonimizeIpv4($ip);
+    } elseif (isIPv4Compatibility($ip)) {
+        return anonimizeIpv4Compatibility($ip);
     }
-    return substr($ip, 0, strrpos($ip, ".") + 1) . '0';
+    return anonimizeIpv6($ip);
+}
+
+/**
+ * masquerade last digit of IP address.
+ * With bad ip argument return 0.0.0.0
+ * @param string $ip
+ * @return string
+ */
+function anonimizeIpv4Compatibility(string $ip):string
+{
+    if (isIPv4Compatibility($ip)) {
+        return substr($ip, 0, strrpos($ip, ".") + 1) . '0';
+    }
+    return '0.0.0.0';
+}
+
+/**
+ * masquerade last digit of IP address with inet php functions.
+ * With bad ip argument return 0.0.0.0
+ * @param string $ip
+ * @return string
+ */
+function anonimizeIpWithInet(string $ip):string
+{
+    if ($ip = @inet_pton($ip)) {
+        return inet_ntop(substr($ip, 0, strlen($ip) / 2) . str_repeat(chr(0), strlen($ip) / 2));
+    }
+    return '0.0.0.0';
+}
+
+/**
+ * masquerade last digit of IP address.
+ * With bad ip argument return 0.0.0.0
+ * @param string $ip
+ * @return string
+ */
+function anonimizeIpv6(string $ip):string
+{
+    if (strrpos($ip, ":") > 0) {
+        return substr($ip, 0, strrpos($ip, ":") + 1) . '0';
+    }
+    return '0.0.0.0';
+}
+
+/**
+ * masquerade last digit of IP address.
+ * With bad ip argument return 0.0.0.0
+ * @param string $ip
+ * @return string
+ */
+function anonimizeIpv4(string $ip):string
+{
+    if (isIPv4($ip)) {
+        return substr($ip, 0, strrpos($ip, ".") + 1) . '0';
+    }
+    return '0.0.0.0';
 }
 
 /**
@@ -244,4 +304,58 @@ function checkIp6($requestIp, $ip) : bool
 function isFromTrustedProxy(array $trustedProxies, $ip)
 {
     return !empty($trustedProxies) && checkIp($ip, $trustedProxies);
+}
+
+/**
+ * Convert an IPv4 address to IPv6
+ *
+ * @param string IP Address in dot notation (192.168.1.100)
+ * @return string IPv6 formatted address or false if invalid input
+ * @see http://stackoverflow.com/questions/444966/working-with-ipv6-addresses-in-php
+ */
+function iPv4To6($ip)
+{
+    static $Mask = '::ffff:'; // This tells IPv6 it has an IPv4 address
+    $IPv6 = (strpos($ip, '::') === 0);
+    $IPv4 = (strpos($ip, '.') > 0);
+
+    if (!$IPv4 && !$IPv6) {
+        return false;
+    }
+    if ($IPv6 && $IPv4) {
+        // Strip IPv4 Compatibility notation
+        $ip = substr($ip, strrpos($ip, ':') + 1);
+    } elseif (!$IPv4) {
+        // Seems to be IPv6 already?
+        return $ip;
+    }
+    $ip = array_pad(explode('.', $ip), 4, 0);
+    if (count($ip) > 4) {
+        return false;
+    }
+    for ($i = 0; $i < 4; $i++) {
+        if ($ip[$i] > 255) {
+            return false;
+        }
+    }
+
+    $Part7 = base_convert(($ip[0] * 256) + $ip[1], 10, 16);
+    $Part8 = base_convert(($ip[2] * 256) + $ip[3], 10, 16);
+    return $Mask . $Part7 . ':' . $Part8;
+}
+
+/**
+ * Replace '::' with appropriate number of ':0'
+ * @param $ip
+ * @return mixed|string
+ * @see http://stackoverflow.com/questions/12095835/quick-way-of-expanding-ipv6-addresses-with-php
+ */
+function expandIPv6Notation($ip)
+{
+    if (!iPv4To6($ip)) {
+        return $ip;
+    }
+    $hex = unpack("H*hex", inet_pton($ip));
+    $ip = substr(preg_replace("/([A-f0-9]{4})/", "$1:", $hex['hex']), 0, -1);
+    return $ip;
 }

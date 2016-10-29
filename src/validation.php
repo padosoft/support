@@ -268,7 +268,7 @@ function isDateTimeIta($value) : bool
 function isTimeIso($value) : bool
 {
     $strRegExp = '/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/';
-    if(!(preg_match($strRegExp, $value) === 1)){
+    if (!(preg_match($strRegExp, $value) === 1)) {
         return false;
     }
     list($HH, $ii, $ss) = explode(':', $value);
@@ -488,6 +488,20 @@ function isIPv6($IP2Check) : bool
 function isIP($IP2Check) : bool
 {
     return !(filter_var($IP2Check, FILTER_VALIDATE_IP) === false);
+}
+
+/**
+ * Check if a string is a valid IP v4 compatibility (ffff:ffff:ffff:ffff.192.168.0.15).
+ * @param  string $IP2Check IP to check
+ * @return bool
+ */
+function isIPv4Compatibility($IP2Check) : bool
+{
+    return (strrpos($IP2Check, ":") > 0
+        && strrpos($IP2Check, ".") > 0
+        && isIPv4(substr($IP2Check, strpos($IP2Check, ".") + 1))
+        && isIPv6(substr($IP2Check, 0, strpos($IP2Check, ".")).':0:0:0:0')
+    );
 }
 
 /**

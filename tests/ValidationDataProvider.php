@@ -1311,4 +1311,19 @@ trait ValidationDataProvider
             'user@veryLongAndNotExistingDomainName132435.com, true' => ['user@veryLongAndNotExistingDomainName132435.com', true, false],
         ];
     }
+
+    /**
+     * @return array
+     */
+    public function isIPv4CompatibilityProvider()
+    {
+        return [
+            '\'\'' => ['', false],
+            '\' \'' => [' ', false],
+            'null' => [null, false],
+            '192.168.0.8' => ['192.168.0.8', false],
+            'ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff' => ['ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff', false],
+            'ffff:ffff:ffff:ffff.192.168.0.15' => ['ffff:ffff:ffff:ffff.192.168.0.15', true],
+        ];
+    }
 }

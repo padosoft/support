@@ -156,6 +156,10 @@ var_dump(str_random(16));
 ### IP
 - getIPVisitor
 - anonimizeIp
+- anonimizeIpv4() : masquerade last digit of IPv4 address.
+- anonimizeIpv4Compatibility() : masquerade last digit of IPv4 compatibility address.
+- anonimizeIpv6() : masquerade last digit of IPv6 address.
+- anonimizeIpWithInet() : masquerade last digit of IP address with inet php function.
 - getHost
 - getClientIps
 - getClientIp
@@ -163,6 +167,7 @@ var_dump(str_random(16));
 - checkIp4
 - checkIp6
 - isFromTrustedProxy
+- expandIPv6Notation(): * Replace '::' with appropriate number of ':0'
 
 ### Reflection
 - short_class_name
@@ -255,6 +260,7 @@ var_dump(str_random(16));
 - isMail
 - isIPv4
 - isIPv6
+- isIPv4Compatibility
 - isIP
 - isUrl
 - isHostname

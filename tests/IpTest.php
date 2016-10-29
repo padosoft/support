@@ -45,4 +45,36 @@ class IpTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($expected, getClientIp($server, $trustedProxies));
         }
     }
+
+    /**
+     * @test
+     * @param $ip
+     * @param $expected
+     * @dataProvider anonimizeIpProvider
+     */
+    public function anonimizeIp($ip, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            anonimizeIp($ip);
+        } else {
+            $this->assertEquals($expected, anonimizeIp($ip));
+        }
+    }
+
+    /**
+     * @test
+     * @param $ip
+     * @param $expected
+     * @dataProvider expandIPv6NotationProvider
+     */
+    public function expandIPv6NotationTest($ip, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            expandIPv6Notation($ip);
+        } else {
+            $this->assertEquals($expected, expandIPv6Notation($ip));
+        }
+    }
 }

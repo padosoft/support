@@ -2,6 +2,23 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.10.0 - 2016-10-29
+
+### ADDED:
+##### VALIDATION:
+- isIPv4Compatibility() : Check if a string is a valid IP v4 compatibility (ffff:ffff:ffff:ffff.192.168.0.15).
+
+##### IP:
+- anonimizeIpv4() : masquerade last digit of IPv4 address.
+- anonimizeIpv4Compatibility() : masquerade last digit of IPv4 compatibility address.
+- anonimizeIpv6() : masquerade last digit of IPv6 address.
+- anonimizeIpWithInet() : masquerade last digit of IP address with inet php function.
+- expandIPv6Notation(): * Replace '::' with appropriate number of ':0'
+
+### IMPROVE
+##### IP:
+- anonimizeIp(): now support ipv6 and ipv4 compatibility.
+
 ## 1.9.1 - 2016-09-18
 
 ### FIX:
@@ -11,7 +28,7 @@ All Notable changes to `support` will be documented in this file
 
 ## 1.9.0 - 2016-09-17
 
-### ADDEDD:
+### ADDED:
 SANITIZE:
 - she() : Escape Shell argument.
 

@@ -630,4 +630,20 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
         $this->expectException('TypeError');
         $this->assertFalse(dateItaToIso(null));
     }
+
+    /**
+     * @test
+     * @param $ip
+     * @param $expected
+     * @dataProvider isIPv4CompatibilityProvider
+     */
+    public function isIPv4CompatibilityTest($ip, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isIPv4Compatibility($ip);
+        } else {
+            $this->assertEquals($expected, isIPv4Compatibility($ip));
+        }
+    }
 }
