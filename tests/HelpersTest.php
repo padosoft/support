@@ -457,4 +457,23 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertInternalType('string', $debug);
         $this->assertContains('Test me', $debug);
     }
+
+    /**
+     * Custom Debug.
+     */
+    public function test_getConsoleColorTagForStatusCode()
+    {
+        $this->assertEquals('info', getConsoleColorTagForStatusCode(200));
+        $this->assertEquals('info', getConsoleColorTagForStatusCode("200"));
+        $this->assertEquals('info', getConsoleColorTagForStatusCode(202));
+        $this->assertEquals('comment', getConsoleColorTagForStatusCode(300));
+        $this->assertEquals('comment', getConsoleColorTagForStatusCode("300"));
+        $this->assertEquals('comment', getConsoleColorTagForStatusCode(302));
+        $this->assertEquals('error', getConsoleColorTagForStatusCode(400));
+        $this->assertEquals('error', getConsoleColorTagForStatusCode("400"));
+        $this->assertEquals('error', getConsoleColorTagForStatusCode(404));
+        $this->assertEquals('error', getConsoleColorTagForStatusCode(500));
+        $this->assertEquals('error', getConsoleColorTagForStatusCode("500"));
+        $this->assertEquals('error', getConsoleColorTagForStatusCode(501));
+    }
 }

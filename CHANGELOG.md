@@ -2,6 +2,24 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.11.0 - 2016-11-05
+
+### ADDED:
+##### STRING:
+- slugify() : Generate a URL friendly "slug" from a given string.
+
+##### ARRAY:
+- array_remove_columns() : Remove given column from the subarrays of a two dimensional array.
+- array_remove_first_columns() : Remove first column from the subarrays of a two dimensional array.
+- array_remove_last_columns()  : Remove last column from the subarrays of a two dimensional array.
+
+##### HELPERS:
+- getConsoleColorTagForStatusCode() : Get the color tag for the given status code to be use in symfony/laravel console.
+
+### CHANGED:
+##### SANITIZE:
+- normalizeUtf8String() : now has more power and run with or without PHP Normalizer class.
+
 ## 1.10.0 - 2016-10-29
 
 ### ADDED:

@@ -71,6 +71,9 @@ var_dump(str_random(16));
 - isNotNullOrEmptyArray
 - isNullOrEmptyArrayKey
 - isNotNullOrEmptyArrayKey
+- array_remove_columns() : Remove given column from the subarrays of a two dimensional array.
+- array_remove_first_columns() : Remove first column from the subarrays of a two dimensional array.
+- array_remove_last_columns()  : Remove last column from the subarrays of a two dimensional array.
 
 ### DateTime
 - carbonFromIsoDateTime
@@ -152,6 +155,7 @@ var_dump(str_random(16));
 - randomChance
 - getExceptionTraceAsString
 - windows_os
+- getConsoleColorTagForStatusCode() : Get the color tag for the given status code to be use in symfony/laravel console.
 
 ### IP
 - getIPVisitor
@@ -231,6 +235,7 @@ var_dump(str_random(16));
 - hoursToText
 - str_html_compress
 - str_word_count_utf8
+- slugify() : Generate a URL friendly "slug" from a given string.
 
 ### Validation
 

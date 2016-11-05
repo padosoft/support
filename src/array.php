@@ -405,3 +405,75 @@ if (!function_exists('isNotNullOrEmptyArrayKey')) {
         return !isNullOrEmptyArrayKey($array, $key, $withTrim);
     }
 }
+
+if (!function_exists('array_remove_columns')) {
+
+    /**
+     * Remove given column from the subarrays of a two dimensional array.
+     * @param $array
+     * @param int $columnToRemove
+     * @return array
+     */
+    function array_remove_columns(array $array, int $columnToRemove):array
+    {
+        if (count($array) < 1) {
+            return [];
+        }
+
+        $numCol = count($array[0]);
+
+        if ($columnToRemove == 1 && isInRange($numCol, 0, 1)) {
+            return [];
+        }
+
+        foreach ($array as &$element) {
+            if ($columnToRemove == 1) {
+                $element = array_slice($element, 1, $numCol - 1);
+            } elseif ($columnToRemove == $numCol) {
+                $element = array_slice($element, 0, $numCol - 1);
+            } else {
+                $element1 = array_slice($element, 0, $columnToRemove - 1);
+                $element2 = array_slice($element, $columnToRemove, $numCol - $columnToRemove);
+                $element = array_merge($element1, $element2);
+            }
+        }
+
+        if (!is_array($element)) {
+            return [];
+        }
+
+        return $array;
+    }
+}
+
+if (!function_exists('array_remove_first_columns')) {
+
+    /**
+     * Remove first column from the subarrays of a two dimensional array.
+     * @param $array
+     * @return array
+     */
+    function array_remove_first_columns(array $array):array
+    {
+        return array_remove_columns($array, 1);
+    }
+}
+
+if (!function_exists('array_remove_last_columns')) {
+
+    /**
+     * Remove last column from the subarrays of a two dimensional array.
+     * @param $array
+     * @return array
+     */
+    function array_remove_last_columns(array $array):array
+    {
+        if (count($array) < 1) {
+            return [];
+        }
+
+        $numCol = count($array[0]);
+
+        return array_remove_columns($array, $numCol);
+    }
+}

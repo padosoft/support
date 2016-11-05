@@ -1256,3 +1256,25 @@ if (!function_exists('windows_os')) {
         return strtolower(substr(PHP_OS, 0, 3)) === 'win';
     }
 }
+
+if (!function_exists('getConsoleColorTagForStatusCode')) {
+    /**
+     * Get the color tag for the given status code to be use in symfony/laravel console.
+     *
+     * @param string $code
+     *
+     * @return string
+     *
+     * @see https://github.com/spatie/http-status-check/blob/master/src/CrawlLogger.php#L96
+     */
+    function getConsoleColorTagForStatusCode($code)
+    {
+        if (starts_with($code, '2')) {
+            return 'info';
+        }
+        if (starts_with($code, '3')) {
+            return 'comment';
+        }
+        return 'error';
+    }
+}

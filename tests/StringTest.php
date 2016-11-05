@@ -48,6 +48,23 @@ class StringTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @test
+     * @param $title
+     * @param $separator
+     * @param $expected
+     * @dataProvider slugfyProvider
+     */
+    public function slugfyTest($title, $separator, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            slugify($title, $separator);
+        } else {
+            $this->assertEquals($expected, slugify($title, $separator));
+        }
+    }
+
+    /**
+     * @test
      * @param $search
      * @param $replace
      * @param $subject

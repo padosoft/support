@@ -145,16 +145,18 @@ if (!function_exists('she')) {
  * texts and returns ASCii-text.
  * @param string $s
  * @return string
+ * @see https://github.com/illuminate/support/blob/master/Str.php#L38
  * @see http://php.net/manual/en/normalizer.normalize.php#92592
  */
 function normalizeUtf8String(string $s) : string
 {
     $original_string = $s;
 
-    // Normalizer-class missing!
-    if (!class_exists("Normalizer", false)) {
-        return $original_string;
+    //Transliterate UTF-8 value to ASCII with chars array map.
+    foreach (charsArray() as $key => $val) {
+        $s = str_replace($val, $key, $s);
     }
+    $s = preg_replace('/[^\x20-\x7E]/u', '', $s);
 
     // maps German (umlauts) and other European characters onto two characters before just removing diacritics
     $s = preg_replace('/\x{00c4}/u', "AE", $s);    // umlaut Ä => AE
@@ -166,9 +168,12 @@ function normalizeUtf8String(string $s) : string
     $s = preg_replace('/\x{00f1}/u', "ny", $s);    // ñ => ny
     $s = preg_replace('/\x{00ff}/u', "yu", $s);    // ÿ => yu
 
-    // maps special characters (characters with diacritics) on their base-character followed by the diacritical mark
-    // exmaple:  Ú => U´,  á => a`
-    $s = Normalizer::normalize($s, Normalizer::FORM_D);
+    // if exists use Normalizer-class
+    if (class_exists("Normalizer", false)) {
+        // maps special characters (characters with diacritics) on their base-character followed by the diacritical mark
+        // exmaple:  Ú => U´,  á => a`
+        $s = Normalizer::normalize($s, Normalizer::FORM_D);
+    }
 
     $s = preg_replace('/\pM/u', "", $s);    // removes diacritics
 
