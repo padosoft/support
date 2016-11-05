@@ -776,14 +776,14 @@ if (!function_exists('slugify')) {
 
 if (!function_exists('charsArray')) {
     /**
-     * Returns the replacements for the toAscii() method.
+     * Returns the replacements for the non-Ascii chars.
      *
      * @return array An array of replacements.
      * @see https://github.com/danielstjules/Stringy/blob/master/src/Stringy.php
      */
     function charsArray()
     {
-        return $charsArray = array(
+        return array(
             '0' => array('°', '₀', '۰'),
             '1' => array('¹', '₁', '۱'),
             '2' => array('²', '₂', '۲'),
@@ -1397,6 +1397,64 @@ if (!function_exists('charsArray')) {
                 "\xE2\x81\x9F",
                 "\xE3\x80\x80"
             ),
+        );
+    }
+}
+if (!function_exists('charsArrayRegEx')) {
+    /**
+     * Returns regex to replacements for diacritics, German chars, and non ASCII chars.
+     *
+     * @return array An array of regex.
+     */
+    function charsArrayRegEx()
+    {
+        return array(
+            // maps German (umlauts) and other European characters onto two characters
+            // before just removing diacritics
+            "AE" => '/\x{00c4}/u', // umlaut Ä => AE
+            "OE" => '/\x{00d6}/u', // umlaut Ö => OE
+            "UE" => '/\x{00dc}/u', // umlaut Ü => UE
+            "ae" => '/\x{00e4}/u', // umlaut ä => ae
+            "oe" => '/\x{00f6}/u', // umlaut ö => oe
+            "ue" => '/\x{00fc}/u', // umlaut ü => ue
+            "ny" => '/\x{00f1}/u', // ñ => ny
+            "yu" => '/\x{00ff}/u', // ÿ => yu
+
+            "" => '/\pM/u', // removes diacritics
+
+            "ss" => '/\x{00df}/u', // maps German ß onto ss
+            "AE" => '/\x{00c6}/u', // Æ => AE
+            "ae" => '/\x{00e6}/u', // æ => ae
+            "IJ" => '/\x{0132}/u', // ? => IJ
+            "ij" => '/\x{0133}/u', // ? => ij
+            "OE" => '/\x{0152}/u', // Œ => OE
+            "oe" => '/\x{0153}/u', // œ => oe
+
+            "D" => '/\x{00d0}/u', // Ð => D
+            "D" => '/\x{0110}/u', // Ð => D
+            "d" => '/\x{00f0}/u', // ð => d
+            "d" => '/\x{0111}/u', // d => d
+            "H" => '/\x{0126}/u', // H => H
+            "h" => '/\x{0127}/u', // h => h
+            "i" => '/\x{0131}/u', // i => i
+            "k" => '/\x{0138}/u', // ? => k
+            "L" => '/\x{013f}/u', // ? => L
+            "L" => '/\x{0141}/u', // L => L
+            "l" => '/\x{0140}/u', // ? => l
+            "l" => '/\x{0142}/u', // l => l
+            "N" => '/\x{014a}/u', // ? => N
+            "n" => '/\x{0149}/u', // ? => n
+            "n" => '/\x{014b}/u', // ? => n
+            "O" => '/\x{00d8}/u', // Ø => O
+            "o" => '/\x{00f8}/u', // ø => o
+            "s" => '/\x{017f}/u', // ? => s
+            "T" => '/\x{00de}/u', // Þ => T
+            "T" => '/\x{0166}/u', // T => T
+            "t" => '/\x{00fe}/u', // þ => t
+            "t" => '/\x{0167}/u', // t => t
+            
+            '' => '/[^\x20-\x7E]/u', // remove all non-ASCii characters
+            '' => '/[^\0-\x80]/u', // remove all non-ASCii characters
         );
     }
 }

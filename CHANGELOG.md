@@ -2,6 +2,11 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.11.1 - 2016-11-05
+
+### CHANGED:
+- small changes and refactor (scrutinizer advice). 
+
 ## 1.11.0 - 2016-11-05
 
 ### ADDED:

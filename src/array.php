@@ -438,7 +438,7 @@ if (!function_exists('array_remove_columns')) {
             }
         }
 
-        if (!is_array($element)) {
+        if (!is_array($array)) {
             return [];
         }
 
