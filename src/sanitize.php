@@ -140,7 +140,7 @@ if (!function_exists('she')) {
 }
 
 /**
- * Normalize the texts before.
+ * Normalize the string.
  * The following function removes all diacritics (marks like accents) from a given UTF8-encoded
  * texts and returns ASCii-text.
  * @param string $s
@@ -162,17 +162,35 @@ function normalizeUtf8String(string $s) : string
         $s = preg_replace($val, $key, $s);
     }
 
-    // if exists use Normalizer-class
-    if (class_exists("Normalizer", false)) {
-        // maps special characters (characters with diacritics) on their base-character
-        // followed by the diacritical mark
-        // exmaple:  Ú => U´,  á => a`
-        $s = Normalizer::normalize($s, Normalizer::FORM_D);
-    }
+    // Normalize utf8 in form D
+    // if exists use Normalizer-class to maps remaining special characters
+    // (characters with diacritics) on their base-character followed by the diacritical mark
+    // exmaple:  Ú => U´,  á => a`
+    $s = normalizerUtf8Safe($s, Normalizer::FORM_D);
 
     // possible errors in UTF8-regular-expressions
     if (isNullOrEmpty($s)) {
         return $original_string;
+    }
+
+    return $s;
+}
+
+/**
+ * Normalize uft8 to various form with php normalizer function if exists,
+ * otherwise return original string.
+ * maps special characters (characters with diacritics) on their base-character
+ * followed by the diacritical mark
+ * exmaple:  Ú => U´,  á => a`
+ * @param string $s
+ * @param $normalizationForm UTF8 Normalization Form if empty Default Normalizer::FORM_D
+ * @return string
+ */
+function normalizerUtf8Safe(string $s, $normalizationForm):string
+{
+    if (class_exists("Normalizer", false)) {
+        $s = Normalizer::normalize($s, isNullOrEmpty($normalizationForm) ? Normalizer::FORM_D : $normalizationForm);
+        return $s;
     }
     return $s;
 }

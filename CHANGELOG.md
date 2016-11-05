@@ -2,7 +2,11 @@
 
 All Notable changes to `support` will be documented in this file
 
-## 1.11.1 - 2016-11-05
+## 1.12.0 - 2016-11-05
+
+### ADDED:
+##### SANITIZE:
+- normalizerUtf8Safe() : Normalize uft8 to various form with php normalizer function if exists, otherwise return original string.
 
 ### CHANGED:
 - small changes and refactor (scrutinizer advice). 

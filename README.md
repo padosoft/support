@@ -189,7 +189,8 @@ var_dump(str_random(16));
 - csse : Escape css argument.
 - attre : Escape html attribute argument.
 - she() : Escape shell argument.
-- normalizeUtf8String
+- normalizeUtf8String : Normalize the string. Removes all diacritics (marks like accents) from a given UTF8-encoded texts and returns ASCii-text.
+- normalizerUtf8Safe() : Normalize uft8 to various form with php normalizer function if exists, otherwise return original string.
 - sanitize_filename
 - sanitize_pathname
 - sanitize_arr_string_xss
