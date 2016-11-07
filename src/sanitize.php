@@ -153,14 +153,16 @@ function normalizeUtf8String(string $s) : string
     $original_string = $s;
 
     //Transliterate UTF-8 value to ASCII with chars array map.
-    foreach (charsArray() as $key => $val) {
+    $charsArray = charsArray();
+    array_walk($charsArray, function($val,$key) use (&$s){
         $s = str_replace($val, $key, $s);
-    }
+    });
 
     //replace non ASCII chars with array regex map.
-    foreach (charsArrayRegEx() as $key => $val) {
+    $charsRegExArray = charsArrayRegEx();
+    array_walk($charsRegExArray, function($val,$key) use (&$s){
         $s = preg_replace($val, $key, $s);
-    }
+    });
 
     // Normalize utf8 in form D
     // if exists use Normalizer-class to maps remaining special characters

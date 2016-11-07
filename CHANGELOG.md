@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.12.1 - 2016-11-07
+
+### CHANGED:
+##### SANITIZE:
+- normalizerUtf8Safe() : small refactor, using array_walk insted of loop.
+
 ## 1.12.0 - 2016-11-05
 
 ### ADDED:
