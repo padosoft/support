@@ -338,8 +338,6 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($ipCheck);
 
         $testCurlPOST = curl('http://jsonplaceholder.typicode.com/posts', $method = 'POST', $data = [
-            'title' => 'foo',
-            'body' => 'bar',
             'userId' => 1,
         ]);
         $POST_obj = json_decode($testCurlPOST);
