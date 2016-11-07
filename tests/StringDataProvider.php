@@ -80,9 +80,12 @@ trait StringDataProvider
             '\'--   An odd__   string-_\', \'-\'' => ['--   An odd__   string-_', '-', 'an-odd-string'],
             '\'A string / strong\', \'-\'' => ['A string / strong', '-', 'a-string-strong'],
             '\'A string \ strong\', \'-\'' => ['A string \ strong', '-', 'a-string-strong'],
+            '\'A string\strong\', \'-\'' => ['A string\strong', '-', 'a-stringstrong'],
+            '\'A string/strong\', \'-\'' => ['A string/strong', '-', 'a-stringstrong'],
             '\'foo           Bar\' (spaces U+2000 to U+200A), \'-\'' => ['foo           Bar', '-', 'foo-bar'],
             '\'foo Bar\' (no-break space (U+00A0)), \'-\'' => ['foo Bar', '-', 'foo-bar'],
             '\'foo𐍉Bar\' (some uncommon, unsupported character (U+10349)), \'-\'' => ['foo𐍉Bar', '-', 'foobar'],
+            '\'modalità di pagamento\', \'-\'' => ['modalità di pagamento', '-', 'modalita-di-pagamento'],
         ];
     }
 }

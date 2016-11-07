@@ -143,6 +143,8 @@ if (!function_exists('she')) {
  * Normalize the string.
  * The following function removes all diacritics (marks like accents) from a given UTF8-encoded
  * texts and returns ASCii-text.
+ * WARNING: if you have a non UTF8 encoded string try this:
+ * @example if (ini_get('default_charset')!='UTF-8'){ $s=mb_convert_encoding($s,'UTF-8',ini_get('default_charset'));}
  * @param string $s
  * @return string
  * @see https://github.com/illuminate/support/blob/master/Str.php#L38
