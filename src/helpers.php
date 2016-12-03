@@ -343,11 +343,8 @@ if (!function_exists('gravatarUrl')) {
      */
     function gravatarUrl($email, $size = 80, $default = 'mm', $rating = 'g')
     {
-        $url = 'http://www.gravatar.com';
-        if (isHttps()) {
-            $url = 'https://secure.gravatar.com';
-        }
-        $url .= '/avatar.php?gravatar_id=' . md5(strtolower(trim($email))) . '&default=' . $default . '&size=' . $size . '&rating=' . $rating;
+        $url = 'https://www.gravatar.com';
+        $url .= '/avatar/' . md5(strtolower(trim($email))) . '?default=' . $default . '&size=' . $size . '&rating=' . $rating;
         return $url;
     }
 }

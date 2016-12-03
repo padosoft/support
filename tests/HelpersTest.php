@@ -103,7 +103,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     public function test_getGravatarUrl()
     {
         $Gravatar = gravatarUrl('gejadze@gmail.com');
-        $this->assertEquals("http://www.gravatar.com/avatar.php?gravatar_id=9d9d478c3b65d4046a84cf84b4c8bf46&default=mm&size=80&rating=g",
+        $this->assertEquals("https://www.gravatar.com/avatar/9d9d478c3b65d4046a84cf84b4c8bf46?default=mm&size=80&rating=g",
             $Gravatar);
     }
 
@@ -114,7 +114,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     {
         $Gravatar = gravatar('gejadze@gmail.com');
         $this->assertEquals(
-            '<img src="http://www.gravatar.com/avatar.php?gravatar_id=9d9d478c3b65d4046a84cf84b4c8bf46&default=mm&size=80&rating=g" width="80px" height="80px"  />',
+            '<img src="https://www.gravatar.com/avatar/9d9d478c3b65d4046a84cf84b4c8bf46?default=mm&size=80&rating=g" width="80px" height="80px"  />',
             $Gravatar
         );
     }
@@ -131,7 +131,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
             ]
         );
         $this->assertEquals(
-            '<img src="http://www.gravatar.com/avatar.php?gravatar_id=9d9d478c3b65d4046a84cf84b4c8bf46&default=monsterid&size=200&rating=x" width="200px" height="200px" class="Gravatar" />',
+            '<img src="https://www.gravatar.com/avatar/9d9d478c3b65d4046a84cf84b4c8bf46?default=monsterid&size=200&rating=x" width="200px" height="200px" class="Gravatar" />',
             $Gravatar
         );
     }
