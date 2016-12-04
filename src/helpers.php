@@ -1317,26 +1317,10 @@ if (!function_exists('get_os_architecture')) {
         switch(PHP_INT_SIZE) {
             case 4:
                 return 32;
-                break;
             case 8:
                 return 64;
-                break;
             default:
                 return 0;
         }
-    }
-}
-
-if (!function_exists('is_64bit')) {
-    /**
-     * Check if the OS architecture is 64bit.
-     *
-     * @return bool
-     *
-     * @see http://stackoverflow.com/questions/6303241/find-windows-32-or-64-bit-using-php
-     */
-    function is_64bit() : bool
-    {
-        return PHP_INT_SIZE==8;
     }
 }

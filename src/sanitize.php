@@ -393,7 +393,7 @@ function sanitize_phone($value, bool $preserveSpaces): string
         $phone = '+' . $phone;
     }
 
-    //check for illegal ()
+    //check for illegal parenthesis
     if ((strpos($phone, '(') !== false || strpos($phone,
                 ')') !== false) && !preg_match('/.*\([[:space:]0-9]{1,}\)[[:space:]0-9]{1,}/', $phone)
     ) {
