@@ -21,7 +21,7 @@ if (!function_exists('jse')) {
      * @return string
      * @source https://github.com/rtconner/laravel-plusplus/blob/laravel-5/src/plus-functions.php
      */
-    function jse(string $str) : string
+    function jse(string $str): string
     {
         if (isNullOrEmpty($str)) {
             return '';
@@ -129,7 +129,7 @@ if (!function_exists('she')) {
      * @param string $input
      * @return string
      */
-    function she(string $input) : string
+    function she(string $input): string
     {
         if (windows_os()) {
             return '"' . addcslashes($input, '\\"') . '"';
@@ -150,19 +150,19 @@ if (!function_exists('she')) {
  * @see https://github.com/illuminate/support/blob/master/Str.php#L38
  * @see http://php.net/manual/en/normalizer.normalize.php#92592
  */
-function normalizeUtf8String(string $s) : string
+function normalizeUtf8String(string $s): string
 {
     $original_string = $s;
 
     //Transliterate UTF-8 value to ASCII with chars array map.
     $charsArray = charsArray();
-    array_walk($charsArray, function($val,$key) use (&$s){
+    array_walk($charsArray, function ($val, $key) use (&$s) {
         $s = str_replace($val, $key, $s);
     });
 
     //replace non ASCII chars with array regex map.
     $charsRegExArray = charsArrayRegEx();
-    array_walk($charsRegExArray, function($val,$key) use (&$s){
+    array_walk($charsRegExArray, function ($val, $key) use (&$s) {
         $s = preg_replace($val, $key, $s);
     });
 
@@ -190,7 +190,7 @@ function normalizeUtf8String(string $s) : string
  * @param $normalizationForm UTF8 Normalization Form if empty Default Normalizer::FORM_D
  * @return string
  */
-function normalizerUtf8Safe(string $s, $normalizationForm):string
+function normalizerUtf8Safe(string $s, $normalizationForm): string
 {
     if (class_exists("Normalizer", false)) {
         $s = Normalizer::normalize($s, isNullOrEmpty($normalizationForm) ? Normalizer::FORM_D : $normalizationForm);
@@ -212,8 +212,7 @@ function sanitize_filename(
     string $fileName,
     bool $sanitizeForPath = false,
     string $charToReplaceWhiteSpace = ' '
-) : string
-{
+): string {
     //check whitespace
     $fileName = str_replace(' ', $charToReplaceWhiteSpace, $fileName);
 
@@ -279,7 +278,7 @@ function sanitize_filename(
  * @return string
  */
 
-function sanitize_pathname(string $pathName, string $charToReplaceWhiteSpace) : string
+function sanitize_pathname(string $pathName, string $charToReplaceWhiteSpace): string
 {
     return sanitize_filename($pathName, true, $charToReplaceWhiteSpace);
 }
@@ -291,7 +290,7 @@ function sanitize_pathname(string $pathName, string $charToReplaceWhiteSpace) : 
  *
  * @return array
  */
-function sanitize_arr_string_xss(array $data) : array
+function sanitize_arr_string_xss(array $data): array
 {
     foreach ($data as $k => $v) {
         $data[$k] = filter_var($v, FILTER_SANITIZE_STRING);
@@ -308,7 +307,7 @@ function sanitize_arr_string_xss(array $data) : array
  *
  * @see https://github.com/Wixel/GUMP/blob/master/gump.class.php
  */
-function sanitize_string_xss(string $data) : string
+function sanitize_string_xss(string $data): string
 {
     return filter_var($data, FILTER_SANITIZE_STRING);
 }
@@ -367,4 +366,47 @@ function sanitize_numbers($value)
 function sanitize_floats($value)
 {
     return filter_var($value, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
+}
+
+/**
+ * Sanitize the string by removing illegal characters from phone numbers
+ * i.e.: optionally starts with +, optionally have prefix parenthesis and only number..
+ * If preserveSpaces set to true, leave spaces and replace illegal chars with one space,
+ * otherwise remove every spaces.
+ *
+ * @param string $value
+ * @param bool $preserveSpaces If set to true, leave spaces and replace illegal chars with one space,
+ * otherwise remove every spaces.
+ *
+ * @return string
+ *
+ */
+function sanitize_phone($value, bool $preserveSpaces): string
+{
+    $startsWithPlus = starts_with($value, '+');
+
+    $phone = mb_ereg_replace('([^\d\(\)' . ($preserveSpaces ? '[:space:]' : '') . '])', $preserveSpaces ? ' ' : '', $value);
+    $phone = trim($phone);
+
+    //revert initial + if needed
+    if ($startsWithPlus) {
+        $phone = '+' . $phone;
+    }
+
+    //check for illegal ()
+    if ((strpos($phone, '(') !== false || strpos($phone,
+                ')') !== false) && !preg_match('/.*\([[:space:]0-9]{1,}\)[[:space:]0-9]{1,}/', $phone)
+    ) {
+        $phone = str_replace(['(', ')'], $preserveSpaces ? ' ' : '', $phone);
+    }
+
+    //remove multiple spaces
+    $phone = str_replace_multiple_space($phone);
+
+    //remove spaces into and around ()
+    $phone = str_replace(['( ', ' )', ' (', ') '], ['(', ')', '(', ')'], $phone);
+
+    $phone = trim($phone);
+
+    return $phone;
 }

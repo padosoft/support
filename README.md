@@ -156,6 +156,9 @@ var_dump(str_random(16));
 - getExceptionTraceAsString
 - windows_os
 - getConsoleColorTagForStatusCode() : Get the color tag for the given status code to be use in symfony/laravel console.
+- get_os_architecture() : Get the OS architecture 32 or 64 bit.
+- is_32bit() : Check if the OS architecture is 32bit.
+- is_64bit() : Check if the OS architecture is 64bit.
 
 ### IP
 - getIPVisitor
@@ -199,6 +202,7 @@ var_dump(str_random(16));
 - sanitize_email
 - sanitize_numbers
 - sanitize_floats
+- sanitize_phone() : Sanitize the string by removing illegal characters from phone numbers.
 
 ### String
 
@@ -243,17 +247,31 @@ var_dump(str_random(16));
 - isStringNumberStartsWithMoreThanOneZero
 - isIntegerPositive
 - isIntegerPositiveOrZero
+- isIntegerNegative() : Check if the value (int, float or string) is a integer and less than zero.
+- isIntegerNegativeOrZero() : Check if the value (int, float or string) is a integer and less than zero or equals to zero.
+- isIntegerZero() : Check if the value (int, float or string) is a integer and equals to zero.
 - isInteger
 - isIntegerFloatingPoint
 - isFloatingPoint
 - isDouble
 - isPercent
+- isIntBool() : Check if the value is a integer/string 0 or 1.
 - isDateIta
 - isDateIso
 - isDateTimeIso
 - isDateTimeIta
 - isTimeIso
 - isTimeIta
+- isDateZeroIso() : Check if string is 0000-00-00
+- isTimeZeroIso() : Check if string is 00:00:00
+- isDateTimeZeroIso() : Check if string is '0000-00-00 00:00:00' 
+- isDateOrDateZeroIso() : Check if string is YYYY-mm-dd and valid date or 0000-00-00 
+- isDateTimeOrDateTimeZeroIso() : Check if string is 'YYYY-mm-dd HH:ii:ss' and valid date or '0000-00-00 00:00:00' 
+- isDateZeroIta() : Check if string is 00/00/0000
+- isTimeZeroIta() : Check if string is 00:00:00
+- isDateTimeZeroIta() : Check if string is '00/00/0000 00:00:00' 
+- isDateOrDateZeroIta() : Check if string is dd/mm/YYYY and valid date or 00/00/0000 
+- isDateTimeOrDateTimeZeroIta() : Check if string is 'dd/mm/YYYY HH:ii:ss' and valid date or '00/00/0000 00:00:00' 
 - hasMinAge
 - hasMaxAge
 - hasAgeInRange
@@ -278,6 +296,9 @@ var_dump(str_random(16));
 - isAlphaNumeric
 - isAlphaNumericDash
 - isAlphaNumericWhiteSpaces
+- isNumeric() : Determine if the provided value contains only numeric characters with or without(default) sign.
+- isNumericWithSign() : Determine if the provided value contains only numeric characters with sign.
+- isNumericWithoutSign() : Determine if the provided value contains only numeric characters without sign.
 - isBool
 - isBoolOrIntBool
 - isCrediCard

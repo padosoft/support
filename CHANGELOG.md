@@ -2,6 +2,39 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.13.0 - 2016-12-04
+
+### ADDED:
+##### VALIDATION:
+- isIntegerZero() : Check if the value (int, float or string) is a integer and equals to zero.
+- isIntegerNegative() : Check if the value (int, float or string) is a integer and less than zero.
+- isIntegerNegativeOrZero() : Check if the value (int, float or string) is a integer and less than zero or equals to zero.
+- isIntBool() : Check if the value is a integer/string 0 or 1.
+- isNumeric() : Determine if the provided value contains only numeric characters with or without(default) sign.
+- isNumericWithSign() : Determine if the provided value contains only numeric characters with sign.
+- isNumericWithoutSign() : Determine if the provided value contains only numeric characters without sign.
+- isDateZeroIta() : Check if string is 00/00/0000
+- isTimeZeroIta() : Check if string is 00:00:00
+- isDateTimeZeroIta() : Check if string is '00/00/0000 00:00:00' 
+- isDateOrDateZeroIta() : Check if string is dd/mm/YYYY and valid date or 00/00/0000 
+- isDateTimeOrDateTimeZeroIta() : Check if string is 'dd/mm/YYYY HH:ii:ss' and valid date or '00/00/0000 00:00:00' 
+
+##### HELPERS:
+- get_os_architecture() : Get the OS architecture 32 or 64 bit.
+- is_32bit() : Check if the OS architecture is 32bit.
+- is_64bit() : Check if the OS architecture is 64bit.
+
+##### SANITIZE:
+- sanitize_phone() : Sanitize the string by removing illegal characters from phone numbers.
+
+### CHANGED:
+##### HELPERS:
+- Update gravatar API.
+
+### FIX:
+##### HELPERS:
+- template.
+
 ## 1.12.1 - 2016-11-07
 
 ### CHANGED:

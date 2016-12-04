@@ -50,7 +50,7 @@ if (!function_exists('hex2rgb')) {
  * @param string $simbol
  * @return string
  */
-function format_money(float $val = 0, int $precision = 2, string $simbol = "") : string
+function format_money(float $val = 0.00, int $precision = 2, string $simbol = "") : string
 {
     return "$simbol " . number_format($val, $precision, ',', '.');
 }
@@ -60,7 +60,7 @@ function format_money(float $val = 0, int $precision = 2, string $simbol = "") :
  * @param float $val
  * @return string
  */
-function format_euro(float $val = 0) : string
+function format_euro(float $val = 0.00) : string
 {
     return format_money($val, 2, '&euro; ');
 }
@@ -747,7 +747,7 @@ if (!function_exists('curl')) {
             if (is_array($data)) {
                 $dataTokens = [];
                 foreach ($data as $key => $value) {
-                    array_push($dataTokens, urlencode($key) . '=' . urlencode($value));
+                    $dataTokens[] = urlencode($key) . '=' . urlencode($value);
                 }
                 $data = implode('&', $dataTokens);
             }
@@ -1125,7 +1125,7 @@ if (!function_exists('logToFile')) {
         if ($varDump) {
             $value = get_var_dump_output($value);
         }
-        $f = fopen($pathFile, 'a');
+        $f = fopen($pathFile, 'ab');
         fwrite($f, date(DATE_RFC822) . "\r\n" . $value . "\r\n----------------------------------------------\r\n");
         fclose($f);
     }
@@ -1173,7 +1173,7 @@ function getImageExtensions() : array
  * @see https://github.com/laradic/support/blob/master/src/Util.php
  * @example
  * <?php
- * $result = Util::template('This is the best template parser. Created by {developerName}', ['developerName' => 'Radic']);
+ * $result = template('This is the best template parser. Created by {developerName}', ['developerName' => 'Radic']);
  * echo $result; // This is the best template parser. Created by Radic
  */
 function template($str, array $vars = [], $openDelimiter = '{', $closeDelimiter = '}')
@@ -1182,7 +1182,7 @@ function template($str, array $vars = [], $openDelimiter = '{', $closeDelimiter 
         if (is_array($var)) {
             $str = template($str, $var);
         } elseif (is_string($var)) {
-            $str = Str::replace($str, $openDelimiter . $k . $closeDelimiter, $var);
+            $str = str_replace($openDelimiter . $k . $closeDelimiter, $var, $str);
         }
     }
     return $str;
@@ -1273,5 +1273,70 @@ if (!function_exists('getConsoleColorTagForStatusCode')) {
             return 'comment';
         }
         return 'error';
+    }
+}
+
+if (!function_exists('is_32bit')) {
+    /**
+     * Check if the OS architecture is 32bit.
+     *
+     * @return bool
+     *
+     * @see http://stackoverflow.com/questions/6303241/find-windows-32-or-64-bit-using-php
+     */
+    function is_32bit() : bool
+    {
+        return get_os_architecture()==32;
+    }
+}
+
+if (!function_exists('is_64bit')) {
+    /**
+     * Check if the OS architecture is 64bit.
+     *
+     * @return bool
+     *
+     * @see http://stackoverflow.com/questions/6303241/find-windows-32-or-64-bit-using-php
+     */
+    function is_64bit() : bool
+    {
+        return get_os_architecture()==64;
+    }
+}
+
+if (!function_exists('get_os_architecture')) {
+    /**
+     * Get the OS architecture 32 or 64 bit.
+     *
+     * @return int return 32 or 64 if ok, otherwise return 0.
+     *
+     * @see http://stackoverflow.com/questions/6303241/find-windows-32-or-64-bit-using-php
+     */
+    function get_os_architecture() : int
+    {
+        switch(PHP_INT_SIZE) {
+            case 4:
+                return 32;
+                break;
+            case 8:
+                return 64;
+                break;
+            default:
+                return 0;
+        }
+    }
+}
+
+if (!function_exists('is_64bit')) {
+    /**
+     * Check if the OS architecture is 64bit.
+     *
+     * @return bool
+     *
+     * @see http://stackoverflow.com/questions/6303241/find-windows-32-or-64-bit-using-php
+     */
+    function is_64bit() : bool
+    {
+        return PHP_INT_SIZE==8;
     }
 }

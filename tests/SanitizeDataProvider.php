@@ -201,4 +201,30 @@ trait SanitizeDataProvider
             'he\'s mine' => ['he\'s mine', '\'he\'\\\'\'s mine\''],
         ];
     }
+    /**
+     * @return array
+     */
+    public function sanitize_phoneProvider()
+    {
+        return [
+            'null, false' => [null, false, ''],
+            '\'\', false' => ['', false, ''],
+            '\' \', false' => [' ', false, ''],
+            '\'  \', false' => ['  ', false, ''],
+            'aaaaaa, false' => ['aaaaaa', false, ''],
+            '123sdfsf456, false' => ['123sdfsf456', false, '123456'],
+            '123 456, false' => ['123 456', false, '123456'],
+            '123 456, true' => ['123 456', true, '123 456'],
+            '123456, false' => ['123456', false, '123456'],
+            '+123456, false' => ['+123456', false, '+123456'],
+            '+39 123a456, false' => ['+39 123a456', false, '+39123456'],
+            '+39 123a456, true' => ['+39 123a456', true, '+39 123 456'],
+            '+39 (123a)456, false' => ['+39 (123a)456', false, '+39(123)456'],
+            '+39 (123a)456, true' => ['+39 (123a)456', true, '+39(123)456'],
+            '+39 (123a 456, false' => ['+39 (123a 456', false, '+39123456'],
+            '+39 (123a 456, true' => ['+39 (123a 456', true, '+39 123 456'],
+            '+39 123)a 456, false' => ['+39 123)a 456', false, '+39123456'],
+            '+39 123)a 456, true' => ['+39 123)a 456', true, '+39 123 456'],
+        ];
+    }
 }

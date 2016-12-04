@@ -19,22 +19,68 @@ function isStringNumberStartsWithMoreThanOneZero($value)
  * @param bool $acceptIntegerFloatingPoints
  * @return bool
  */
-function isIntegerPositive($value, $acceptIntegerFloatingPoints = false) : bool
+function isIntegerPositive($value, $acceptIntegerFloatingPoints = false): bool
 {
     return isInteger($value, true, $acceptIntegerFloatingPoints) && $value > 0;
 }
 
 /**
- * Check if the value (int, float or string) is a integer and greater than zero or equals to zero..
+ * Check if the value (int, float or string) is a integer and less than zero..
+ * Only number <0 and >=PHP_INT_MIN
+ * or if $acceptIntegerFloatingPoints==true a floating point that match an negative integer).
+ * @param $value
+ * @param bool $acceptIntegerFloatingPoints
+ * @return bool
+ */
+function isIntegerNegative($value, $acceptIntegerFloatingPoints = false): bool
+{
+    return isInteger($value, false, $acceptIntegerFloatingPoints) && $value < 0;
+}
+
+/**
+ * Check if the value (int, float or string) is a integer and greater than zero or equals to zero.
  * Only number >=0 and <=PHP_INT_MAX
  * or if $acceptIntegerFloatingPoints==true a floating point that match an positive integer).
  * @param $value
  * @param bool $acceptIntegerFloatingPoints
  * @return bool
  */
-function isIntegerPositiveOrZero($value, $acceptIntegerFloatingPoints = false) : bool
+function isIntegerPositiveOrZero($value, $acceptIntegerFloatingPoints = false): bool
 {
     return isInteger($value, true, $acceptIntegerFloatingPoints) && $value >= 0;
+}
+
+/**
+ * Check if the value (int, float or string) is a integer and less than zero or equals to zero.
+ * Only number <=0 and >=PHP_INT_MIN
+ * or if $acceptIntegerFloatingPoints==true a floating point that match an negative integer).
+ * @param $value
+ * @param bool $acceptIntegerFloatingPoints
+ * @return bool
+ */
+function isIntegerNegativeOrZero($value, $acceptIntegerFloatingPoints = false): bool
+{
+    return isInteger($value, false, $acceptIntegerFloatingPoints) && $value <= 0;
+}
+
+/**
+ * Check if the value (int, float or string) is a integer and equals to zero.
+ * If $acceptIntegerFloatingPoints==true a floating point that match an zero integer).
+ * @param $value
+ * @param bool $acceptIntegerFloatingPoints default false
+ * @param bool $acceptSign default false if set to true accept -0 and +0 otherwise accept 0.
+ * @return bool
+ */
+function isIntegerZero($value, $acceptIntegerFloatingPoints = false, $acceptSign = false): bool
+{
+    if(isNullOrEmpty($value)){
+        return false;
+    }
+    if(!$acceptSign){
+        return $value == 0 && isNumericWithoutSign($value) && !isStringNumberStartsWithMoreThanOneZero($value);
+    }else{
+        return abs($value) == 0 && isInteger(abs($value), !$acceptSign, $acceptIntegerFloatingPoints);
+    }
 }
 
 /**
@@ -46,7 +92,7 @@ function isIntegerPositiveOrZero($value, $acceptIntegerFloatingPoints = false) :
  * @param bool $acceptIntegerFloatingPoints
  * @return bool
  */
-function isInteger($value, $unsigned = true, $acceptIntegerFloatingPoints = false) : bool
+function isInteger($value, $unsigned = true, $acceptIntegerFloatingPoints = false): bool
 {
     if (isStringNumberStartsWithMoreThanOneZero($value)) {
         return false;
@@ -68,13 +114,14 @@ function isInteger($value, $unsigned = true, $acceptIntegerFloatingPoints = fals
  * @param bool $unsigned
  * @return bool
  */
-function isIntegerFloatingPoint($value, $unsigned = true) : bool
+function isIntegerFloatingPoint($value, $unsigned = true): bool
 {
     return isFloatingPoint($value, $unsigned)
-    && $value <= PHP_INT_MAX && $value >= PHP_INT_MIN
-    //big number rouned to int aproximately!
-    //big number change into exp format
-    && ((int)((double)$value) == $value || (int)$value == $value || strpos(strtoupper((string)$value), 'E') === false);
+        && $value <= PHP_INT_MAX && $value >= PHP_INT_MIN
+        //big number rouned to int aproximately!
+        //big number change into exp format
+        && ((int)((double)$value) == $value || (int)$value == $value || strpos(strtoupper((string)$value),
+                'E') === false);
 }
 
 /**
@@ -84,14 +131,24 @@ function isIntegerFloatingPoint($value, $unsigned = true) : bool
  * @param $unsigned
  * @return bool
  */
-function isFloatingPoint($value, $unsigned) : bool
+function isFloatingPoint($value, $unsigned): bool
 {
     if (isStringNumberStartsWithMoreThanOneZero($value)) {
         return false;
     }
 
     return preg_match('/^' . ($unsigned ? '[+]{0,1}' : '[-+]{0,1}') . '[0-9]{1,}(\.[0-9]{1,}){0,1}([Ee][+,-]{0,1}[0-9]{1,}){0,}$/',
-        $value) === 1;
+            $value) === 1;
+}
+
+/**
+ * Check if the value is a integer/string 0 or 1.
+ * @param $value
+ * @return bool
+ */
+function isIntBool($value): bool
+{
+    return $value === 1 || $value === 0 || $value === '1' || $value === '0';
 }
 
 /**
@@ -104,7 +161,7 @@ function isFloatingPoint($value, $unsigned) : bool
  * if $dec is an empty string, accept 0 to infinite decimals.
  * @return bool
  */
-function isDouble($value, $dec = 2, $unsigned = true, $exactDec = false) : bool
+function isDouble($value, $dec = 2, $unsigned = true, $exactDec = false): bool
 {
     if (isStringNumberStartsWithMoreThanOneZero($value)) {
         return false;
@@ -120,7 +177,7 @@ function isDouble($value, $dec = 2, $unsigned = true, $exactDec = false) : bool
  * @param bool $withPercentChar if set to true require % char, otherwise if find a % char return false.
  * @return bool
  */
-function isPercent($value, bool $withDecimal = true, bool $withPercentChar = false) : bool
+function isPercent($value, bool $withDecimal = true, bool $withPercentChar = false): bool
 {
     if (isNullOrEmpty($value)) {
         return false;
@@ -143,7 +200,7 @@ function isPercent($value, bool $withDecimal = true, bool $withPercentChar = fal
  * @param float $rightRange
  * @return bool
  */
-function isInRange(float $value, float $leftRange = 0, float $rightRange = 0) : bool
+function isInRange(float $value, float $leftRange = 0.00, float $rightRange = 0.00): bool
 {
     return ($value <= $rightRange && $value >= $leftRange);
 }
@@ -153,7 +210,7 @@ function isInRange(float $value, float $leftRange = 0, float $rightRange = 0) : 
  * @param $value
  * @return bool
  */
-function isDateIta($value) : bool
+function isDateIta($value): bool
 {
     if (isNullOrEmpty($value) || strlen($value) != 10 || strpos($value, '/') === false) {
         return false;
@@ -171,7 +228,7 @@ function isDateIta($value) : bool
  * @param $value
  * @return bool
  */
-function isDateZeroIso($value) : bool
+function isDateZeroIso($value): bool
 {
     return $value == '0000-00-00';
 }
@@ -181,7 +238,7 @@ function isDateZeroIso($value) : bool
  * @param $value
  * @return bool
  */
-function isTimeZeroIso($value) : bool
+function isTimeZeroIso($value): bool
 {
     return $value == '00:00:00';
 }
@@ -191,7 +248,7 @@ function isTimeZeroIso($value) : bool
  * @param $value
  * @return bool
  */
-function isDateTimeZeroIso($value) : bool
+function isDateTimeZeroIso($value): bool
 {
     return $value == '0000-00-00 00:00:00';
 }
@@ -201,7 +258,7 @@ function isDateTimeZeroIso($value) : bool
  * @param $value
  * @return bool
  */
-function isDateOrDateZeroIso($value) : bool
+function isDateOrDateZeroIso($value): bool
 {
     return isDateIso($value) || isDateZeroIso($value);
 }
@@ -211,9 +268,60 @@ function isDateOrDateZeroIso($value) : bool
  * @param $value
  * @return bool
  */
-function isDateTimeOrDateTimeZeroIso($value) : bool
+function isDateTimeOrDateTimeZeroIso($value): bool
 {
     return isDateTimeIso($value) || isDateTimeZeroIso($value);
+}
+
+
+/**
+ * Check if string is 00/00/0000
+ * @param $value
+ * @return bool
+ */
+function isDateZeroIta($value): bool
+{
+    return $value == '00/00/0000';
+}
+
+/**
+ * Check if string is 00:00:00
+ * @param $value
+ * @return bool
+ */
+function isTimeZeroIta($value): bool
+{
+    return $value == '00:00:00';
+}
+
+/**
+ * Check if string is '00/00/0000 00:00:00'
+ * @param $value
+ * @return bool
+ */
+function isDateTimeZeroIta($value): bool
+{
+    return $value == '00/00/0000 00:00:00';
+}
+
+/**
+ * Check if string is dd/mm/YYYY and valid date or 00/00/0000
+ * @param $value
+ * @return bool
+ */
+function isDateOrDateZeroIta($value): bool
+{
+    return isDateIta($value) || isDateZeroIta($value);
+}
+
+/**
+ * Check if string is 'dd/mm/YYYY HH:ii:ss' and valid date or '00/00/0000 00:00:00'
+ * @param $value
+ * @return bool
+ */
+function isDateTimeOrDateTimeZeroIta($value): bool
+{
+    return isDateTimeIta($value) || isDateTimeZeroIta($value);
 }
 
 /**
@@ -221,7 +329,7 @@ function isDateTimeOrDateTimeZeroIso($value) : bool
  * @param $value
  * @return bool
  */
-function isDateIso($value) : bool
+function isDateIso($value): bool
 {
     if (isNullOrEmpty($value) || strlen($value) != 10 || strpos($value, '-') === false) {
         return false;
@@ -239,7 +347,7 @@ function isDateIso($value) : bool
  * @param $value
  * @return bool
  */
-function isDateTimeIso($value) : bool
+function isDateTimeIso($value): bool
 {
     if (!isDateIso(substr($value, 0, 10))) {
         return false;
@@ -252,7 +360,7 @@ function isDateTimeIso($value) : bool
  * @param $value
  * @return bool
  */
-function isDateTimeIta($value) : bool
+function isDateTimeIta($value): bool
 {
     if (!isDateIta(substr($value, 0, 10))) {
         return false;
@@ -265,7 +373,7 @@ function isDateTimeIta($value) : bool
  * @param $value
  * @return bool
  */
-function isTimeIso($value) : bool
+function isTimeIso($value): bool
 {
     $strRegExp = '/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/';
     if (!(preg_match($strRegExp, $value) === 1)) {
@@ -290,7 +398,7 @@ function isTimeIta($value)
  * @param int $year
  * @return bool
  */
-function isJewishLeapYear(int $year) : bool
+function isJewishLeapYear(int $year): bool
 {
     if ($year % 19 == 0 || $year % 19 == 3 || $year % 19 == 6 ||
         $year % 19 == 8 || $year % 19 == 11 || $year % 19 == 14 ||
@@ -311,7 +419,7 @@ function isJewishLeapYear(int $year) : bool
  * @param int $calendar
  * @return bool
  */
-function isMonth(int $value, int $year, int $calendar = CAL_GREGORIAN) : bool
+function isMonth(int $value, int $year, int $calendar = CAL_GREGORIAN): bool
 {
     if (!isInRange($year, 0, PHP_INT_MAX)) {
         return false;
@@ -338,7 +446,7 @@ function isMonth(int $value, int $year, int $calendar = CAL_GREGORIAN) : bool
  * @param int $calendar
  * @return bool
  */
-function isDay(int $value, int $month = 0, int $year = 0, int $calendar = CAL_GREGORIAN) : bool
+function isDay(int $value, int $month = 0, int $year = 0, int $calendar = CAL_GREGORIAN): bool
 {
     if ($month != 0 && !isMonth($month, $year, $calendar)) {
         return false;
@@ -368,7 +476,7 @@ function isDay(int $value, int $month = 0, int $year = 0, int $calendar = CAL_GR
  *
  * @return bool
  */
-function hasMinAge($dateOfBirthday, int $age) : bool
+function hasMinAge($dateOfBirthday, int $age): bool
 {
     return date_diff(date('Y-m-d'), $dateOfBirthday) >= $age;
 }
@@ -381,7 +489,7 @@ function hasMinAge($dateOfBirthday, int $age) : bool
  *
  * @return bool
  */
-function hasMaxAge($dateOfBirthday, int $age) : bool
+function hasMaxAge($dateOfBirthday, int $age): bool
 {
     return date_diff(date('Y-m-d'), $dateOfBirthday) <= $age;
 }
@@ -395,7 +503,7 @@ function hasMaxAge($dateOfBirthday, int $age) : bool
  *
  * @return bool
  */
-function hasAgeInRange($dateOfBirthday, int $ageMin, int $ageMax) : bool
+function hasAgeInRange($dateOfBirthday, int $ageMin, int $ageMax): bool
 {
     return hasMinAge($dateOfBirthday, $ageMin) && hasMaxAge($dateOfBirthday, $ageMax);
 }
@@ -408,7 +516,7 @@ function hasAgeInRange($dateOfBirthday, int $ageMin, int $ageMax) : bool
  * @param bool $strict if set to false (default) check >=min and <=max otherwise check >min and <max.
  * @return bool
  */
-function betweenDateIso(string $date, string $minDate, string $maxDate, bool $strict = false) : bool
+function betweenDateIso(string $date, string $minDate, string $maxDate, bool $strict = false): bool
 {
     if (!isDateIso($date) || !isDateIso($minDate) || !isDateIso($maxDate)) {
         return false;
@@ -428,7 +536,7 @@ function betweenDateIso(string $date, string $minDate, string $maxDate, bool $st
  * @param bool $strict if set to false (default) check >=min and <=max otherwise check >min and <max.
  * @return bool
  */
-function betweenDateIta(string $date, string $minDate, string $maxDate, bool $strict = false) : bool
+function betweenDateIta(string $date, string $minDate, string $maxDate, bool $strict = false): bool
 {
     if (!isDateIta($date) || !isDateIta($minDate) || !isDateIta($maxDate)) {
         return false;
@@ -446,7 +554,7 @@ function betweenDateIta(string $date, string $minDate, string $maxDate, bool $st
  * @param $checkMx
  * @return bool
  */
-function isMail($value, bool $checkMx = false) : bool
+function isMail($value, bool $checkMx = false): bool
 {
     if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
         return false;
@@ -465,7 +573,7 @@ function isMail($value, bool $checkMx = false) : bool
  * @param  string $IP2Check IP to check
  * @return bool
  */
-function isIPv4($IP2Check) : bool
+function isIPv4($IP2Check): bool
 {
     return !(filter_var($IP2Check, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4) === false);
 }
@@ -475,7 +583,7 @@ function isIPv4($IP2Check) : bool
  * @param  string $IP2Check IP to check
  * @return bool
  */
-function isIPv6($IP2Check) : bool
+function isIPv6($IP2Check): bool
 {
     return !(filter_var($IP2Check, FILTER_VALIDATE_IP, FILTER_FLAG_IPV6) === false);
 }
@@ -485,7 +593,7 @@ function isIPv6($IP2Check) : bool
  * @param  string $IP2Check IP to check
  * @return bool
  */
-function isIP($IP2Check) : bool
+function isIP($IP2Check): bool
 {
     return !(filter_var($IP2Check, FILTER_VALIDATE_IP) === false);
 }
@@ -495,12 +603,12 @@ function isIP($IP2Check) : bool
  * @param  string $IP2Check IP to check
  * @return bool
  */
-function isIPv4Compatibility($IP2Check) : bool
+function isIPv4Compatibility($IP2Check): bool
 {
     return (strrpos($IP2Check, ":") > 0
         && strrpos($IP2Check, ".") > 0
         && isIPv4(substr($IP2Check, strpos($IP2Check, ".") + 1))
-        && isIPv6(substr($IP2Check, 0, strpos($IP2Check, ".")).':0:0:0:0')
+        && isIPv6(substr($IP2Check, 0, strpos($IP2Check, ".")) . ':0:0:0:0')
     );
 }
 
@@ -511,7 +619,7 @@ function isIPv4Compatibility($IP2Check) : bool
  * @param $url
  * @return bool
  */
-function isUrl($url) : bool
+function isUrl($url): bool
 {
     return filter_var($url, FILTER_VALIDATE_URL) !== false;
 }
@@ -522,7 +630,7 @@ function isUrl($url) : bool
  * @param $value
  * @return bool
  */
-function isHostname($value) : bool
+function isHostname($value): bool
 {
     return preg_match('/(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)/i', $value) === 1;
 }
@@ -545,7 +653,7 @@ function isHostname($value) : bool
  * @return bool Success
  * @see https://github.com/cakephp/cakephp/blob/master/src/Validation/Validation.php#L839
  */
-function urlW3c($check, bool $strict = false) : bool
+function urlW3c($check, bool $strict = false): bool
 {
     $_pattern = array();
     $pattern = '((([0-9A-Fa-f]{1,4}:){7}(([0-9A-Fa-f]{1,4})|:))|(([0-9A-Fa-f]{1,4}:){6}';
@@ -591,7 +699,7 @@ function urlW3c($check, bool $strict = false) : bool
  * try to check VIES service. If VIES return false or soap exception was thrown, return false.
  * @return bool
  */
-function isPiva(string $pi, bool $validateOnVIES = false) : bool
+function isPiva(string $pi, bool $validateOnVIES = false): bool
 {
     if ($pi === null || $pi === '' || strlen($pi) != 11 || preg_match("/^[0-9]+\$/", $pi) != 1) {
         return false;
@@ -629,7 +737,7 @@ function isPiva(string $pi, bool $validateOnVIES = false) : bool
  * @return bool
  * @throws SoapFault
  */
-function isVATNumber(string $vatNumber, string $countryCodeDefault = 'IT') : bool
+function isVATNumber(string $vatNumber, string $countryCodeDefault = 'IT'): bool
 {
     if (!isAlphaNumericWhiteSpaces($vatNumber) || strlen(trim($vatNumber)) < 3) {
         return false;
@@ -666,7 +774,7 @@ function isVATNumber(string $vatNumber, string $countryCodeDefault = 'IT') : boo
  * cioe' il dato viene considerato opzionale.
  * @return bool
  */
-function isCf(string $cf) : bool
+function isCf(string $cf): bool
 {
     if ($cf === null || $cf === '' || strlen($cf) != 16) {
         return false;
@@ -810,10 +918,10 @@ function isCf(string $cf) : bool
  *
  * @see https://github.com/Wixel/GUMP/blob/master/gump.class.php
  */
-function isAlpha(string $field) : bool
+function isAlpha(string $field): bool
 {
     return isNotNullOrEmpty($field)
-    && preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ])+$/i', $field) === 1;
+        && preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ])+$/i', $field) === 1;
 }
 
 /**
@@ -825,9 +933,46 @@ function isAlpha(string $field) : bool
  *
  * @see https://github.com/Wixel/GUMP/blob/master/gump.class.php
  */
-function isAlphaNumeric(string $field) : bool
+function isAlphaNumeric(string $field): bool
 {
     return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ])+$/i', $field) === 1;
+}
+
+/**
+ * Determine if the provided value contains only numeric characters with or without(default) sign.
+ *
+ * @param string $field
+ * @param bool $acceptSign default false if true accept string that starts with +/- oterwise only [0-9] chars.
+ *
+ * @return mixed
+ */
+function isNumeric(string $field, bool $acceptSign = false): bool
+{
+    return preg_match('/^(' . ($acceptSign ? '[+-]{0,1}' : '') . '[0-9])+$/i', $field) === 1;
+}
+
+/**
+ * Determine if the provided value contains only numeric characters with sign.
+ *
+ * @param string $field
+ *
+ * @return mixed
+ */
+function isNumericWithSign(string $field): bool
+{
+    return isNumeric($field, true);
+}
+
+/**
+ * Determine if the provided value contains only numeric characters without sign.
+ *
+ * @param string $field
+ *
+ * @return mixed
+ */
+function isNumericWithoutSign(string $field): bool
+{
+    return isNumeric($field, false);
 }
 
 /**
@@ -837,7 +982,7 @@ function isAlphaNumeric(string $field) : bool
  *
  * @return mixed
  */
-function isAlphaNumericDash($field) : bool
+function isAlphaNumericDash($field): bool
 {
     return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ\-_])+$/i', $field) === 1;
 }
@@ -849,7 +994,7 @@ function isAlphaNumericDash($field) : bool
  *
  * @return mixed
  */
-function isAlphaNumericWhiteSpaces($field) : bool
+function isAlphaNumericWhiteSpaces($field): bool
 {
     return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ\-_\s])+$/i', $field) === 1;
 }
@@ -861,7 +1006,7 @@ function isAlphaNumericWhiteSpaces($field) : bool
  *
  * @return mixed
  */
-function isBool($field) : bool
+function isBool($field): bool
 {
     return $field === true || $field === false;
 }
@@ -873,7 +1018,7 @@ function isBool($field) : bool
  *
  * @return bool
  */
-function isBoolOrIntBool($field) : bool
+function isBoolOrIntBool($field): bool
 {
     return in_array($field, [0, 1, '0', '1', true, false], true);
 }
@@ -887,7 +1032,7 @@ function isBoolOrIntBool($field) : bool
  *
  * @return mixed
  */
-function isCrediCard(string $field) : bool
+function isCrediCard(string $field): bool
 {
     if (isNullOrEmpty($field)) {
         return false;
@@ -922,7 +1067,7 @@ function isCrediCard(string $field) : bool
  *
  * @See: https://github.com/Wixel/GUMP/issues/5
  */
-function isValidHumanName(string $field) : bool
+function isValidHumanName(string $field): bool
 {
     if (isNullOrEmpty($field)) {
         return false;
@@ -939,7 +1084,7 @@ function isValidHumanName(string $field) : bool
  *
  * @see https://github.com/Wixel/GUMP/blob/master/gump.class.php
  */
-function isIban($field) : bool
+function isIban($field): bool
 {
     if (isNullOrEmpty($field)) {
         return false;
@@ -991,7 +1136,7 @@ function isIban($field) : bool
  * @return bool
  * @see https://github.com/cakephp/cakephp/blob/master/src/Validation/Validation.php
  */
-function hasFileExtension($filePath, array $allowed_extensions) : bool
+function hasFileExtension($filePath, array $allowed_extensions): bool
 {
     $extension = strtolower(pathinfo($filePath, PATHINFO_EXTENSION));
     $allowed_extensions = (array)array_map('mb_strtolower', $allowed_extensions);
@@ -1021,7 +1166,7 @@ function hasFileExtension($filePath, array $allowed_extensions) : bool
  *
  * @see https://github.com/Wixel/GUMP/blob/master/gump.class.php
  */
-function isphoneNumber($field) : bool
+function isphoneNumber($field): bool
 {
     if (isNullOrEmpty($field) || strlen(trim($field)) < 2) {
         return false;
@@ -1041,7 +1186,7 @@ function isphoneNumber($field) : bool
  *
  * @return bool
  */
-function isJsonString($field) : bool
+function isJsonString($field): bool
 {
     if (isNullOrEmpty($field)) {
         return false;
@@ -1131,7 +1276,7 @@ function isLatitude($value, array $options = [])
  * @link https://en.wikipedia.org/wiki/Longitude
  * @see \Cake\Validation\Validation::geoCoordinate()
  */
-function isLongitude($value, array $options = []) : bool
+function isLongitude($value, array $options = []): bool
 {
     $options['format'] = 'long';
     return isGeoCoordinate($value, $options);
@@ -1168,7 +1313,7 @@ function isAscii($value)
  * @param array $options An array of options. See above for the supported options.
  * @return bool
  */
-function isUtf8($value, array $options = []) : bool
+function isUtf8($value, array $options = []): bool
 {
     if (!is_string($value)) {
         return false;

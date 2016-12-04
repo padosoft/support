@@ -108,4 +108,21 @@ class SanitizeTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($expected, she($val));
         }
     }
+
+    /**
+     * @test
+     * @param $val
+     * @param $preserveSpaces
+     * @param $expected
+     * @dataProvider sanitize_phoneProvider
+     */
+    public function sanitize_phoneTest($val, $preserveSpaces, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            sanitize_phone($val, $preserveSpaces);
+        } else {
+            $this->assertEquals($expected, sanitize_phone($val, $preserveSpaces));
+        }
+    }
 }

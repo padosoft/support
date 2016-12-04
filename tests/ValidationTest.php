@@ -49,22 +49,6 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @test
      * @param $val
      * @param $expected
-     * @dataProvider isDateTimeOrDateTimeZeroIsoProvider
-     */
-    public function isDateTimeOrDateTimeZeroIsoTest($val, $expected)
-    {
-        if ($this->expectedIsAnException($expected)) {
-            $this->expectException($expected);
-            isDateTimeOrDateTimeZeroIso($val);
-        } else {
-            $this->assertEquals($expected, isDateTimeOrDateTimeZeroIso($val));
-        }
-    }
-
-    /**
-     * @test
-     * @param $val
-     * @param $expected
      * @dataProvider dateTimeItaValidateProvider
      */
     public function isDateTimeItaTest($val, $expected)
@@ -97,6 +81,22 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @test
      * @param $val
      * @param $expected
+     * @dataProvider isDateTimeOrDateTimeZeroIsoProvider
+     */
+    public function isDateTimeOrDateTimeZeroIsoTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isDateTimeOrDateTimeZeroIso($val);
+        } else {
+            $this->assertEquals($expected, isDateTimeOrDateTimeZeroIso($val));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
      * @dataProvider isDateOrDateZeroIsoProvider
      */
     public function isDateOrDateZeroIsoTest($val, $expected)
@@ -106,6 +106,38 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             isDateOrDateZeroIso($val);
         } else {
             $this->assertEquals($expected, isDateOrDateZeroIso($val));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider isDateTimeOrDateTimeZeroItaProvider
+     */
+    public function isDateTimeOrDateTimeZeroItaTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isDateTimeOrDateTimeZeroIta($val);
+        } else {
+            $this->assertEquals($expected, isDateTimeOrDateTimeZeroIta($val));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider isDateOrDateZeroItaProvider
+     */
+    public function isDateOrDateZeroItaTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isDateOrDateZeroIta($val);
+        } else {
+            $this->assertEquals($expected, isDateOrDateZeroIta($val));
         }
     }
 
@@ -203,6 +235,90 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             isIntegerPositive($val, false);
         } else {
             $this->assertEquals($expected, isIntegerPositive($val, false));
+        }
+    }
+
+   /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider isIntegerNegativeOrZeroNoFloatingValidateProvider
+     */
+    public function isIntegerNegativeOrZeroNoFloatingTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isIntegerNegativeOrZero($val, false);
+        } else {
+            $this->assertEquals($expected, isIntegerNegativeOrZero($val, false));
+        }
+    }
+
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider isIntegerNegativeNoFloatingValidateProvider
+     */
+    public function isIntegerNegativeNoFloatingTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isIntegerNegative($val, false);
+        } else {
+            $this->assertEquals($expected, isIntegerNegative($val, false));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $signed
+     * @param $expected
+     * @dataProvider isIntegerZeroNoFloatingValidateProvider
+     */
+    public function isIntegerZeroNoFloatingTest($val, $signed, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isIntegerZero($val, false, $signed);
+        } else {
+            $this->assertEquals($expected, isIntegerZero($val, false, $signed));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $signed
+     * @param $expected
+     * @dataProvider isIntegerZeroFloatingValidateProvider
+     */
+    public function isIntegerZeroFloatingTest($val, $signed, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isIntegerZero($val, false, $signed);
+        } else {
+            $this->assertEquals($expected, isIntegerZero($val, false, $signed));
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $signed
+     * @param $expected
+     * @dataProvider isNumericValidateProvider
+     */
+    public function isNumericTest($val, $signed, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isNumeric($val, $signed);
+        } else {
+            $this->assertEquals($expected, isNumeric($val, $signed));
         }
     }
 
@@ -365,6 +481,22 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
             isPercent($value, $withDecimal, $withPercentChar);
         } else {
             $this->assertEquals($expected, isPercent($value, $withDecimal, $withPercentChar));
+        }
+    }
+
+    /**
+     * @test
+     * @param $value
+     * @param $expected
+     * @dataProvider isIntBoolProvider
+     */
+    public function isIntBoolTest($value, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isIntBool($value);
+        } else {
+            $this->assertEquals($expected, isIntBool($value));
         }
     }
 
