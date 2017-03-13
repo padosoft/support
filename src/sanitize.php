@@ -170,7 +170,9 @@ function normalizeUtf8String(string $s): string
     // if exists use Normalizer-class to maps remaining special characters
     // (characters with diacritics) on their base-character followed by the diacritical mark
     // exmaple:  Ú => U´,  á => a`
-    $s = normalizerUtf8Safe($s, Normalizer::FORM_D);
+    if (class_exists('Normalizer', false)) {
+        $s = normalizerUtf8Safe($s, Normalizer::FORM_D);
+    }
 
     // possible errors in UTF8-regular-expressions
     if (isNullOrEmpty($s)) {
@@ -192,7 +194,7 @@ function normalizeUtf8String(string $s): string
  */
 function normalizerUtf8Safe(string $s, $normalizationForm): string
 {
-    if (class_exists("Normalizer", false)) {
+    if (class_exists('Normalizer', false)) {
         $s = Normalizer::normalize($s, isNullOrEmpty($normalizationForm) ? Normalizer::FORM_D : $normalizationForm);
         return $s;
     }

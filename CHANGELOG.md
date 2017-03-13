@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.13.1 - 2017-03-13
+
+### FIX:
+##### SANITIZE:
+- FIX in normalizeUtf8String() when Normalizer class not exists.
+
 ## 1.13.0 - 2016-12-04
 
 ### ADDED:
