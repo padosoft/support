@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.13.2 - 2017-03-24
+
+### ADD:
+##### HELPERS:
+- ADD  $prepend option in format_money and format_euro. If $prepend true (default) prefix with $simbol, otherwise suffix with $simbol.
+
 ## 1.13.1 - 2017-03-13
 
 ### FIX:

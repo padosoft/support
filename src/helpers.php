@@ -48,21 +48,29 @@ if (!function_exists('hex2rgb')) {
  * @param float $val
  * @param int $precision
  * @param string $simbol
+ * @param bool $prepend if true (default) prefix with $simbol, otherwise suffix with $simbol.
  * @return string
  */
-function format_money(float $val = 0.00, int $precision = 2, string $simbol = "") : string
+function format_money(float $val = 0.00, int $precision = 2, string $simbol = "", bool $prepend=true) : string
 {
-    return "$simbol " . number_format($val, $precision, ',', '.');
+    $prefix = $simbol.' ';
+    $suffix = '';
+    if(!$prepend){
+        $prefix = '';
+        $suffix = ' '.$simbol;
+    }
+    return $prefix . number_format($val, $precision, ',', '.').$suffix;
 }
 
 /**
  * Format float 1125.86 into string '&euro 1.125,86'
  * @param float $val
+ * @param bool $prepend if true (default) prefix with '&euro; ', otherwise suffix with ' &euro;'.
  * @return string
  */
-function format_euro(float $val = 0.00) : string
+function format_euro(float $val = 0.00, bool $prepend=true) : string
 {
-    return format_money($val, 2, '&euro; ');
+    return format_money($val, 2, '&euro; ', $prepend);
 }
 
 if (!function_exists('ordinal')) {
