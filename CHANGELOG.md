@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.14.1 - 2017-03-28
+
+### FIX:
+##### XML:
+- FIX unterminated entity reference php in SimpleXMLElement->addChild. See http://stackoverflow.com/questions/17027043/unterminated-entity-reference-php.
+
 ## 1.14.0 - 2017-03-24
 
 ### ADD:

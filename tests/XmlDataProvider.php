@@ -50,14 +50,14 @@ trait XmlDataProvider
         $arr = [
                 'root'
                 => ['child1'
-                    => ['child1child1' => 'ciaone']
+                    => ['child1&child1' => 'cia&o<ne']
                     ]
                 ];
         return [
             'arr with ciaone and master tag, \'<master></master>\'' => [$arr, '<master></master>', '<?xml version="1.0"?>
-<master><root><child1><child1child1>ciaone</child1child1></child1></root></master>'],
+<master><root><child1><child1&amp;child1>cia&amp;o&lt;ne</child1&amp;child1></child1></root></master>'],
             'arr with ciaone and no master tag, \'\'' => [$arr, '', '<?xml version="1.0"?>
-<root><root><child1><child1child1>ciaone</child1child1></child1></root></root>'],
+<root><root><child1><child1&amp;child1>cia&amp;o&lt;ne</child1&amp;child1></child1></root></root>'],
         ];
     }
 }

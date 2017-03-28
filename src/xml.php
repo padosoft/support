@@ -157,13 +157,13 @@ function array2SimpleXMLElement(array $arrData, SimpleXMLElement $objXml)
     foreach ($arrData as $key => $value) {
         if (is_array($value)) {
             if (!is_numeric($key)) {
-                $subnode = $objXml->addChild("$key");
+                $subnode = $objXml->addChild(htmlspecialchars("$key"));
                 array2SimpleXMLElement($value, $subnode);
             } else {
                 array2SimpleXMLElement($value, $objXml);
             }
         } else {
-            $objXml->addChild("$key", "$value");
+            $objXml->addChild(htmlspecialchars("$key"), htmlspecialchars("$value"));
         }
     }
 }
