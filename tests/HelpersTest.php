@@ -204,7 +204,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     public function test_getCurrentUrlPageName()
     {
         $old = $_SERVER['PHP_SELF'];
-        $this->assertEquals('phpunit', getCurrentUrlPageName());
+        $this->assertContains('phpunit', getCurrentUrlPageName());
 
         $_SERVER['PHP_SELF'] = '/one/two/index.php';
         $this->assertEquals('index.php', getCurrentUrlPageName());
