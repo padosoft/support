@@ -2,6 +2,17 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.15.0 - 2017-08-09
+
+### ADDED:
+##### IP:
+- decbin32(): to ensure that the binary strings are padded with zeros out to 32 characters.
+- ipInRange(): Function to determine if an IP is located in a specific range as specified via several alternative formats.
+
+##### HELPERS:
+- isRequestFromCloudFlare(): check if request (by given $_SERVER) is a cloudflare request.
+- isCloudFlareIp(): check if given ip is a valid cloudflare ip. 
+
 ## 1.14.1 - 2017-03-28
 
 ### FIX:

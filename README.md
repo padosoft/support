@@ -159,6 +159,9 @@ var_dump(str_random(16));
 - get_os_architecture() : Get the OS architecture 32 or 64 bit.
 - is_32bit() : Check if the OS architecture is 32bit.
 - is_64bit() : Check if the OS architecture is 64bit.
+- isRequestFromCloudFlare(): check if request (by given $_SERVER) is a cloudflare request.
+- isCloudFlareIp(): check if given ip is a valid cloudflare ip. 
+
 
 ### IP
 - getIPVisitor
@@ -175,6 +178,8 @@ var_dump(str_random(16));
 - checkIp6
 - isFromTrustedProxy
 - expandIPv6Notation(): * Replace '::' with appropriate number of ':0'
+- decbin32(): to ensure that the binary strings are padded with zeros out to 32 characters.
+- ipInRange(): Function to determine if an IP is located in a specific range as specified via several alternative formats.
 
 ### Reflection
 - short_class_name

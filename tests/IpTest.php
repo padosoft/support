@@ -77,4 +77,21 @@ class IpTest extends \PHPUnit_Framework_TestCase
             $this->assertEquals($expected, expandIPv6Notation($ip));
         }
     }
+
+    /**
+     * @test
+     * @param $ip
+     * @param $range
+     * @param $expected
+     * @dataProvider ipInRangeProvider
+     */
+    public function ipInRangeTest($ip, $range, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            ipInRange($ip, $range);
+        } else {
+            $this->assertEquals($expected, ipInRange($ip, $range));
+        }
+    }
 }

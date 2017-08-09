@@ -474,4 +474,94 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('error', getConsoleColorTagForStatusCode("500"));
         $this->assertEquals('error', getConsoleColorTagForStatusCode(501));
     }
+
+    /**
+     * Custom Debug.
+     */
+    public function test_isCloudFlareIp()
+    {
+        $this->assertEquals(false, isCloudFlareIp(''));
+        $this->assertEquals(false, isCloudFlareIp('sdfsfsdfdsf'));
+        $this->assertEquals(false, isCloudFlareIp('192.168.0.1'));
+        $this->assertEquals(false, isCloudFlareIp('387.168.0.1'));
+        $this->assertEquals(false, isCloudFlareIp('2.38.87.100'));
+        $this->assertEquals(true, isCloudFlareIp('104.28.5.62'));
+        $this->assertEquals(true, isCloudFlareIp('188.114.101.5'));
+    }
+
+    /**
+     * Custom Debug.
+     */
+    public function test_isRequestFromCloudFlare()
+    {
+        $old = array_key_exists_safe($_SERVER, 'HTTP_CF_CONNECTING_IP') ? $_SERVER['HTTP_CF_CONNECTING_IP'] : '';
+        $old2 = array_key_exists_safe($_SERVER, 'REMOTE_ADDR') ? $_SERVER['REMOTE_ADDR'] : '';
+        $old3 = array_key_exists_safe($_SERVER, 'HTTP_X_FORWARDED_FOR') ? $_SERVER['HTTP_X_FORWARDED_FOR'] : '';
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '2.38.87.100';
+        $this->assertEquals(false, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '188.114.101.5';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '2.38.87.100';
+        $this->assertEquals(true, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '';
+        $this->assertEquals(false, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '2.38.87.100';
+        $this->assertEquals(false, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '188.114.101.5';
+        $this->assertEquals(true, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = 'fsdf, dsfsdfds';
+        $this->assertEquals(false, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '2.38.87.100, dsfsdfds';
+        $this->assertEquals(false, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '2.38.87.100, 2.38.87.99';
+        $this->assertEquals(false, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '2.38.87.100, 188.114.101.5';
+        $this->assertEquals(true, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '2.38.87.100, 188.114.101.5';
+        $this->assertEquals(true, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '188.114.101.5, 2.38.87.100';
+        $this->assertEquals(true, isRequestFromCloudFlare($_SERVER));
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = '2.38.87.100';
+        $_SERVER['REMOTE_ADDR'] = '2.38.87.100';
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = '2.38.87.88, 188.114.101.5, 2.38.87.100';
+        $this->assertEquals(true, isRequestFromCloudFlare($_SERVER));
+
+
+        $_SERVER['HTTP_CF_CONNECTING_IP'] = $old;
+        $_SERVER['REMOTE_ADDR'] = $old2;
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = $old3;
+    }
+
 }

@@ -1332,3 +1332,91 @@ if (!function_exists('get_os_architecture')) {
         }
     }
 }
+
+
+if (!function_exists('isRequestFromCloudFlare')) {
+
+    /**
+     * Check if request (by given $_SERVER) is a cloudflare request
+     * @param $server
+     * @return bool
+     */
+    function isRequestFromCloudFlare(array $server) : bool
+    {
+        if (!isset($server['HTTP_CF_CONNECTING_IP']) || !isIP($server['HTTP_CF_CONNECTING_IP'])) {
+            return false;
+        }
+
+        if (isCloudFlareIp($server['REMOTE_ADDR'])) {
+            return true;
+        }
+
+        //in case proxy or load balancer in front the server web
+        //the chained passed IPs are in the HTTP_X_FORWARDED_FOR var in these two possible ways:
+        //2.38.87.88
+        //2.38.87.88, 188.114.101.5
+        if (empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return false;
+        }
+
+        if (strpos($_SERVER['HTTP_X_FORWARDED_FOR'], ',') === false) {
+            return isCloudFlareIp($server['HTTP_X_FORWARDED_FOR']);
+        }
+
+        $IPs = explode(",", $_SERVER['HTTP_X_FORWARDED_FOR']);
+        if (empty($IPs) || !is_array($IPs) || count($IPs) < 1) {
+            return false;
+        }
+
+        //usually the cloudflare ip are the last IP in the stack, so start loop by last entries
+        for ($i = count($IPs) - 1; $i >= 0; $i--) {
+            $ip = trim($IPs[$i]);
+            if (isCloudFlareIp($ip)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('isCloudFlareIp')) {
+
+    /**
+     * Check if given ip is a valid cloudflare ip.
+     * @param $ip
+     * @return bool
+     */
+    function isCloudFlareIp($ip) : bool
+    {
+        if (!isIP($ip)) {
+            return false;
+        }
+
+        //array given from https://www.cloudflare.com/ips-v4
+        $cf_ip_ranges = array(
+            '103.21.244.0/22',
+            '103.22.200.0/22',
+            '103.31.4.0/22',
+            '104.16.0.0/12',
+            '108.162.192.0/18',
+            '131.0.72.0/22',
+            '141.101.64.0/18',
+            '162.158.0.0/15',
+            '172.64.0.0/13',
+            '173.245.48.0/20',
+            '188.114.96.0/20',
+            '190.93.240.0/20',
+            '197.234.240.0/22',
+            '198.41.128.0/17',
+        );
+
+        foreach ($cf_ip_ranges as $range) {
+            if (ipInRange($ip, $range)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
