@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.16.0 - 2017-08-09
+
+### CHANGED:
+##### HELPERS:
+- bytes2HumanSize(): add param int $decimals [optional] default 0. Sets the number of decimal points.
+
 ## 1.15.0 - 2017-08-09
 
 ### ADDED:

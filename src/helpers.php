@@ -142,20 +142,25 @@ function isExecutedByCLI() : bool
  * Convert the output of PHP's filesize() function
  * to a nice format with PB, TB, GB, MB, kB, bytes.
  * @param $bytes
+ * @param int $decimals [optional] default 0. Sets the number of decimal points.
  * @return string
  */
-function bytes2HumanSize($bytes)
+function bytes2HumanSize($bytes, $decimals=0)
 {
+    if(!isIntegerPositiveOrZero($decimals)){
+        $decimals = 0;
+    }
+
     if ($bytes >= 1125899906842624) {
-        $bytes = number_format($bytes / 1073741824, 2) . ' PB';
+        $bytes = number_format($bytes / 1073741824, $decimals) . ' PB';
     } elseif ($bytes >= 1099511627776) {
-        $bytes = number_format($bytes / 1073741824, 2) . ' TB';
+        $bytes = number_format($bytes / 1073741824, $decimals) . ' TB';
     } elseif ($bytes >= 1073741824) {
-        $bytes = number_format($bytes / 1073741824, 2) . ' GB';
+        $bytes = number_format($bytes / 1073741824, $decimals) . ' GB';
     } elseif ($bytes >= 1048576) {
-        $bytes = number_format($bytes / 1048576, 2) . ' MB';
+        $bytes = number_format($bytes / 1048576, $decimals) . ' MB';
     } elseif ($bytes >= 1024) {
-        $bytes = number_format($bytes / 1024, 2) . ' kB';
+        $bytes = number_format($bytes / 1024, $decimals) . ' kB';
     } elseif ($bytes > 1) {
         $bytes .= ' bytes';
     } elseif ($bytes == 1) {
