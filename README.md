@@ -161,7 +161,7 @@ var_dump(str_random(16));
 - is_64bit() : Check if the OS architecture is 64bit.
 - isRequestFromCloudFlare(): check if request (by given $_SERVER) is a cloudflare request.
 - isCloudFlareIp(): check if given ip is a valid cloudflare ip. 
-
+- gzCompressFile(): GZIPs a file on disk (appending .gz to the name) without read all source file in memory.
 
 ### IP
 - getIPVisitor

@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.17.0 - 2017-08-26
+
+### ADDED:
+##### HELPERS:
+- gzCompressFile(): GZIPs a file on disk (appending .gz to the name) without read all source file in memory.
+
 ## 1.16.0 - 2017-08-09
 
 ### CHANGED:

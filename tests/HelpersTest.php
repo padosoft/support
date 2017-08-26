@@ -11,6 +11,15 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
 
     protected function tearDown()
     {
+        $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.log';
+        $destFile = $file.'.gz';
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        if (file_exists($destFile)) {
+            unlink($destFile);
+        }
     }
 
     /**
@@ -562,6 +571,38 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         $_SERVER['HTTP_CF_CONNECTING_IP'] = $old;
         $_SERVER['REMOTE_ADDR'] = $old2;
         $_SERVER['HTTP_X_FORWARDED_FOR'] = $old3;
+    }
+
+    /**
+     * Custom Debug.
+     */
+    public function test_gzCompressFile()
+    {
+        //Create a temporary file in the temporary
+        $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.log';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        file_put_contents($file, 'hello');
+
+        $destFile = $file.'.gz';
+        if (file_exists($destFile)) {
+            unlink($destFile);
+        }
+
+        $result = gzCompressFile($file);
+
+        $this->assertEquals(true, $result!='' && $result!=false);
+        $this->assertFileExists($destFile);
+        $size = filesize ($destFile);
+        $this->assertEquals(true, $size!==false && $size>0);
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        if (file_exists($destFile)) {
+            unlink($destFile);
+        }
     }
 
 }
