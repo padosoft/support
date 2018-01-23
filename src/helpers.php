@@ -764,7 +764,7 @@ if (!function_exists('curl')) {
                 }
                 $data = implode('&', $dataTokens);
             }
-            $url .= (strpos($url, '?') === false ? '&' : '?') . $data;
+            $url .= (strpos($url, '?') === false ? '?' : '&') . $data;
         }
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, false);

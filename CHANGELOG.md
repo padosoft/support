@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.17.1 - 2018-01-23
+
+### FIX:
+##### HELPERS:
+- curl(): Fix $url when methods is GET and url passed with querystring.
+
 ## 1.17.0 - 2017-08-26
 
 ### ADDED:
