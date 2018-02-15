@@ -548,7 +548,7 @@ if (!function_exists('lastSegment')) {
  */
 function isNullOrEmpty($subject, bool $withTrim = true) : bool
 {
-    return $subject === null || $subject == '' || ($withTrim === true && trim($subject) == '');
+    return $subject === null || $subject === '' || !is_scalar($subject) || ($withTrim === true && trim($subject) == '');
 }
 
 /**
@@ -1452,7 +1452,7 @@ if (!function_exists('charsArrayRegEx')) {
             "T" => '/\x{0166}/u', // T => T
             "t" => '/\x{00fe}/u', // þ => t
             "t" => '/\x{0167}/u', // t => t
-            
+
             '' => '/[^\x20-\x7E]/u', // remove all non-ASCii characters
             '' => '/[^\0-\x80]/u', // remove all non-ASCii characters
         );

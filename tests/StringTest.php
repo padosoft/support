@@ -145,6 +145,13 @@ class StringTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(isNullOrEmpty(' ', false));
         $this->assertFalse(isNullOrEmpty('  ', false));
         $this->assertFalse(isNullOrEmpty('eigh', false));
+        $this->assertFalse(isNullOrEmpty('0', false));
+        $this->assertFalse(isNullOrEmpty(0, false));
+        $this->assertFalse(isNullOrEmpty(0.0, false));
+        $this->assertFalse(isNullOrEmpty(false, false));
+        $this->assertFalse(isNullOrEmpty('false', false));
+        $this->assertTrue(isNullOrEmpty(new \DateTime(), false));
+        $this->assertTrue(isNullOrEmpty(array(), false));
     }
 
     /**
