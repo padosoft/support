@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.17.3 - 2018-03-27
+
+### FIX:
+##### STRING:
+- isNullOrEmpty(): Fix when int or double or bool arg passed instead of string.
+
 ## 1.17.2 - 2018-02-15
 
 ### FIX:

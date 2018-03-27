@@ -540,15 +540,16 @@ if (!function_exists('lastSegment')) {
         return segment($delimiter, -1, $subject);
     }
 }
+
 /**
- * Return true if $subject is null or empty string ('').
+ * Return true if $subject is null or the string representation(cast to string) of $subject is an empty string ('').
  * @param $subject
- * @param bool $withTrim if set to true (default) check if trim()!='' too.
+ * @param bool $withTrim if set to true (default) and $subject is a scalar then check if trim($subject)!='' too.
  * @return bool
  */
 function isNullOrEmpty($subject, bool $withTrim = true) : bool
 {
-    return $subject === null || $subject === '' || !is_scalar($subject) || ($withTrim === true && trim($subject) == '');
+    return $subject === null || $subject === '' || ($withTrim === true && is_scalar($subject) && trim($subject) == '');
 }
 
 /**
