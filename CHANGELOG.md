@@ -6,7 +6,7 @@ All Notable changes to `support` will be documented in this file
 
 ### FIX:
 ##### STRING:
-- isNullOrEmpty(): Fix when int or double or bool arg passed instead of string.
+- isNullOrEmpty(): Fix when subject is not a scalar.
 
 ## 1.17.2 - 2018-02-15
 
