@@ -2,6 +2,15 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 2.0.0 - 2018-04-18
+
+### BREAKING CHANGES:
+##### validation:
+- isPiva and IsVatNumber was removed in favour to new functions: isEuVatNumber, isVATRegisteredInVies, isITVat.
+- isVATRegisteredInVies() : Validate a European VAT number using the EU commission VIES service to verify if VAT number is authorized to carry out intra-Community operations must use the service.
+- isITVat() : Check Italian Vat Number (Partita IVA).
+- isEuVatNumber() : Check if a valid EU vat given against specific EU country vat rules (at the moment only for italy) and optionally check the EU VIES service.   
+
 ## 1.17.4 - 2018-04-18
 
 ### FIX:
@@ -309,7 +318,7 @@ ADD functions:
 - ADD IP helpers.
 - ADD getClientIp() by small refactor of Synfony functions with unit test.
 - CHANGE mark OBSOLETE getIPVisitor().
-- ADD isVATNumber().Validate a European VAT number using the EU commission VIES service with soap.
+- ADD isVATRegisteredInVies().Validate a European VAT number using the EU commission VIES service with soap.
 - ADD xml2array() and array2xml().
 - ADD generateRandomPassword().
 - ADD some new helpers.

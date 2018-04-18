@@ -687,20 +687,76 @@ function urlW3c($check, bool $strict = false): bool
 }
 
 /**
- * Controlla partita IVA Italiana.
+ * Check if a valid EU vat given.
+ * @param string $pi required eu vat number with or without country code prefix.
+ * If you don't pass country code prefix, 'IT' will be assumed.
+ * @param bool $validateOnVIES default false. if se to true, first check formal EU country algorithm,
+ * then if it valid and country code isn't 'IT' try to check by API VIES service.
+ * If VIES return false or soap exception was thrown, return false.
+ * @return bool
+ */
+function isEuVatNumber(string $pi, bool $validateOnVIES = false): bool
+{
+    if ($pi === null || $pi === '' || strlen($pi) < 2) {
+        return false;
+    }
+
+    //try to find country code
+    $countryCode = strtoupper(substr($pi, 0, 2));
+    if (preg_match('/^[A-Za-z]{2}$/', $countryCode) === 1) {
+        $pi = substr($pi, 2);
+    }else{
+        $countryCode='IT';
+    }
+
+    $result = true;
+    if (function_exists('is'.$countryCode.'Vat')){
+        $funcname = 'is'.$countryCode.'Vat';
+        $result = $funcname($pi);
+    }
+    if(!$result){
+        return false;
+    }
+    if($countryCode=='IT' || !$validateOnVIES){
+        return $result;
+    }
+
+    //check vies
+    try {
+        return isVATRegisteredInVies($pi);
+    } catch (SoapFault $e) {
+        return false;
+    }
+}
+
+/**
+ * Check Italian Vat Number (Partita IVA).
  * @author Umberto Salsi <salsi@icosaedro.it>
  * @author Lorenzo Padovani modified.
  * @version 2012-05-12
- * @param string $pi Partita IVA Italiana è costituita da 11 cifre. Non sono ammessi
- * caratteri di spazio, per cui i campi di input dell'utente dovrebbero
- * essere trimmati preventivamente. La stringa vuota e' ammessa, cioe'
- * il dato viene considerato opzionale.
- * @param bool $validateOnVIES default false. if se to true, first check algorithm then if it valid,
- * try to check VIES service. If VIES return false or soap exception was thrown, return false.
+ * @param string $pi Partita IVA Italiana è costituita da 11 cifre o 13 caratteri (prefisso 2 lettere IT).
+ * Non sono ammessi caratteri di spazio, per cui i campi di input dell'utente dovrebbero
+ * essere trimmati preventivamente.
  * @return bool
  */
-function isPiva(string $pi, bool $validateOnVIES = false): bool
+function isITVat(string $pi): bool
 {
+    if ($pi === null || $pi === '' || strlen($pi) < 2) {
+        return false;
+    }
+
+    //try to find country code
+    $countryCode = strtoupper(substr($pi, 0, 2));
+    if (preg_match('/^[A-Za-z]{2}$/', $countryCode) === 1) {
+        $pi = substr($pi, 2);
+    }else{
+        $countryCode='IT';
+    }
+
+    if($countryCode!='IT'){
+        return false;
+    }
+
     if ($pi === null || $pi === '' || strlen($pi) != 11 || preg_match("/^[0-9]+\$/", $pi) != 1) {
         return false;
     }
@@ -718,26 +774,20 @@ function isPiva(string $pi, bool $validateOnVIES = false): bool
     if ((10 - $s % 10) % 10 != ord($pi[10]) - ord('0')) {
         return false;
     }
-    if (!$validateOnVIES) {
-        return true;
-    }
-    //check vies
-    try {
-        return isVATNumber($pi);
-    } catch (SoapFault $e) {
-        return false;
-    }
+
+    return true;
 }
 
 /**
  * Validate a European VAT number using the EU commission VIES service.
+ * To verify if VAT number is authorized to carry out intra-Community operations must use the service
  * If not $vatNumber starts with country code, a default $countryCodeDefault applied.
  * @param string $vatNumber
  * @param string $countryCodeDefault default 'IT'
  * @return bool
  * @throws SoapFault
  */
-function isVATNumber(string $vatNumber, string $countryCodeDefault = 'IT'): bool
+function isVATRegisteredInVies(string $vatNumber, string $countryCodeDefault = 'IT'): bool
 {
     if (!isAlphaNumericWhiteSpaces($vatNumber) || strlen(trim($vatNumber)) < 3) {
         return false;
@@ -1152,7 +1202,7 @@ function hasFileExtension($filePath, array $allowed_extensions): bool
  *
  * Examples:
  *
- *  555-555-5555: valid
+ *    555-555-5555: valid
  *    5555425555: valid
  *    555 555 5555: valid
  *    1(519) 555-4444: valid

@@ -553,22 +553,6 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
      * @test
      * @param $val
      * @param $expected
-     * @dataProvider isPivaProvider
-     */
-    public function isPivaTest($val, $expected)
-    {
-        if ($this->expectedIsAnException($expected)) {
-            $this->expectException($expected);
-            isPiva($val);
-        } else {
-            $this->assertEquals($expected, isPiva($val));
-        }
-    }
-
-    /**
-     * @test
-     * @param $val
-     * @param $expected
      * @dataProvider isCfProvider
      */
     public function isCfTest($val, $expected)
@@ -584,19 +568,55 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @param $val
-     * @param $countryCode
+     * @param $validateOnVies
      * @param $expected
-     * @dataProvider isVATNumberProvider
+     * @dataProvider isEuVatNumberProvider
      */
-    public function isVATNumberTest($val, $countryCode, $expected)
+    public function isEuVatNumberTest($val, $validateOnVies, $expected)
     {
         if ($this->expectedIsAnException($expected)) {
             $this->expectException($expected);
-            isVATNumber($val, $countryCode);
+            isEuVatNumber($val, $validateOnVies);
+        } else {
+            $this->assertEquals($expected, isEuVatNumber($val, $validateOnVies));
+        }
+    }
+
+
+    /**
+     * @test
+     * @param $val
+     * @param $expected
+     * @dataProvider isITVatProvider
+     */
+    public function isITVatTest($val, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isITVat($val);
+        } else {
+            $result = isITVat($val);
+            $this->assertEquals($expected, $result);
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
+     * @param $countryCode
+     * @param $expected
+     * @dataProvider isVATRegisteredInViesProvider
+     * @throws
+     */
+    public function isVATRegisteredInViesTest($val, $countryCode, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isVATRegisteredInVies($val, $countryCode);
         } else {
             try
             {
-                $result = isVATNumber($val, $countryCode);
+                $result = isVATRegisteredInVies($val, $countryCode);
                 $this->assertEquals($expected, $result);
             } catch (SoapFault $e) {
                 $this->expectException('SoapFault');

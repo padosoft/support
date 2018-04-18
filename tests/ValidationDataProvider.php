@@ -1604,15 +1604,52 @@ trait ValidationDataProvider
     /**
      * @return array
      */
-    public function isPivaProvider()
+    public function isEuVatNumberProvider()
+    {
+        return [
+            '"", false' => ['', false, false],
+            '"", true' => ['', true, false],
+            '" ", false ' => [' ', false, false],
+            '" ", true' => [' ', true, false],
+            'null, false' => [null, false, 'TypeError'],
+            'null, true' => [null, true, 'TypeError'],
+            '00000000000, false' => ['00000000000', false, true],
+            '00000000000, true' => ['00000000000', true, true],
+            'IT00000000000, false' => ['IT00000000000', false, true],
+            'IT00000000000, true' => ['IT00000000000', true, true],
+            '02361141209, false' => ['02361141209', false, true],
+            '02361141209, true' => ['02361141209', true, true],
+            'IT02361141209, false' => ['IT02361141209', false, true],
+            'IT02361141209, true' => ['IT02361141209', true, true],
+            '00000000001, false' => ['00000000001', false, false],
+            '00000000001, true' => ['00000000001', true, false],
+            'IT00000000001, false' => ['IT00000000001', false, false],
+            'IT00000000001, true' => ['IT00000000001', true, false],
+            'DE00000000001, false' => ['DE00000000001', false, true],//finchè non c'è un validatore per ogni stato se passo un vat estero e non valido via vies torna true
+            'DE00000000001, true' => ['DE00000000001', true, false],
+            '0, false' => ['0', false, false],
+            '0, true' => ['0', true, false],
+            '123456789012345678990, false' => ['123456789012345678990', false, false],
+            '123456789012345678990, true' => ['123456789012345678990', true, false],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function isITVatProvider()
     {
         return [
             '' => ['', false],
             ' ' => [' ', false],
             'null' => [null, 'TypeError'],
             '00000000000' => ['00000000000', true],
+            'IT00000000000' => ['IT00000000000', true],
             '02361141209' => ['02361141209', true],
+            'IT02361141209' => ['IT02361141209', true],
             '00000000001' => ['00000000001', false],
+            'IT00000000001' => ['IT00000000001', false],
+            'DE00000000001' => ['DE00000000001', false],
             '0' => ['0', false],
             '123456789012345678990' => ['123456789012345678990', false],
         ];
@@ -1621,7 +1658,7 @@ trait ValidationDataProvider
     /**
      * @return array
      */
-    public function isVATNumberProvider()
+    public function isVATRegisteredInViesProvider()
     {
         return [
             '\'\', \'\'' => ['', '', false],

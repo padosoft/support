@@ -294,8 +294,9 @@ var_dump(str_random(16));
 - isUrl
 - isHostname
 - urlW3c
-- isPiva
-- isVATNumber
+- isVATRegisteredInVies() : Validate a European VAT number using the EU commission VIES service to verify if VAT number is authorized to carry out intra-Community operations must use the service.
+- isITVat() : Check Italian Vat Number (Partita IVA).
+- isEuVatNumber() : Check if a valid EU vat given against specific EU country vat rules (at the moment only for italy) and optionally check the EU VIES service.   
 - isCf
 - isAlpha
 - isAlphaNumeric
