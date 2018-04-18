@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 2.0.2 - 2018-04-18
+
+### CHANGES:
+##### validation:
+- small refactor (remove unused code) in getCoutryCodeByVatNumberTest.    
+
 ## 2.0.1 - 2018-04-18
 
 ### ADD:

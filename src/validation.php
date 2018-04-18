@@ -735,9 +735,7 @@ function getCoutryCodeByVatNumber(string $pi, string $fallback  ='IT'): string
 
     //try to find country code
     $countryCode = strtoupper(substr($pi, 0, 2));
-    if (preg_match('/^[A-Za-z]{2}$/', $countryCode) === 1) {
-        $pi = substr($pi, 2);
-    } else {
+    if (!(preg_match('/^[A-Za-z]{2}$/', $countryCode) === 1)) {
         $countryCode = $fallback;
     }
     return $countryCode;
