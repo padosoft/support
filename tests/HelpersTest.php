@@ -320,6 +320,20 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
      */
     public function test_isMobile()
     {
+        $_SERVER['HTTP_USER_AGENT'] = '';
+        $isMobile = isMobile();
+        $this->assertFalse($isMobile);
+        unset($_SERVER['HTTP_USER_AGENT']);
+
+        unset($_SERVER['HTTP_USER_AGENT']);
+        $isMobile = isMobile();
+        $this->assertFalse($isMobile);
+
+        $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:57.0) Gecko/20100101 Firefox/57.0';
+        $isMobile = isMobile();
+        $this->assertFalse($isMobile);
+        unset($_SERVER['HTTP_USER_AGENT']);
+
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7';
         $isMobile = isMobile();
         $this->assertTrue($isMobile);

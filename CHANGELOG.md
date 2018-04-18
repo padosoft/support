@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 1.17.4 - 2018-04-18
+
+### FIX:
+##### helpers:
+- isMobile(): Fix when some bot has no $_SERVER['HTTP_USER_AGENT'].
+
 ## 1.17.3 - 2018-03-27
 
 ### FIX:
