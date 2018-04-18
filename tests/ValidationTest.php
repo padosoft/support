@@ -603,6 +603,24 @@ class ValidationTest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @param $val
+     * @param $fallback
+     * @param $expected
+     * @dataProvider getCoutryCodeByVatNumberProvider
+     */
+    public function getCoutryCodeByVatNumberTest($val, $fallback, $expected)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            getCoutryCodeByVatNumber($val, $fallback);
+        } else {
+            $result = getCoutryCodeByVatNumber($val, $fallback);
+            $this->assertEquals($expected, $result);
+        }
+    }
+
+    /**
+     * @test
+     * @param $val
      * @param $countryCode
      * @param $expected
      * @dataProvider isVATRegisteredInViesProvider

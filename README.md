@@ -296,7 +296,8 @@ var_dump(str_random(16));
 - urlW3c
 - isVATRegisteredInVies() : Validate a European VAT number using the EU commission VIES service to verify if VAT number is authorized to carry out intra-Community operations must use the service.
 - isITVat() : Check Italian Vat Number (Partita IVA).
-- isEuVatNumber() : Check if a valid EU vat given against specific EU country vat rules (at the moment only for italy) and optionally check the EU VIES service.   
+- isEuVatNumber() : Check if a valid EU vat given against specific EU country vat rules (at the moment only for italy) and optionally check the EU VIES service.
+- getCoutryCodeByVatNumberTest($val, $fallback): Try to extract EU country code in Vat number return $fallback if it fails.   
 - isCf
 - isAlpha
 - isAlphaNumeric

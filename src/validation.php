@@ -697,17 +697,7 @@ function urlW3c($check, bool $strict = false): bool
  */
 function isEuVatNumber(string $pi, bool $validateOnVIES = false): bool
 {
-    if ($pi === null || $pi === '' || strlen($pi) < 2) {
-        return false;
-    }
-
-    //try to find country code
-    $countryCode = strtoupper(substr($pi, 0, 2));
-    if (preg_match('/^[A-Za-z]{2}$/', $countryCode) === 1) {
-        $pi = substr($pi, 2);
-    }else{
-        $countryCode='IT';
-    }
+    $countryCode = getCoutryCodeByVatNumber($pi, 'IT');
 
     $result = true;
     if (function_exists('is'.$countryCode.'Vat')){
@@ -730,6 +720,30 @@ function isEuVatNumber(string $pi, bool $validateOnVIES = false): bool
 }
 
 /**
+ * Try to extract EU country code in Vat number
+ * return $fallback if it fails.
+ *
+ * @param string $pi
+ * @param string $fallback
+ * @return string
+ */
+function getCoutryCodeByVatNumber(string $pi, string $fallback  ='IT'): string
+{
+    if ($pi === null || $pi === '' || strlen($pi) < 2) {
+        return $fallback;
+    }
+
+    //try to find country code
+    $countryCode = strtoupper(substr($pi, 0, 2));
+    if (preg_match('/^[A-Za-z]{2}$/', $countryCode) === 1) {
+        $pi = substr($pi, 2);
+    } else {
+        $countryCode = $fallback;
+    }
+    return $countryCode;
+}
+
+/**
  * Check Italian Vat Number (Partita IVA).
  * @author Umberto Salsi <salsi@icosaedro.it>
  * @author Lorenzo Padovani modified.
@@ -741,20 +755,12 @@ function isEuVatNumber(string $pi, bool $validateOnVIES = false): bool
  */
 function isITVat(string $pi): bool
 {
-    if ($pi === null || $pi === '' || strlen($pi) < 2) {
+    $countryCode = getCoutryCodeByVatNumber($pi, '');
+    if($countryCode!='IT' && $countryCode!=''){
         return false;
     }
-
-    //try to find country code
-    $countryCode = strtoupper(substr($pi, 0, 2));
-    if (preg_match('/^[A-Za-z]{2}$/', $countryCode) === 1) {
+    if($countryCode!=''){
         $pi = substr($pi, 2);
-    }else{
-        $countryCode='IT';
-    }
-
-    if($countryCode!='IT'){
-        return false;
     }
 
     if ($pi === null || $pi === '' || strlen($pi) != 11 || preg_match("/^[0-9]+\$/", $pi) != 1) {

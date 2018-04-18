@@ -2,6 +2,16 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 2.0.1 - 2018-04-18
+
+### ADD:
+##### validation:
+- getCoutryCodeByVatNumberTest($val, $fallback): Try to extract EU country code in Vat number return $fallback if it fails.    
+
+### CHANGES:
+##### validation:
+- small refactor    
+
 ## 2.0.0 - 2018-04-18
 
 ### BREAKING CHANGES:
