@@ -1459,3 +1459,35 @@ if (!function_exists('charsArrayRegEx')) {
         );
     }
 }
+
+if (!function_exists('firstStringBetween')) {
+
+    /**
+     * Returns the first string there is between the strings from the parameter start and end.
+     * Example:
+     * firstStringBetween('This is a [custom] string', '[', ']'); // return 'custom'
+     * if start char and/or end char doesn't exists, return ''.
+     *
+     * @param $haystack
+     * @param $start
+     * @param $end
+     * @return bool|string
+     */
+    function firstStringBetween($haystack, $start, $end)
+    {
+        $char = strpos($haystack, $start);
+        if (!$char) {
+            return '';
+        }
+
+        $endchar = strpos($haystack, $end);
+        if (!$endchar) {
+            return '';
+        }
+
+        $char += strlen($start);
+        $len = strpos($haystack, $end, $char) - $char;
+
+        return substr($haystack, $char, $len);
+    }
+}

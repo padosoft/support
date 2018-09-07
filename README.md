@@ -246,6 +246,7 @@ var_dump(str_random(16));
 - str_html_compress
 - str_word_count_utf8
 - slugify() : Generate a URL friendly "slug" from a given string.
+- firstStringBetween(): Returns the first string there is between the strings from the parameter start and end.
 
 ### Validation
 

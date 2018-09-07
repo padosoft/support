@@ -59,7 +59,7 @@ function format_money(float $val = 0.00, int $precision = 2, string $simbol = ""
         $prefix = '';
         $suffix = ' '.$simbol;
     }
-    return $prefix . number_format($val, $precision, ',', '.').$suffix;
+    return trim($prefix . number_format($val, $precision, ',', '.').$suffix);
 }
 
 /**

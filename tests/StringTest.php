@@ -365,4 +365,47 @@ class StringTest extends \PHPUnit_Framework_TestCase
             $shortenString
         );
     }
+
+    /**
+     *
+     */
+    public function test_firstStringBetween()
+    {
+        $result = firstStringBetween('This is a [custom] string', '[', ']');
+        $this->assertEquals(
+            'custom',
+            $result
+        );
+        $result = firstStringBetween('This is a [custom] string. Very [custom2] string.', '[', ']');
+        $this->assertEquals(
+            'custom',
+            $result
+        );
+        $result = firstStringBetween('This is a [custom] string', '[', '}');
+        $this->assertEquals(
+            '',
+            $result
+        );
+        $result = firstStringBetween('This is a [custom] string', '{', '}');
+        $this->assertEquals(
+            '',
+            $result
+        );
+        $result = firstStringBetween('', '[', ']');
+        $this->assertEquals(
+            '',
+            $result
+        );
+        $result = firstStringBetween(' ', '[', ']');
+        $this->assertEquals(
+            '',
+            $result
+        );
+        $result = firstStringBetween(null, '[', ']');
+        $this->assertEquals(
+            '',
+            $result
+        );
+    }
+
 }

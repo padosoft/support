@@ -2,6 +2,16 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 2.1.0 - 2018-09-07
+
+### ADD:
+##### string:
+- firstStringBetween(): Returns the first string there is between the strings from the parameter start and end.
+    
+### FIX:
+##### helpers:
+- format_money(): Fix white space when no simbol passed.
+    
 ## 2.0.2 - 2018-04-18
 
 ### CHANGES:
