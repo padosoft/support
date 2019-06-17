@@ -402,7 +402,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     {
         $TinyUrl = getTinyUrl('https://github.com/ngfw/Recipe');
         $this->assertEquals(
-            'http://tinyurl.com/h2nchjh',
+            'http://tinyurl.com/yxhznoqt',
             $TinyUrl
         );
     }
