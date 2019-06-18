@@ -86,7 +86,7 @@ class XmlTest extends \PHPUnit_Framework_TestCase
             $this->expectException($expected);
             array2xml($val, $rootXml);
         } else {
-            $this->assertEquals($expected, array2xml($val, $rootXml));
+            $this->assertEquals(str_replace(["\r","\n"],['',''],trim($expected)), str_replace(["\r","\n"],['',''],trim(array2xml($val, $rootXml))));
         }
     }
 }
