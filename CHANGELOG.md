@@ -1,7 +1,17 @@
 # Changelog
 
 All Notable changes to `support` will be documented in this file
+## 2.2.1 - 2019-06-18
+    
+### FIX:
+##### tests:
+- fixed test for XMLTest and Vat Validator
 
+## 2.2.0 - 2019-06-18
+
+### CHANGE:
+- added compatibility with Nesbot/Carbon 2.x
+        
 ## 2.1.0 - 2018-09-07
 
 ### ADD:
