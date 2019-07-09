@@ -1,6 +1,13 @@
 # Changelog
 
 All Notable changes to `support` will be documented in this file
+
+## 2.3.0 - 2019-07-09
+    
+### CHANGE:
+##### string:
+- slugify: remove degrees and math power char.
+
 ## 2.2.1 - 2019-06-18
     
 ### FIX:

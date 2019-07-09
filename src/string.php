@@ -757,6 +757,9 @@ if (!function_exists('slugify')) {
      */
     function slugify(string $title, string $separator = '-') : string
     {
+        // Remove all characters that are degrees or math power exponetial
+        $title = preg_replace('[°₀۰¹₁²₂³₃⁴₄⁵₅⁶₆⁷₇⁸₈⁹₉]', '', mb_strtolower($title));
+
         //removes all diacritics (marks like accents) from a given UTF8-encoded
         //texts and returns ASCii-text equivalent(if possible).
         $title = normalizeUtf8String($title);

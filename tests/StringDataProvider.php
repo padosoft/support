@@ -74,7 +74,7 @@ trait StringDataProvider
             '\'Using strings like fòô bàř\', \'-\'' => ['Using strings like fòô bàř', '-', 'using-strings-like-foo-bar'],
             '\'numbers 1234\', \'-\'' => ['numbers 1234', '-', 'numbers-1234'],
             '\'śšşсσșςစſს\', \'-\'' => ['śšşсσșςစſს', '-', 'ssssssssss'],
-            '\'°₀۰\', \'-\'' => ['°₀۰', '-', '000'],
+            '\'1°₀۰¹₁²₂³₃⁴₄⁵₅⁶₆⁷₇⁸₈⁹₉1\', \'-\'' => ['1°₀۰¹₁²₂³₃⁴₄⁵₅⁶₆⁷₇⁸₈⁹₉1', '-', '11'],
             '\'Foo bar baz\', \'_\'' => ['Foo bar baz', '_', 'foo_bar_baz'],
             '\'A_string with_underscores\', \'_\'' => ['A_string with_underscores', '_', 'a_string_with_underscores'],
             '\'--   An odd__   string-_\', \'-\'' => ['--   An odd__   string-_', '-', 'an-odd-string'],
