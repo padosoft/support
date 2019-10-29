@@ -2,6 +2,15 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 2.4.0 - 2019-10-29
+    
+### ADD:
+##### helpers:
+- getFileMimeType(): get the mime type string of a file using more strategies or return FALSE if it fails.
+- getFileMimeTypeByFileInfo(): get File MimeType string using the newer PHP finfo functions.
+- getFileMimeTypeByOSFileCommand(): get File MimeType string using the OS' file command. AFAIK that's only available on *NIX systems.
+- getImageMimeTypeByExif_imagetype(): get image MimeType string of image using exif_imagetype.
+
 ## 2.3.0 - 2019-07-09
     
 ### CHANGE:

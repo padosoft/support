@@ -162,7 +162,11 @@ var_dump(str_random(16));
 - isRequestFromCloudFlare(): check if request (by given $_SERVER) is a cloudflare request.
 - isCloudFlareIp(): check if given ip is a valid cloudflare ip. 
 - gzCompressFile(): GZIPs a file on disk (appending .gz to the name) without read all source file in memory.
-
+- getFileMimeType(): get the mime type string of a file using more strategies or return FALSE if it fails.
+- getFileMimeTypeByFileInfo(): get File MimeType string using the newer PHP finfo functions.
+- getFileMimeTypeByOSFileCommand(): get File MimeType string using the OS' file command. AFAIK that's only available on *NIX systems.
+- getImageMimeTypeByExif_imagetype(): get image MimeType string of image using exif_imagetype.
+      
 ### IP
 - getIPVisitor
 - anonimizeIp

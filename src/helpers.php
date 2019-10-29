@@ -1465,3 +1465,119 @@ if (!function_exists('gzCompressFile')) {
             return $dest;
     }
 }
+
+if (!function_exists('getFileMimeTypeByFileInfo')) {
+
+    /**
+     * get File MimeType string using the newer PHP finfo functions.
+     *
+     * It tries to use the newer PHP finfo functions.
+     *
+     * @param string $filePath the full path file name
+     * @return mixed|string the mime type string or FALSE if it fails.
+     */
+    function getFileMimeTypeByFileInfo(string $filePath)
+    {
+        if (function_exists('finfo_file')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $type = finfo_file($finfo, $filePath);
+            finfo_close($finfo);
+            return $type;
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('getFileMimeTypeByOSFileCommand')) {
+
+    /**
+     * get File MimeType string using the OS' file command.
+     * AFAIK that's only available on *NIX systems,
+     *
+     * @param string $filePath the full path file name
+     * @return mixed|string the mime type string or FALSE if it fails.
+     */
+    function getFileMimeTypeByOSFileCommand(string $filePath)
+    {
+        if (windows_os()) {
+            return false;
+        }
+
+        try{
+            $secondOpinion = exec('file -b --mime-type ' . escapeshellarg($filePath), $foo, $returnCode);
+            if ($returnCode === 0 && $secondOpinion) {
+                $type = $secondOpinion;
+                return $type;
+            }
+        }catch(Exception $exception){
+            return false;
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('getImageMimeTypeByExif_imagetype')) {
+
+    /**
+     * get image MimeType string of image using exif_imagetype
+     *
+     * @param string $filePath the full path file name
+     * @return mixed|string the mime type string or FALSE if it fails.
+     */
+    function getImageMimeTypeByExif_imagetype(string $filePath)
+    {
+        try {
+            $exifImageType = exif_imagetype($filePath);
+            if ($exifImageType !== false) {
+                return image_type_to_mime_type($exifImageType);
+            }
+        }catch(Exception $exception){
+            return false;
+        }
+
+        return false;
+    }
+}
+
+if (!function_exists('getFileMimeType')) {
+
+    /**
+     * get File MimeType string using more strategies.
+     *
+     * It tries to use the newer PHP finfo functions.
+     * If those aren't available, it uses the mime_content_type.
+     * If those didn't return anything useful, it'll try the OS' file command.
+     * AFAIK that's only available on *NIX systems,
+     * If nothing worked, it tries exif_imagetype as fallback for images only.
+     *
+     * @param string $filePath the full path file name
+     * @return mixed|string the mime type string or FALSE if it fails.
+     *
+     * See: https://stackoverflow.com/questions/1232769/how-to-get-the-content-type-of-a-file-in-php?noredirect=1&lq=1
+     *
+     */
+    function getFileMimeType(string $filePath)
+    {
+        //tries to use the newer PHP finfo functions
+        $type = getFileMimeTypeByFileInfo($filePath);
+
+        //If those aren't available, it uses the mime_content_type.
+        if (!$type && function_exists('mime_content_type')) {
+            $type = mime_content_type($filePath);
+        }
+
+        //If those didn't return anything useful, it'll try the OS' file command. AFAIK that's only available on *NIX systems,
+        if (!$type && in_array($type, array('application/octet-stream', 'text/plain'))) {
+            $type = getFileMimeTypeByOSFileCommand($filePath);
+        }
+
+        //If nothing worked, it tries exif_imagetype as fallback for images only.
+        if (!$type && in_array($type, array('application/octet-stream', 'text/plain'))) {
+            $type = getImageMimeTypeByExif_imagetype($filePath);
+        }
+
+        return $type;
+    }
+}

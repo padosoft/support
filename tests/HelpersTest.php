@@ -4,7 +4,6 @@ namespace Padosoft\Support\Test;
 
 class HelpersTest extends \PHPUnit_Framework_TestCase
 {
-
     protected function setUp()
     {
     }
@@ -619,4 +618,168 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         }
     }
 
+    /**
+     * Custom Debug.
+     */
+    public function test_getFileMimeTypeByFileInfo()
+    {
+        //Create a temporary file in the temporary
+        $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.log';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        file_put_contents($file, 'hello');
+
+        $mime = getFileMimeTypeByFileInfo($file);
+
+        $this->assertEquals(true, $mime=='text/plain');
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        //test with jpeg
+
+        //Create a temporary file in the temporary
+        $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.jpg';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        //create white jpg
+        $this->createWhiteJpg($file);
+
+        $mime = getFileMimeTypeByFileInfo($file);
+
+        $this->assertEquals(true, $mime=='image/jpeg');
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * Custom Debug.
+     */
+    public function test_getFileMimeTypeByOSFileCommand()
+    {
+        //Create a temporary file in the temporary
+        $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.log';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        file_put_contents($file, 'hello');
+
+        $mime = getFileMimeTypeByOSFileCommand($file);
+
+        if(windows_os()){
+            $this->assertEquals(false, $mime);
+        }else{
+            $this->assertEquals(true, $mime=='text/plain');
+        }
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        //test with jpeg
+
+        //Create a temporary file in the temporary
+        $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.jpg';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        //create white jpg
+        $this->createWhiteJpg($file);
+
+        $mime = getFileMimeTypeByOSFileCommand($file);
+
+        if(windows_os()){
+            $this->assertEquals(false, $mime);
+        }else{
+            $this->assertEquals(true, $mime=='image/jpeg');
+        }
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * Custom Debug.
+     */
+    public function test_getImageMimeTypeByExif_imagetype()
+    {
+        //Create a temporary file in the temporary
+        $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.jpg';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        //create white jpg
+        $this->createWhiteJpg($file);
+
+        $mime = getImageMimeTypeByExif_imagetype($file);
+
+        $this->assertEquals(true, $mime=='image/jpeg');
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * Custom Debug.
+     */
+    public function test_getFileMimeType()
+    {
+        //test with txt
+
+        //Create a temporary file in the temporary
+        $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.log';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+        file_put_contents($file, 'hello');
+
+        $mime = getFileMimeType($file);
+
+        $this->assertEquals(true, $mime=='text/plain');
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        //test with jpeg
+
+        //Create a temporary file in the temporary
+        $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.jpg';
+        if (file_exists($file)) {
+            unlink($file);
+        }
+
+        //create white jpg
+        $this->createWhiteJpg($file);
+
+        $mime = getFileMimeType($file);
+
+        $this->assertEquals(true, $mime=='image/jpeg');
+
+        if (file_exists($file)) {
+            unlink($file);
+        }
+    }
+
+    /**
+     * create white jpg
+     * @param string $file
+     */
+    public function createWhiteJpg(string $file): void
+    {
+        $img = imagecreatetruecolor(120, 20);
+        $bg = imagecolorallocate($img, 255, 255, 255);
+        imagefilledrectangle($img, 0, 0, 120, 20, $bg);
+        imagejpeg($img, $file, 100);
+    }
 }
