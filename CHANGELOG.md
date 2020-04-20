@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 2.4.1 - 2020-04-20
+    
+### FIX BUG:
+##### array.php:
+- fix array_get() and array_set().
+
 ## 2.4.0 - 2019-10-29
     
 ### ADD:

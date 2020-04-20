@@ -24,8 +24,8 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         }
 
         return strpos($expected, 'Exception') !== false
-        || strpos($expected, 'PHPUnit_Framework_') !== false
-        || strpos($expected, 'TypeError') !== false;
+            || strpos($expected, 'PHPUnit_Framework_') !== false
+            || strpos($expected, 'TypeError') !== false;
     }
 
     /**
@@ -201,4 +201,30 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($test_arr_result_first, array_remove_columns($test_arr, 1));
         $this->assertEquals($test_arr_result_first, array_remove_first_columns($test_arr));
     }
+
+    public function test_array_get()
+    {
+        $array = [
+            'a' => [
+                'b' => 'c'
+            ]
+        ];
+        $this->assertEquals(
+            ['b' => 'c'],
+            array_get($array, 'a')
+        );
+        $this->assertEquals(
+            'c',
+            array_get($array, 'a.b')
+        );
+        $this->assertEquals(
+            null,
+            array_get($array, 'c.df.f')
+        );
+        $this->assertEquals(
+            'pippo',
+            array_get($array, 'c.df.f', 'pippo')
+        );
+    }
+
 }

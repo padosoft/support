@@ -4,9 +4,9 @@ if (!function_exists('get')) {
     /**
      * Get an item from an array using "dot" notation.
      *
-     * @param  array $array
-     * @param  string $key
-     * @param  mixed $default
+     * @param array $array
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     function get($array, $key, $default = null)
@@ -31,7 +31,7 @@ if (!function_exists('head')) {
     /**
      * Get the first element of an array. Useful for method chaining.
      *
-     * @param  array $array
+     * @param array $array
      * @return mixed
      */
     function head($array)
@@ -44,7 +44,7 @@ if (!function_exists('last')) {
     /**
      * Get the last element from an array.
      *
-     * @param  array $array
+     * @param array $array
      * @return mixed
      */
     function last($array)
@@ -63,7 +63,7 @@ if (!function_exists('insert_at_top')) {
      * @return bool
      * @see https://github.com/ifsnop/lpsf/blob/master/src/Ifsnop/functions.inc.php
      */
-    function insert_at_top(&$my_arr, $elem, int $count = 10) : bool
+    function insert_at_top(&$my_arr, $elem, int $count = 10): bool
     {
         if (!is_array($my_arr) || is_null($elem)) {
             return false;
@@ -78,8 +78,8 @@ if (!function_exists('array_has')) {
     /**
      * Check if an item exists in an array using "dot" notation.
      *
-     * @param  array $array
-     * @param  string $key
+     * @param array $array
+     * @param string $key
      * @return bool
      */
     function array_has($array, $key)
@@ -100,25 +100,49 @@ if (!function_exists('array_has')) {
     }
 }
 
+if (!function_exists('array_accessible')) {
+    /**
+     * Determine whether the given value is array accessible.
+     * See: https://github.com/illuminate/support/blob/master/Arr.php
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    function array_accessible($value)
+    {
+        return is_array($value) || $value instanceof ArrayAccess;
+    }
+}
+
 if (!function_exists('array_get')) {
     /**
      * Get an item from an array using "dot" notation.
      *
-     * @param  array $array
-     * @param  string $key
-     * @param  mixed $default
+     * @param array $array
+     * @param string $key
+     * @param mixed $default
      * @return mixed
      */
     function array_get($array, $key, $default = null)
     {
+        if (!array_accessible($array)) {
+            return value($default);
+        }
+
         if (is_null($key)) {
             return $array;
         }
-        if (isset($array[$key])) {
+
+        if (array_key_exists_safe($array, $key)) {
             return $array[$key];
         }
+
+        if (strpos($key, '.') === false) {
+            return $array[$key] ?? value($default);
+        }
+
         foreach (explode('.', $key) as $segment) {
-            if (!is_array($segment) || !array_key_exists_safe($segment, $array)) {
+            if (!array_accessible($array) || !array_key_exists_safe($array, $segment)) {
                 return value($default);
             }
             $array = $array[$segment];
@@ -130,12 +154,13 @@ if (!function_exists('array_get')) {
 if (!function_exists('array_set')) {
     /**
      * Set an array item to a given value using "dot" notation.
-     *
      * If no key is given to the method, the entire array will be replaced.
      *
-     * @param  array $array
-     * @param  string $key
-     * @param  mixed $value
+     * @see: https://github.com/illuminate/support/blob/master/Arr.php
+     *
+     * @param array $array
+     * @param string|null $key
+     * @param mixed $value
      * @return array
      */
     function array_set(&$array, $key, $value)
@@ -143,18 +168,28 @@ if (!function_exists('array_set')) {
         if (is_null($key)) {
             return $array = $value;
         }
+
         $keys = explode('.', $key);
-        while (count($keys) > 1) {
-            $key = array_shift($keys);
+
+        foreach ($keys as $i => $key) {
+            if (count($keys) === 1) {
+                break;
+            }
+
+            unset($keys[$i]);
+
             // If the key doesn't exist at this depth, we will just create an empty array
             // to hold the next value, allowing us to create the arrays to hold final
             // values at the correct depth. Then we'll keep digging into the array.
             if (!isset($array[$key]) || !is_array($array[$key])) {
-                $array[$key] = array();
+                $array[$key] = [];
             }
-            $array =& $array[$key];
+
+            $array = &$array[$key];
         }
+
         $array[array_shift($keys)] = $value;
+
         return $array;
     }
 }
@@ -215,13 +250,13 @@ if (!function_exists('in_array_column')) {
      * For exampe, following code
      *  $exist = in_array_column([['id' => 1], ['id' => 2], ['id' => 3]], 3, 'id');
      * will produce 2
-     * @author wapmorgan
-     * @since 2015.05.19
      * @param array $haystack Source array
      * @param mixed $needle Needed value
      * @param string $column Column to perform search
      * @param bool $strict Should search be strict or not.
      * @return bool True if value exists in array, False otherwise.
+     * @since 2015.05.19
+     * @author wapmorgan
      * @see modified from https://github.com/wapmorgan/php-functions-repository/blob/master/i/in_array_column.php
      */
     function in_array_column($haystack, $needle, $column, $strict = false)
@@ -245,7 +280,7 @@ if (!function_exists('objectToArray')) {
      * @return array
      * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
      */
-    function objectToArray($object) : array
+    function objectToArray($object): array
     {
         if (!is_object($object) && !is_array($object)) {
             return [];
@@ -267,7 +302,7 @@ if (!function_exists('arrayToObject')) {
      * @return stdClass (object)
      * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
      */
-    function arrayToObject(array $array = []) : \stdClass
+    function arrayToObject(array $array = []): \stdClass
     {
         $object = new \stdClass();
 
@@ -297,7 +332,7 @@ if (!function_exists('arrayToString')) {
      * @return string
      * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
      */
-    function arrayToString(array $array = []) : string
+    function arrayToString(array $array = []): string
     {
         if (isNullOrEmptyArray($array)) {
             return '';
@@ -319,7 +354,7 @@ if (!function_exists('array_key_exists_safe')) {
      * @param string $key
      * @return bool
      */
-    function array_key_exists_safe(array $array, string $key) : bool
+    function array_key_exists_safe(array $array, string $key): bool
     {
         if (isNullOrEmptyArray($array) || isNullOrEmpty($key)) {
             return false;
@@ -357,7 +392,7 @@ if (!function_exists('isNullOrEmptyArray')) {
      * @param $array
      * @return bool
      */
-    function isNullOrEmptyArray($array):bool
+    function isNullOrEmptyArray($array): bool
     {
         return $array === null || !is_array($array) || count($array) < 1;
     }
@@ -372,7 +407,7 @@ if (!function_exists('isNullOrEmptyArrayKey')) {
      * @param bool $withTrim if set to true (default) check if trim()!='' too.
      * @return bool
      */
-    function isNullOrEmptyArrayKey(array $array, string $key, bool $withTrim = true):bool
+    function isNullOrEmptyArrayKey(array $array, string $key, bool $withTrim = true): bool
     {
         return !array_key_exists_safe($array, $key) || $array[$key] === null || isNullOrEmpty($array[$key], $withTrim);
     }
@@ -385,7 +420,7 @@ if (!function_exists('isNotNullOrEmptyArray')) {
      * @param $array
      * @return bool
      */
-    function isNotNullOrEmptyArray($array):bool
+    function isNotNullOrEmptyArray($array): bool
     {
         return !isNullOrEmptyArray($array);
     }
@@ -400,7 +435,7 @@ if (!function_exists('isNotNullOrEmptyArrayKey')) {
      * @param bool $withTrim if set to true (default) check if trim()!='' too.
      * @return bool
      */
-    function isNotNullOrEmptyArrayKey(array $array, string $key, bool $withTrim = true):bool
+    function isNotNullOrEmptyArrayKey(array $array, string $key, bool $withTrim = true): bool
     {
         return !isNullOrEmptyArrayKey($array, $key, $withTrim);
     }
@@ -414,7 +449,7 @@ if (!function_exists('array_remove_columns')) {
      * @param int $columnToRemove
      * @return array
      */
-    function array_remove_columns(array $array, int $columnToRemove):array
+    function array_remove_columns(array $array, int $columnToRemove): array
     {
         if (count($array) < 1) {
             return [];
@@ -453,7 +488,7 @@ if (!function_exists('array_remove_first_columns')) {
      * @param $array
      * @return array
      */
-    function array_remove_first_columns(array $array):array
+    function array_remove_first_columns(array $array): array
     {
         return array_remove_columns($array, 1);
     }
@@ -466,7 +501,7 @@ if (!function_exists('array_remove_last_columns')) {
      * @param $array
      * @return array
      */
-    function array_remove_last_columns(array $array):array
+    function array_remove_last_columns(array $array): array
     {
         if (count($array) < 1) {
             return [];
