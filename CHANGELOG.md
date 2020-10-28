@@ -2,6 +2,18 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 2.4.2 - 2020-10-28
+
+### CHANGE:
+- Updated dependencies
+##### string.php:
+- added str_contains_array 
+- now str_contains is provided by Symfony\Polyfill\Php80 but the function
+is maintained for backwards compatibility.
+
+##### sanitize.php:
+- sanitize_filename now use str_contains_array function
+
 ## 2.4.1 - 2020-04-20
     
 ### FIX BUG:

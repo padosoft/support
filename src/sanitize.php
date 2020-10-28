@@ -238,7 +238,7 @@ function sanitize_filename(
         '..%c0%af',
         '..%c1%9c',
     ];
-    while (str_contains($fileName, $notAllowedPath) !== false) {
+    while (str_contains_array($fileName, $notAllowedPath) !== false) {
         $fileName = str_replace($notAllowedPath, '', $fileName);
     }
 

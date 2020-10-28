@@ -2,15 +2,17 @@
 
 namespace Padosoft\Support\Test;
 
-class ValidationTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ValidationTest extends TestCase
 {
     use \Padosoft\Support\Test\ValidationDataProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

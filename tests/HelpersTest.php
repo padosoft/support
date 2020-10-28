@@ -2,13 +2,15 @@
 
 namespace Padosoft\Support\Test;
 
-class HelpersTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class HelpersTest extends TestCase
 {
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $file = sys_get_temp_dir().DIRECTORY_SEPARATOR.'pippo.log';
         $destFile = $file.'.gz';
@@ -212,7 +214,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     public function test_getCurrentUrlPageName()
     {
         $old = $_SERVER['PHP_SELF'];
-        $this->assertContains('phpunit', getCurrentUrlPageName());
+        $this->assertStringContainsString('phpunit', getCurrentUrlPageName());
 
         $_SERVER['PHP_SELF'] = '/one/two/index.php';
         $this->assertEquals('index.php', getCurrentUrlPageName());
@@ -346,7 +348,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     {
         $_SERVER['HTTP_USER_AGENT'] = 'Mozilla/5.0 (iPhone; U; CPU iPhone OS 4_0 like Mac OS X; en-us) AppleWebKit/532.9 (KHTML, like Gecko) Version/4.0.5 Mobile/8A293 Safari/6531.22.7';
         $browser = getBrowser();
-        $this->assertInternalType('string', $browser);
+        $this->assertIsString( $browser);
         unset($_SERVER['HTTP_USER_AGENT']);
     }
 
@@ -363,19 +365,19 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
             'userId' => 1,
         ]);
         $POST_obj = json_decode($testCurlPOST);
-        $this->assertInternalType('object', $POST_obj);
+        $this->assertIsObject($POST_obj);
 
         $testCurlHeaderAndReturnInfo = curl('http://jsonplaceholder.typicode.com/posts', $method = 'GET', $data = false,
             $header = [
                 'Accept' => 'application/json',
             ], $returnInfo = true);
-        $this->assertInternalType('array', $testCurlHeaderAndReturnInfo);
-        $this->assertInternalType('array', $testCurlHeaderAndReturnInfo['info']);
-        $this->assertInternalType('string', $testCurlHeaderAndReturnInfo['contents']);
+        $this->assertIsArray($testCurlHeaderAndReturnInfo);
+        $this->assertIsArray($testCurlHeaderAndReturnInfo['info']);
+        $this->assertIsString($testCurlHeaderAndReturnInfo['contents']);
 
         $testCurlLog = curl('https://api.ipify.org','GET',false,[],false,'','',true,false,10,__DIR__.'/curl.log');
         $this->assertFileExists(__DIR__.'/curl.log');
-        $this->assertContains($testCurlLog, file_get_contents(__DIR__.'/curl.log'));
+        $this->assertStringContainsString($testCurlLog, file_get_contents(__DIR__.'/curl.log'));
         unlink(__DIR__.'/curl.log');
 
         $testCurlLog = curl('https://sdasdsadsadsada.org','GET',false,[],false,'','',true,false,1);
@@ -401,7 +403,7 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
     {
         $TinyUrl = getTinyUrl('https://github.com/ngfw/Recipe');
         $this->assertEquals(
-            'http://tinyurl.com/yxhznoqt',
+            'https://tinyurl.com/yxhznoqt',
             $TinyUrl
         );
     }
@@ -461,8 +463,8 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
      */
     public function test_get_var_dump_output()
     {
-        $this->assertInternalType('string', get_var_dump_output('dummy'));
-        $this->assertContains('string(5) "dummy"', get_var_dump_output('dummy'));
+        $this->assertIsString(get_var_dump_output('dummy'));
+        $this->assertStringContainsString('string(5) "dummy"', get_var_dump_output('dummy'));
     }
 
     /**
@@ -474,8 +476,8 @@ class HelpersTest extends \PHPUnit_Framework_TestCase
         ob_start();
         debug($string);
         $debug = ob_get_clean();
-        $this->assertInternalType('string', $debug);
-        $this->assertContains('Test me', $debug);
+        $this->assertIsString($debug);
+        $this->assertStringContainsString('Test me', $debug);
     }
 
     /**

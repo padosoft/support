@@ -3,6 +3,9 @@
 namespace Padosoft\Support\Test;
 
 
+use PHPUnit\Framework\Error\Error;
+use \PHPUnit\Framework\Error\Warning;
+
 trait DateTimeDataProvider
 {
     /**
@@ -11,9 +14,9 @@ trait DateTimeDataProvider
     public function cal_days_in_monthProvider()
     {
         return [
-            'null, null, null' => [null, null, null, 'PHPUnit_Framework_Error'],
-            '\'\', \'\', \'\'' => ['', '', '', 'PHPUnit_Framework_Error'],
-            '\' \', \' \', \' \' ' => [' ', ' ', ' ', 'PHPUnit_Framework_Error'],
+            'null, null, null' => [null, null, null, Warning::class],
+            '\'\', \'\', \'\'' => ['', '', '',  Error::class],
+            '\' \', \' \', \' \' ' => [' ', ' ', ' ',  Error::class],
             '0, 1, 2016' => [0, 1, 2016, 31],
             'CAL_GREGORIAN, 1, 2016' => [CAL_GREGORIAN, 1, 2016, 31],
             'CAL_GREGORIAN, 2, 2015' => [CAL_GREGORIAN, 2, 2015, 28],

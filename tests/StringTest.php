@@ -2,15 +2,17 @@
 
 namespace Padosoft\Support\Test;
 
-class StringTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class StringTest extends TestCase
 {
     use \Padosoft\Support\Test\StringDataProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 
@@ -100,13 +102,13 @@ class StringTest extends \PHPUnit_Framework_TestCase
             }
             $this->assertEquals($len, strlen($psw));
             if ($secLevel < 1) {
-                $this->assertRegExp('/[a-z]{1,' . $len . '}/', $psw);
+                $this->assertMatchesRegularExpression('/[a-z]{1,' . $len . '}/', $psw);
             } elseif ($secLevel == 1) {
-                $this->assertRegExp('/[a-z0-9]{1,' . $len . '}/', $psw);
+                $this->assertMatchesRegularExpression('/[a-z0-9]{1,' . $len . '}/', $psw);
             } elseif ($secLevel == 2) {
-                $this->assertRegExp('/[A-Za-z0-9]{1,' . $len . '}/', $psw);
+                $this->assertMatchesRegularExpression('/[A-Za-z0-9]{1,' . $len . '}/', $psw);
             } elseif ($secLevel >= 3) {
-                $this->assertRegExp('/[A-Za-z0-9-_$!+&%?=*#@]{1,' . $len . '}/', $psw);
+                $this->assertMatchesRegularExpression('/[A-Za-z0-9-_$!+&%?=*#@]{1,' . $len . '}/', $psw);
             }
         }
     }
