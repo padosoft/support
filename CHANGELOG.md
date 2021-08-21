@@ -2,6 +2,12 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 2.5.0 - 2021-08-22
+
+### ADD:
+- support for PHP8
+- Updated dependencies
+
 ## 2.4.2 - 2020-10-28
 
 ### CHANGE:

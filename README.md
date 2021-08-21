@@ -28,7 +28,7 @@ All helpers function are splitted into these files:
 
 ##Requires
   
-- php: >=7.0.0
+- php: >=7.0.0|^8.0
 - nesbot/carbon (only for some datetime functions)
   
 ## Installation

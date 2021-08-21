@@ -334,9 +334,9 @@ function isDateIso($value): bool
     if (isNullOrEmpty($value) || strlen($value) != 10 || strpos($value, '-') === false) {
         return false;
     }
-    list($yyyy, $mm, $dd) = explode('-', $value);
+    [$yyyy, $mm, $dd] = explode('-', $value);
     try {
-        return checkdate($mm, $dd, $yyyy);
+        return checkdate((int)$mm, (int)$dd, (int)$yyyy);
     } catch (Exception $e) {
         return false;
     }
@@ -551,7 +551,7 @@ function betweenDateIta(string $date, string $minDate, string $maxDate, bool $st
 
 /**
  * @param $value
- * @param $checkMx
+ * @param bool $checkMx
  * @return bool
  */
 function isMail($value, bool $checkMx = false): bool

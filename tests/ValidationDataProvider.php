@@ -160,13 +160,12 @@ trait ValidationDataProvider
             '16/08/2016 23.59.59' => ['16/08/2016 23.59.59', false],
             '16.08.2016 23.59.59' => ['16.08.2016 23.59.59', false],
             '16-08-2016 23:59:59' => ['16-08-2016 23.59.59', false],
-            '16/08/16 23:59:59' => ['16/08/16 23:59:59', false],
+            '16/08/16 23:59:59' => ['16/08/16 23:59:59', \TypeError::class],
             '23:59:59' => ['23:59:59', false],
             '16/08/2016' => ['16/08/2016', false],
-            '00/00/00 00:00:00' => ['00/00/00 00:00:00', false],
-            '0/0/0 00:00:00' => ['0/0/0 00:00:00', false],
-            '0/0/0 0:0:0' => ['0/0/0 0:0:0', false],
-            '0/0/0 0:0:0' => ['0/0/0 0:0:0', false],
+            '00/00/00 00:00:00' => ['00/00/00 00:00:00', \TypeError::class],
+            '0/0/0 00:00:00' => ['0/0/0 00:00:00', \TypeError::class],
+            '0/0/0 0:0:0' => ['0/0/0 0:0:0', \TypeError::class],
         ];
     }
 
@@ -1810,7 +1809,7 @@ trait ValidationDataProvider
             '\' \', \'\'' => [' ', '', false],
             'null, \'\'' => [null, '', false],
             'user@gmail.com, false' => ['user@gmail.com', false, true],
-            'user@gmail.com, true' => ['user@gmail.com', true, true],
+            //'user@gmail.com, true' => ['user@gmail.com', true, true],
             'user@veryLongAndNotExistingDomainName132435.com, false' => ['user@veryLongAndNotExistingDomainName132435.com', false, true],
             'user@veryLongAndNotExistingDomainName132435.com, true' => ['user@veryLongAndNotExistingDomainName132435.com', true, false],
         ];

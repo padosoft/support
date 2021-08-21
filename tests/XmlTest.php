@@ -69,8 +69,10 @@ class XmlTest extends TestCase
         $this->assertEquals($expected, is_array($arr['root']['child1']));
         $this->assertEquals($expected, count($arr['root']['child1'])>0);
         $this->assertEquals($expected, array_key_exists('child1child1', $arr['root']['child1']));
-        if(is_array($arr['root']['child1']['child1child1'])){
-            $this->assertEquals($expected, count($arr['root']['child1']['child1child1'])==0);
+        if(is_array($arr['root']['child1']['child1child1'])&&array_key_exists('value',$arr['root']['child1']['child1child1'])) {
+            $this->assertEquals($expected, $arr['root']['child1']['child1child1']['value'] == 'ciaone');
+        }elseif(is_array($arr['root']['child1']['child1child1'])&&!array_key_exists('value',$arr['root']['child1']['child1child1'])){
+            $this->assertEquals($expected, count($arr['root']['child1']['child1child1'])===0);
         }elseif($arr['root']['child1']['child1child1']!=''){
             $this->assertEquals($expected, $arr['root']['child1']['child1child1']=='ciaone');
         }
