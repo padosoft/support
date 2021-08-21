@@ -594,7 +594,7 @@ if (!function_exists('cal_days_in_month')) {
      * @param int $year
      * @return int
      */
-    function cal_days_in_month($calendar = CAL_GREGORIAN, $month, $year) : int
+    function cal_days_in_month($calendar = CAL_GREGORIAN, $month=0, $year=0) : int
     {
         if (!isInRange($month, 1, 12) || $year < 1) {
             return 0;
