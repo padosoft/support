@@ -2,15 +2,17 @@
 
 namespace Padosoft\Support\Test;
 
-class XmlTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class XmlTest extends TestCase
 {
     use \Padosoft\Support\Test\XmlDataProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

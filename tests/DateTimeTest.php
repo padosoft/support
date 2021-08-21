@@ -2,15 +2,17 @@
 
 namespace Padosoft\Support\Test;
 
-class DateTimeTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class DateTimeTest extends TestCase
 {
     use \Padosoft\Support\Test\DateTimeDataProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 
@@ -26,26 +28,11 @@ class DateTimeTest extends \PHPUnit_Framework_TestCase
 
         return strpos($expected, 'Exception') !== false
         || strpos($expected, 'PHPUnit_Framework_') !== false
+        || strpos($expected, '\PHPUnit\Framework\Error\\') !== false
         || strpos($expected, 'TypeError') !== false;
     }
 
-    /**
-     * @test
-     * @param $calendar
-     * @param $month
-     * @param $year
-     * @param $expected
-     * @dataProvider cal_days_in_monthProvider
-     */
-    public function cal_days_in_monthTest($calendar, $month, $year, $expected)
-    {
-        if ($this->expectedIsAnException($expected)) {
-            $this->expectException($expected);
-            cal_days_in_month($calendar, $month, $year);
-        } else {
-            $this->assertEquals($expected, cal_days_in_month($calendar, $month, $year));
-        }
-    }
+
 
     /**
      * @test

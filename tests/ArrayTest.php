@@ -2,14 +2,16 @@
 
 namespace Padosoft\Support\Test;
 
-class ArrayTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class ArrayTest extends TestCase
 {
 
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 
@@ -24,8 +26,8 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         }
 
         return strpos($expected, 'Exception') !== false
-        || strpos($expected, 'PHPUnit_Framework_') !== false
-        || strpos($expected, 'TypeError') !== false;
+            || strpos($expected, 'PHPUnit_Framework_') !== false
+            || strpos($expected, 'TypeError') !== false;
     }
 
     /**
@@ -37,7 +39,7 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         $obj->foo = 'bar';
         $obj->baz = 'qux';
         $array = objectToArray($obj);
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
     }
 
     public function test_arrayToObject()
@@ -47,7 +49,7 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
             'baz' => 'qux',
         ];
         $obj = arrayToObject($array);
-        $this->assertInternalType('object', $obj);
+        $this->assertIsObject( $obj);
         $this->assertEquals('bar', $obj->foo);
         $this->assertEquals('qux', $obj->baz);
 
@@ -59,9 +61,9 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
             ],
         ];
         $obj = arrayToObject($array);
-        $this->assertInternalType('object', $obj);
+        $this->assertIsObject( $obj);
         $this->assertEquals('bar', $obj->foo);
-        $this->assertInternalType('object', $obj->baz);
+        $this->assertIsObject( $obj->baz);
         $this->assertEquals('bar2', $obj->baz->foo2);
         $this->assertEquals('ok', $obj->baz->baz2);
     }
@@ -201,4 +203,30 @@ class ArrayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($test_arr_result_first, array_remove_columns($test_arr, 1));
         $this->assertEquals($test_arr_result_first, array_remove_first_columns($test_arr));
     }
+
+    public function test_array_get()
+    {
+        $array = [
+            'a' => [
+                'b' => 'c'
+            ]
+        ];
+        $this->assertEquals(
+            ['b' => 'c'],
+            array_get($array, 'a')
+        );
+        $this->assertEquals(
+            'c',
+            array_get($array, 'a.b')
+        );
+        $this->assertEquals(
+            null,
+            array_get($array, 'c.df.f')
+        );
+        $this->assertEquals(
+            'pippo',
+            array_get($array, 'c.df.f', 'pippo')
+        );
+    }
+
 }

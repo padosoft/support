@@ -54,6 +54,7 @@ if (!function_exists('last')) {
 }
 
 if (!function_exists('insert_at_top')) {
+
     /**
      * Insert element in top of array and return $count element.
      * @param $my_arr
@@ -99,25 +100,49 @@ if (!function_exists('array_has')) {
     }
 }
 
+if (!function_exists('array_accessible')) {
+    /**
+     * Determine whether the given value is array accessible.
+     * See: https://github.com/illuminate/support/blob/master/Arr.php
+     *
+     * @param mixed $value
+     * @return bool
+     */
+    function array_accessible($value)
+    {
+        return is_array($value) || $value instanceof ArrayAccess;
+    }
+}
+
 if (!function_exists('array_get')) {
     /**
      * Get an item from an array using "dot" notation.
      *
-     * @param array $array
-     * @param string $key
-     * @param mixed $default
+     * @param  array $array
+     * @param  string $key
+     * @param  mixed $default
      * @return mixed
      */
     function array_get($array, $key, $default = null)
     {
+        if (!array_accessible($array)) {
+            return value($default);
+        }
+
         if (is_null($key)) {
             return $array;
         }
-        if (isset($array[$key])) {
+
+        if (array_key_exists_safe($array, $key)) {
             return $array[$key];
         }
+
+        if (strpos($key, '.') === false) {
+            return $array[$key] ?? value($default);
+        }
+
         foreach (explode('.', $key) as $segment) {
-            if (!is_array($segment) || !array_key_exists_safe($segment, $array)) {
+            if (!array_accessible($array) || !array_key_exists_safe($array, $segment)) {
                 return value($default);
             }
             $array = $array[$segment];
@@ -129,11 +154,12 @@ if (!function_exists('array_get')) {
 if (!function_exists('array_set')) {
     /**
      * Set an array item to a given value using "dot" notation.
-     *
      * If no key is given to the method, the entire array will be replaced.
      *
+     * @see: https://github.com/illuminate/support/blob/master/Arr.php
+     *
      * @param array $array
-     * @param string $key
+     * @param string|null $key
      * @param mixed $value
      * @return array
      */
@@ -142,18 +168,28 @@ if (!function_exists('array_set')) {
         if (is_null($key)) {
             return $array = $value;
         }
+
         $keys = explode('.', $key);
-        while (count($keys) > 1) {
-            $key = array_shift($keys);
+
+        foreach ($keys as $i => $key) {
+            if (count($keys) === 1) {
+                break;
+            }
+
+            unset($keys[$i]);
+
             // If the key doesn't exist at this depth, we will just create an empty array
             // to hold the next value, allowing us to create the arrays to hold final
             // values at the correct depth. Then we'll keep digging into the array.
             if (!isset($array[$key]) || !is_array($array[$key])) {
-                $array[$key] = array();
+                $array[$key] = [];
             }
-            $array =& $array[$key];
+
+            $array = &$array[$key];
         }
+
         $array[array_shift($keys)] = $value;
+
         return $array;
     }
 }
@@ -233,6 +269,7 @@ if (!function_exists('in_array_column')) {
 }
 
 if (!function_exists('objectToArray')) {
+
     /**
      * Convert objecte to the array.
      *
@@ -254,6 +291,7 @@ if (!function_exists('objectToArray')) {
 }
 
 if (!function_exists('arrayToObject')) {
+
     /**
      * Convert array to the object.
      *
@@ -282,6 +320,7 @@ if (!function_exists('arrayToObject')) {
 }
 
 if (!function_exists('arrayToString')) {
+
     /**
      * Convert Array to string
      * expected output: <key1>="value1" <key2>="value2".
@@ -306,6 +345,7 @@ if (!function_exists('arrayToString')) {
 }
 
 if (!function_exists('array_key_exists_safe')) {
+
     /**
      * Check if a key exists in array
      * @param array $array
@@ -323,6 +363,7 @@ if (!function_exists('array_key_exists_safe')) {
 }
 
 if (!function_exists('array_get_key_value_safe')) {
+
     /**
      * Retrieve a single key from an array.
      * If the key does not exist in the array, or array is null or empty
@@ -369,6 +410,7 @@ if (!function_exists('isNullOrEmptyArrayKey')) {
 }
 
 if (!function_exists('isNotNullOrEmptyArray')) {
+
     /**
      * Check if array is not null and not empty.
      * @param $array
@@ -381,6 +423,7 @@ if (!function_exists('isNotNullOrEmptyArray')) {
 }
 
 if (!function_exists('isNotNullOrEmptyArrayKey')) {
+
     /**
      * Check if an array key exists and is not null and not empty.
      * @param $array
@@ -395,6 +438,7 @@ if (!function_exists('isNotNullOrEmptyArrayKey')) {
 }
 
 if (!function_exists('array_remove_columns')) {
+
     /**
      * Remove given column from the subarrays of a two dimensional array.
      * @param $array
@@ -434,6 +478,7 @@ if (!function_exists('array_remove_columns')) {
 }
 
 if (!function_exists('array_remove_first_columns')) {
+
     /**
      * Remove first column from the subarrays of a two dimensional array.
      * @param $array
@@ -446,6 +491,7 @@ if (!function_exists('array_remove_first_columns')) {
 }
 
 if (!function_exists('array_remove_last_columns')) {
+
     /**
      * Remove last column from the subarrays of a two dimensional array.
      * @param $array

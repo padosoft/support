@@ -2,15 +2,17 @@
 
 namespace Padosoft\Support\Test;
 
-class IpTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class IpTest extends TestCase
 {
     use \Padosoft\Support\Test\IpDataProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

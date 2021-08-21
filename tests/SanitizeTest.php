@@ -2,15 +2,17 @@
 
 namespace Padosoft\Support\Test;
 
-class SanitizeTest extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+
+class SanitizeTest extends TestCase
 {
     use \Padosoft\Support\Test\SanitizeDataProvider;
 
-    protected function setUp()
+    protected function setUp(): void
     {
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
     }
 

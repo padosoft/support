@@ -219,6 +219,25 @@ if (!function_exists('starts_with_insensitive')) {
     }
 }
 
+if (!function_exists('str_contains_array')) {
+    /**
+     * Determine if a given string contains one of the given substring.
+     *
+     * @param  string $haystack
+     * @param  array $needles
+     * @return bool
+     */
+    function str_contains_array(string $haystack, array $needles)
+    {
+        foreach ($needles as $needle) {
+            if (str_contains($haystack,$needle)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
 if (!function_exists('str_contains')) {
     /**
      * Determine if a given string contains a given substring.
