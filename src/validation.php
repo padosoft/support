@@ -217,7 +217,7 @@ function isDateIta($value): bool
     }
     list($dd, $mm, $yyyy) = explode('/', $value);
     try {
-        return checkdate($mm, $dd, $yyyy);
+        return checkdate((int) $mm, (int) $dd, (int) $yyyy);
     } catch (Exception $e) {
         return false;
     }
