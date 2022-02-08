@@ -8,6 +8,9 @@
  */
 function isStringNumberStartsWithMoreThanOneZero($value)
 {
+    if (isNullOrEmpty($value)) {
+        return false;
+    }
     return preg_match('/^[0]{2,}$/', $value) === 1 || preg_match('/^0{1,}[1-9]{1,}$/', $value) === 1;
 }
 
@@ -73,12 +76,12 @@ function isIntegerNegativeOrZero($value, $acceptIntegerFloatingPoints = false): 
  */
 function isIntegerZero($value, $acceptIntegerFloatingPoints = false, $acceptSign = false): bool
 {
-    if(isNullOrEmpty($value)){
+    if (isNullOrEmpty($value)) {
         return false;
     }
-    if(!$acceptSign){
+    if (!$acceptSign) {
         return $value == 0 && isNumericWithoutSign($value) && !isStringNumberStartsWithMoreThanOneZero($value);
-    }else{
+    } else {
         return abs($value) == 0 && isInteger(abs($value), !$acceptSign, $acceptIntegerFloatingPoints);
     }
 }
@@ -99,7 +102,7 @@ function isInteger($value, $unsigned = true, $acceptIntegerFloatingPoints = fals
     }
 
     //accept only integer number and if $acceptIntegerFloatingPoints is true accept integer floating point too.
-    return ((preg_match('/^' . ($unsigned ? '' : '-{0,1}') . '[0-9]{1,}$/', (int) $value) === 1
+    return ((preg_match('/^' . ($unsigned ? '' : '-{0,1}') . '[0-9]{1,}$/', (int)$value) === 1
             && ($value <= PHP_INT_MAX && $value >= PHP_INT_MIN && (((int)$value) == $value))
         )
         || ($acceptIntegerFloatingPoints && isIntegerFloatingPoint($value, $unsigned)));
@@ -121,7 +124,7 @@ function isIntegerFloatingPoint($value, $unsigned = true): bool
         //big number rouned to int aproximately!
         //big number change into exp format
         && ((int)((double)$value) == $value || (int)$value == $value || strpos(strtoupper((string)$value),
-                'E') === false);
+                                                                               'E') === false);
 }
 
 /**
@@ -138,7 +141,7 @@ function isFloatingPoint($value, $unsigned): bool
     }
 
     return preg_match('/^' . ($unsigned ? '[+]{0,1}' : '[-+]{0,1}') . '[0-9]{1,}(\.[0-9]{1,}){0,1}([Ee][+,-]{0,1}[0-9]{1,}){0,}$/',
-            $value) === 1;
+                      $value) === 1;
 }
 
 /**
@@ -217,7 +220,7 @@ function isDateIta($value): bool
     }
     list($dd, $mm, $yyyy) = explode('/', $value);
     try {
-        return checkdate((int) $mm, (int) $dd, (int) $yyyy);
+        return checkdate((int)$mm, (int)$dd, (int)$yyyy);
     } catch (Exception $e) {
         return false;
     }
@@ -570,7 +573,7 @@ function isMail($value, bool $checkMx = false): bool
 
 /**
  * isIPv4 check if a string is a valid IP v4
- * @param  string $IP2Check IP to check
+ * @param string $IP2Check IP to check
  * @return bool
  */
 function isIPv4($IP2Check): bool
@@ -580,7 +583,7 @@ function isIPv4($IP2Check): bool
 
 /**
  * isIPv6 check if a string is a valid IP v6
- * @param  string $IP2Check IP to check
+ * @param string $IP2Check IP to check
  * @return bool
  */
 function isIPv6($IP2Check): bool
@@ -590,7 +593,7 @@ function isIPv6($IP2Check): bool
 
 /**
  * Check if a string is a valid IP (v4 or v6).
- * @param  string $IP2Check IP to check
+ * @param string $IP2Check IP to check
  * @return bool
  */
 function isIP($IP2Check): bool
@@ -600,7 +603,7 @@ function isIP($IP2Check): bool
 
 /**
  * Check if a string is a valid IP v4 compatibility (ffff:ffff:ffff:ffff.192.168.0.15).
- * @param  string $IP2Check IP to check
+ * @param string $IP2Check IP to check
  * @return bool
  */
 function isIPv4Compatibility($IP2Check): bool
@@ -700,14 +703,14 @@ function isEuVatNumber(string $pi, bool $validateOnVIES = false): bool
     $countryCode = getCoutryCodeByVatNumber($pi, 'IT');
 
     $result = true;
-    if (function_exists('is'.$countryCode.'Vat')){
-        $funcname = 'is'.$countryCode.'Vat';
+    if (function_exists('is' . $countryCode . 'Vat')) {
+        $funcname = 'is' . $countryCode . 'Vat';
         $result = $funcname($pi);
     }
-    if(!$result){
+    if (!$result) {
         return false;
     }
-    if($countryCode=='IT' || !$validateOnVIES){
+    if ($countryCode == 'IT' || !$validateOnVIES) {
         return $result;
     }
 
@@ -727,7 +730,7 @@ function isEuVatNumber(string $pi, bool $validateOnVIES = false): bool
  * @param string $fallback
  * @return string
  */
-function getCoutryCodeByVatNumber(string $pi, string $fallback  ='IT'): string
+function getCoutryCodeByVatNumber(string $pi, string $fallback = 'IT'): string
 {
     if ($pi === null || $pi === '' || strlen($pi) < 2) {
         return $fallback;
@@ -743,21 +746,21 @@ function getCoutryCodeByVatNumber(string $pi, string $fallback  ='IT'): string
 
 /**
  * Check Italian Vat Number (Partita IVA).
- * @author Umberto Salsi <salsi@icosaedro.it>
- * @author Lorenzo Padovani modified.
- * @version 2012-05-12
  * @param string $pi Partita IVA Italiana è costituita da 11 cifre o 13 caratteri (prefisso 2 lettere IT).
  * Non sono ammessi caratteri di spazio, per cui i campi di input dell'utente dovrebbero
  * essere trimmati preventivamente.
  * @return bool
+ * @version 2012-05-12
+ * @author Umberto Salsi <salsi@icosaedro.it>
+ * @author Lorenzo Padovani modified.
  */
 function isITVat(string $pi): bool
 {
     $countryCode = getCoutryCodeByVatNumber($pi, '');
-    if($countryCode!='IT' && $countryCode!=''){
+    if ($countryCode != 'IT' && $countryCode != '') {
         return false;
     }
-    if($countryCode!=''){
+    if ($countryCode != '') {
         $pi = substr($pi, 2);
     }
 
@@ -809,9 +812,9 @@ function isVATRegisteredInVies(string $vatNumber, string $countryCodeDefault = '
         $serviceUrl = 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl';
         $client = new SoapClient($serviceUrl);
         $response = $client->checkVat([
-            'countryCode' => $countryCode,
-            'vatNumber' => $vatNumber,
-        ]);
+                                          'countryCode' => $countryCode,
+                                          'vatNumber' => $vatNumber,
+                                      ]);
         return $response->valid;
     } catch (SoapFault $e) {
         throw $e;
@@ -820,13 +823,13 @@ function isVATRegisteredInVies(string $vatNumber, string $countryCodeDefault = '
 
 /**
  * Controlla codice fiscale.
- * @author Umberto Salsi <salsi@icosaedro.it>
- * @version 2012-05-12
  * @param string $cf Codice fiscale costituito da 16 caratteri. Non
  * sono ammessi caratteri di spazio, per cui i campi di input dell'utente
  * dovrebbero essere trimmati preventivamente. La stringa vuota e' ammessa,
  * cioe' il dato viene considerato opzionale.
  * @return bool
+ * @author Umberto Salsi <salsi@icosaedro.it>
+ * @version 2012-05-12
  */
 function isCf(string $cf): bool
 {
@@ -975,7 +978,7 @@ function isCf(string $cf): bool
 function isAlpha(string $field): bool
 {
     return isNotNullOrEmpty($field)
-        && preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ])+$/i', $field) === 1;
+        && preg_match('/^([a-zÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ])+$/iu', $field) === 1;
 }
 
 /**
@@ -989,7 +992,7 @@ function isAlpha(string $field): bool
  */
 function isAlphaNumeric(string $field): bool
 {
-    return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ])+$/i', $field) === 1;
+    return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ])+$/iu', $field) === 1;
 }
 
 /**
@@ -1038,7 +1041,7 @@ function isNumericWithoutSign(string $field): bool
  */
 function isAlphaNumericDash($field): bool
 {
-    return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ\-_])+$/i', $field) === 1;
+    return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ\-_])+$/iu', $field) === 1;
 }
 
 /**
@@ -1050,7 +1053,7 @@ function isAlphaNumericDash($field): bool
  */
 function isAlphaNumericWhiteSpaces($field): bool
 {
-    return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ\-_\s])+$/i', $field) === 1;
+    return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ\-_\s])+$/iu', $field) === 1;
 }
 
 /**
@@ -1292,9 +1295,9 @@ function isGeoCoordinate($value, array $options = [])
     ];
     if ($options['type'] !== 'latLong') {
         throw new RuntimeException(sprintf(
-            'Unsupported coordinate type "%s". Use "latLong" instead.',
-            $options['type']
-        ));
+                                       'Unsupported coordinate type "%s". Use "latLong" instead.',
+                                       $options['type']
+                                   ));
     }
     $pattern = '/^' . $_pattern['latitude'] . ',\s*' . $_pattern['longitude'] . '$/';
     if ($options['format'] === 'long') {
