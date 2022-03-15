@@ -136,6 +136,10 @@ function isIntegerFloatingPoint($value, $unsigned = true): bool
  */
 function isFloatingPoint($value, $unsigned): bool
 {
+    if ($value === null) {
+        return false;
+    }
+
     if (isStringNumberStartsWithMoreThanOneZero($value)) {
         return false;
     }
@@ -166,6 +170,10 @@ function isIntBool($value): bool
  */
 function isDouble($value, $dec = 2, $unsigned = true, $exactDec = false): bool
 {
+    if ($value === null) {
+        return false;
+    }
+
     if (isStringNumberStartsWithMoreThanOneZero($value)) {
         return false;
     }

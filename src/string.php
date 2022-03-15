@@ -637,7 +637,7 @@ function numberToWord(int $number, string $locale = 'IT') : string
             }
             break;
         case $number < 1000:
-            $hundreds = $number / 100;
+            $hundreds = floor($number / 100);
             $remainder = $number % 100;
             $string = $dictionary[$hundreds] . ' ' . $dictionary[100];
             if ($remainder) {
