@@ -538,7 +538,7 @@ if (!function_exists('isMobile')) {
     function isMobile()
     {
         $useragent = array_key_exists_safe($_SERVER, 'HTTP_USER_AGENT') ? $_SERVER['HTTP_USER_AGENT'] : '';
-        if($useragent===''){
+        if(isNullOrEmpty($useragent)){
             return false;
         }
         return preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i',
@@ -557,6 +557,9 @@ if (!function_exists('isMobile')) {
 function getBrowser()
 {
     $u_agent = $_SERVER['HTTP_USER_AGENT'];
+    if(isNullOrEmpty($u_agent)){
+        $u_agent = '';
+    }
     $browserName = $ub = $platform = 'Unknown';
     if (preg_match('/linux/i', $u_agent)) {
         $platform = 'Linux';
@@ -643,6 +646,9 @@ function expandShortUrl(string $shortURL) : string
         return $headers['Location'];
     }
     $data = curl($shortURL);
+    if(isNullOrEmpty($data)){
+        return '';
+    }
     preg_match_all('/<[\s]*meta[\s]*http-equiv="?' . '([^>"]*)"?[\s]*' . 'content="?([^>"]*)"?[\s]*[\/]?[\s]*>/si',
         $data, $match);
     if (isNullOrEmptyArray($match) || count($match) != 3

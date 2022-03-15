@@ -315,6 +315,10 @@ function isFromTrustedProxy(array $trustedProxies, $ip)
  */
 function iPv4To6($ip)
 {
+    if(isNullOrEmpty($ip)){
+        return '';
+    }
+
     static $Mask = '::ffff:'; // This tells IPv6 it has an IPv4 address
     $IPv6 = (strpos($ip, '::') === 0);
     $IPv4 = (strpos($ip, '.') > 0);

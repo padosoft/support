@@ -40,19 +40,48 @@ if (!function_exists('class_constants')) {
     }
 }
 
-if (!function_exists('class_uses_recursive')) {
+
+
+if (! function_exists('trait_uses_recursive')) {
     /**
-     * Returns all traits used by a class, it's subclasses and trait of their traits
+     * Returns all traits used by a trait and its traits.
+     * see: Illuminate/Support/helpers.php
      *
-     * @param  string $class
+     * @param  string  $trait
+     * @return array
+     */
+    function trait_uses_recursive($trait)
+    {
+        $traits = class_uses($trait) ?: [];
+
+        foreach ($traits as $trait2) {
+            $traits += trait_uses_recursive($trait2);
+        }
+
+        return $traits;
+    }
+}
+
+if (! function_exists('class_uses_recursive')) {
+    /**
+     * Returns all traits used by a class, its parent classes and trait of their traits.
+     * see: Illuminate/Support/helpers.php
+     *
+     * @param  object|string  $class
      * @return array
      */
     function class_uses_recursive($class)
     {
+        if (is_object($class)) {
+            $class = get_class($class);
+        }
+
         $results = [];
-        foreach (array_merge([$class => $class], class_parents($class)) as $class) {
+
+        foreach (array_reverse(class_parents($class)) + [$class => $class] as $class) {
             $results += trait_uses_recursive($class);
         }
+
         return array_unique($results);
     }
 }

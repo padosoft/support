@@ -340,6 +340,9 @@ if (!function_exists('str_is')) {
         if ($pattern == $value) {
             return true;
         }
+        if(isNullOrEmpty($value) || isNullOrEmpty($pattern)){
+            return false;
+        }
         $pattern = preg_quote($pattern, '#');
         // Asterisks are translated into zero-or-more regular expression wildcards
         // to make it convenient to check if the strings starts with the given
@@ -754,6 +757,9 @@ if (!function_exists('str_word_count_utf8')) {
      */
     function str_word_count_utf8(string $str) : int
     {
+        if(isNullOrEmpty($str)){
+            return 0;
+        }
         $result = preg_match_all("/\p{L}[\p{L}\p{Mn}\p{Pd}'\x{2019}]*/u", $str, $matches);
         return $result === false ? 0 : $result;
     }
@@ -1497,6 +1503,9 @@ if (!function_exists('firstStringBetween')) {
      */
     function firstStringBetween($haystack, $start, $end)
     {
+        if (isNullOrEmpty($haystack) || isNullOrEmpty($start)) {
+            return '';
+        }
         $char = strpos($haystack, $start);
         if (!$char) {
             return '';

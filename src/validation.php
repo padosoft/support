@@ -352,6 +352,9 @@ function isDateIso($value): bool
  */
 function isDateTimeIso($value): bool
 {
+    if (isNullOrEmpty($value)) {
+        return false;
+    }
     if (!isDateIso(substr($value, 0, 10))) {
         return false;
     }
@@ -365,6 +368,9 @@ function isDateTimeIso($value): bool
  */
 function isDateTimeIta($value): bool
 {
+    if (isNullOrEmpty($value)) {
+        return false;
+    }
     if (!isDateIta(substr($value, 0, 10))) {
         return false;
     }
@@ -378,6 +384,9 @@ function isDateTimeIta($value): bool
  */
 function isTimeIso($value): bool
 {
+    if (isNullOrEmpty($value)) {
+        return false;
+    }
     $strRegExp = '/^[0-9]{2}:[0-9]{2}:[0-9]{2}$/';
     if (!(preg_match($strRegExp, $value) === 1)) {
         return false;
@@ -608,7 +617,8 @@ function isIP($IP2Check): bool
  */
 function isIPv4Compatibility($IP2Check): bool
 {
-    return (strrpos($IP2Check, ":") > 0
+    return (isNotNullOrEmpty($IP2Check)
+        && strrpos($IP2Check, ":") > 0
         && strrpos($IP2Check, ".") > 0
         && isIPv4(substr($IP2Check, strpos($IP2Check, ".") + 1))
         && isIPv6(substr($IP2Check, 0, strpos($IP2Check, ".")) . ':0:0:0:0')
@@ -635,6 +645,9 @@ function isUrl($url): bool
  */
 function isHostname($value): bool
 {
+    if (isNullOrEmpty($value)) {
+        return false;
+    }
     return preg_match('/(?=^.{4,253}$)(^((?!-)[a-zA-Z0-9-]{0,62}[a-zA-Z0-9]\.)+[a-zA-Z]{2,63}$)/i', $value) === 1;
 }
 
@@ -658,6 +671,9 @@ function isHostname($value): bool
  */
 function urlW3c($check, bool $strict = false): bool
 {
+    if (isNullOrEmpty($check)) {
+        return false;
+    }
     $_pattern = array();
     $pattern = '((([0-9A-Fa-f]{1,4}:){7}(([0-9A-Fa-f]{1,4})|:))|(([0-9A-Fa-f]{1,4}:){6}';
     $pattern .= '(:|((25[0-5]|2[0-4]\d|[01]?\d{1,2})(\.(25[0-5]|2[0-4]\d|[01]?\d{1,2})){3})';
@@ -802,6 +818,9 @@ function isVATRegisteredInVies(string $vatNumber, string $countryCodeDefault = '
 
     $vatNumber = str_replace([' ', '-', '.', ','], '', strtoupper(trim($vatNumber)));
     $countryCode = strtoupper(substr($vatNumber, 0, 2));
+    if (isNullOrEmpty($countryCode)) {
+        return false;
+    }
 
     if (preg_match('/^[A-Za-z]{2}$/', $countryCode) === 1) {
         $vatNumber = substr($vatNumber, 2);
@@ -992,6 +1011,9 @@ function isAlpha(string $field): bool
  */
 function isAlphaNumeric(string $field): bool
 {
+    if (isNullOrEmpty($field)) {
+        return false;
+    }
     return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ])+$/iu', $field) === 1;
 }
 
@@ -1005,6 +1027,9 @@ function isAlphaNumeric(string $field): bool
  */
 function isNumeric(string $field, bool $acceptSign = false): bool
 {
+    if (isNullOrEmpty($field)) {
+        return false;
+    }
     return preg_match('/^(' . ($acceptSign ? '[+-]{0,1}' : '') . '[0-9])+$/i', $field) === 1;
 }
 
@@ -1041,6 +1066,9 @@ function isNumericWithoutSign(string $field): bool
  */
 function isAlphaNumericDash($field): bool
 {
+    if (isNullOrEmpty($field)) {
+        return false;
+    }
     return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ\-_])+$/iu', $field) === 1;
 }
 
@@ -1053,6 +1081,9 @@ function isAlphaNumericDash($field): bool
  */
 function isAlphaNumericWhiteSpaces($field): bool
 {
+    if (isNullOrEmpty($field)) {
+        return false;
+    }
     return preg_match('/^([a-z0-9ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖßÙÚÛÜÝàáâãäåçèéêëìíîïñðòóôõöùúûüýÿ\-_\s])+$/iu', $field) === 1;
 }
 
@@ -1260,6 +1291,9 @@ function isJsonString($field): bool
  */
 function isUuid($check)
 {
+    if (isNullOrEmpty($check)) {
+        return false;
+    }
     $regex = '/^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[0-5][a-fA-F0-9]{3}-[089aAbB][a-fA-F0-9]{3}-[a-fA-F0-9]{12}$/';
     return preg_match($regex, $check) === 1;
 }
@@ -1284,6 +1318,9 @@ function isUuid($check)
  */
 function isGeoCoordinate($value, array $options = [])
 {
+    if (isNullOrEmpty($value)) {
+        return false;
+    }
     $_pattern = [
         'latitude' => '[-+]?([1-8]?\d(\.\d+)?|90(\.0+)?)',
         'longitude' => '[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?)',
@@ -1372,6 +1409,9 @@ function isAscii($value)
  */
 function isUtf8($value, array $options = []): bool
 {
+    if (isNullOrEmpty($value)) {
+        return false;
+    }
     if (!is_string($value)) {
         return false;
     }

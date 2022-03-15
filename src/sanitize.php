@@ -385,6 +385,10 @@ function sanitize_floats($value)
  */
 function sanitize_phone($value, bool $preserveSpaces): string
 {
+    if(isNullOrEmpty($value)){
+        return '';
+    }
+
     $startsWithPlus = starts_with($value, '+');
 
     $phone = mb_ereg_replace('([^\d\(\)' . ($preserveSpaces ? '[:space:]' : '') . '])', $preserveSpaces ? ' ' : '', $value);

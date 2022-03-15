@@ -22,13 +22,17 @@ class IpTest extends TestCase
      */
     protected function expectedIsAnException($expected)
     {
+        if ($expected === null) {
+            return false;
+        }
+
         if (is_array($expected)) {
             return false;
         }
 
         return strpos($expected, 'Exception') !== false
-        || strpos($expected, 'PHPUnit_Framework_') !== false
-        || strpos($expected, 'TypeError') !== false;
+            || strpos($expected, 'PHPUnit_Framework_') !== false
+            || strpos($expected, 'TypeError') !== false;
     }
 
     /**
