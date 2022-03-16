@@ -19,7 +19,7 @@ if (!function_exists('get')) {
         }
         foreach (explode('.', $key) as $segment) {
             if (!array_key_exists_safe($segment, $array)) {
-                return value($default);
+                return valueEx($default);
             }
             $array = $array[$segment];
         }
@@ -126,7 +126,7 @@ if (!function_exists('array_get')) {
     function array_get($array, $key, $default = null)
     {
         if (!array_accessible($array)) {
-            return value($default);
+            return valueEx($default);
         }
 
         if (is_null($key)) {
@@ -138,12 +138,12 @@ if (!function_exists('array_get')) {
         }
 
         if (strpos($key, '.') === false) {
-            return $array[$key] ?? value($default);
+            return $array[$key] ?? valueEx($default);
         }
 
         foreach (explode('.', $key) as $segment) {
             if (!array_accessible($array) || !array_key_exists_safe($array, $segment)) {
-                return value($default);
+                return valueEx($default);
             }
             $array = $array[$segment];
         }

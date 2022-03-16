@@ -90,26 +90,26 @@ if (!function_exists('ordinal')) {
     }
 }
 
-if (!function_exists('value')) {
+if (!function_exists('valueEx')) {
     /**
      * Return the default value of the given value.
      *
      * @param  mixed $value
      * @return mixed
      */
-    function value($value)
+    function valueEx($value)
     {
         return $value instanceof Closure ? $value() : $value;
     }
 }
-if (!function_exists('with')) {
+if (!function_exists('withEx')) {
     /**
      * Return the given object. Useful for chaining.
      *
      * @param  mixed $object
      * @return mixed
      */
-    function with($object)
+    function withEx($object)
     {
         return $object;
     }
