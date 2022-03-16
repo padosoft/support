@@ -1,27 +1,25 @@
 <?php
 
 if (!function_exists('short_class_name')) {
-
     /**
      * @param $object
      * @return string
+     * @throws ReflectionException
      */
     function short_class_name($object): string
     {
-        $objectProperties = new \ReflectionClass($object);
-
-        return $objectProperties->getShortName();
+        return (new \ReflectionClass($object))->getShortName();
     }
 }
 
 if (!function_exists('class_constants')) {
-
     /**
      * Get all class constants that starts with $startsWithFilter
      * or if empty get all class constants.
      * @param $object
      * @param string $startsWithFilter
      * @return array
+     * @throws ReflectionException
      * @see https://github.com/spatie-custom/blender/blob/master/app/Foundation/helpers.php
      */
     function class_constants($object, string $startsWithFilter = ''): array
@@ -42,7 +40,7 @@ if (!function_exists('class_constants')) {
 
 
 
-if (! function_exists('trait_uses_recursive')) {
+if (! function_exists('trait_uses_recursiveEx')) {
     /**
      * Returns all traits used by a trait and its traits.
      * see: Illuminate/Support/helpers.php
@@ -50,19 +48,19 @@ if (! function_exists('trait_uses_recursive')) {
      * @param  string  $trait
      * @return array
      */
-    function trait_uses_recursive($trait)
+    function trait_uses_recursiveEx($trait)
     {
         $traits = class_uses($trait) ?: [];
 
         foreach ($traits as $trait2) {
-            $traits += trait_uses_recursive($trait2);
+            $traits += trait_uses_recursiveEx($trait2);
         }
 
         return $traits;
     }
 }
 
-if (! function_exists('class_uses_recursive')) {
+if (! function_exists('class_uses_recursiveEx')) {
     /**
      * Returns all traits used by a class, its parent classes and trait of their traits.
      * see: Illuminate/Support/helpers.php
@@ -70,7 +68,7 @@ if (! function_exists('class_uses_recursive')) {
      * @param  object|string  $class
      * @return array
      */
-    function class_uses_recursive($class)
+    function class_uses_recursiveEx($class)
     {
         if (is_object($class)) {
             $class = get_class($class);
@@ -79,21 +77,22 @@ if (! function_exists('class_uses_recursive')) {
         $results = [];
 
         foreach (array_reverse(class_parents($class)) + [$class => $class] as $class) {
-            $results += trait_uses_recursive($class);
+            $results += trait_uses_recursiveEx($class);
         }
 
         return array_unique($results);
     }
 }
 
-if (!function_exists('class_basename')) {
+if (!function_exists('class_basenameEx')) {
     /**
      * Get the class "basename" of the given object / class.
+     * see: Illuminate/Support/helpers.php
      *
      * @param  string|object $class
      * @return string
      */
-    function class_basename($class)
+    function class_basenameEx($class)
     {
         $class = is_object($class) ? get_class($class) : $class;
         return basename(str_replace('\\', '/', $class));

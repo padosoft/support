@@ -134,12 +134,12 @@ class ArrayTest extends TestCase
         $this->assertEquals(2, array_get_key_value_safe(['1' => 1, '2' => 2, '3' => 3, '4' => 4], '2', 2));
     }
 
-    public function test_insert_at_top()
+    public function test_insert_at_topEx()
     {
         $test_arr = array('a', 'b', 'c', 'd');
         $test_arr_result = array(99, 98, 97, 96, 95, 94, 93, 92, 91, 90);
         for ($i = 0; $i < 100; $i++) {
-            insert_at_top($test_arr, $i, 10);
+            insert_at_topEx($test_arr, $i, 10);
         }
         $this->assertEquals($test_arr, $test_arr_result);
     }
@@ -204,7 +204,7 @@ class ArrayTest extends TestCase
         $this->assertEquals($test_arr_result_first, array_remove_first_columns($test_arr));
     }
 
-    public function test_array_get()
+    public function test_array_getEx()
     {
         $array = [
             'a' => [
@@ -213,19 +213,19 @@ class ArrayTest extends TestCase
         ];
         $this->assertEquals(
             ['b' => 'c'],
-            array_get($array, 'a')
+            array_getEx($array, 'a')
         );
         $this->assertEquals(
             'c',
-            array_get($array, 'a.b')
+            array_getEx($array, 'a.b')
         );
         $this->assertEquals(
             null,
-            array_get($array, 'c.df.f')
+            array_getEx($array, 'c.df.f')
         );
         $this->assertEquals(
             'pippo',
-            array_get($array, 'c.df.f', 'pippo')
+            array_getEx($array, 'c.df.f', 'pippo')
         );
     }
 

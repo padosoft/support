@@ -27,7 +27,7 @@ function getIPVisitor(array $server = []) : string
         return '';
     }
 
-    return trim(head($arrIps));
+    return trim(headEx($arrIps));
 }
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-if (!function_exists('get')) {
+if (!function_exists('getEx')) {
     /**
      * Get an item from an array using "dot" notation.
      *
@@ -9,7 +9,7 @@ if (!function_exists('get')) {
      * @param mixed $default
      * @return mixed
      */
-    function get($array, $key, $default = null)
+    function getEx($array, $key, $default = null)
     {
         if (is_null($key)) {
             return $array;
@@ -27,33 +27,33 @@ if (!function_exists('get')) {
     }
 }
 
-if (!function_exists('head')) {
+if (!function_exists('headEx')) {
     /**
      * Get the first element of an array. Useful for method chaining.
      *
      * @param array $array
      * @return mixed
      */
-    function head($array)
+    function headEx($array)
     {
         return reset($array);
     }
 }
 
-if (!function_exists('last')) {
+if (!function_exists('lastEx')) {
     /**
      * Get the last element from an array.
      *
      * @param array $array
      * @return mixed
      */
-    function last($array)
+    function lastEx($array)
     {
         return end($array);
     }
 }
 
-if (!function_exists('insert_at_top')) {
+if (!function_exists('insert_at_topEx')) {
 
     /**
      * Insert element in top of array and return $count element.
@@ -63,7 +63,7 @@ if (!function_exists('insert_at_top')) {
      * @return bool
      * @see https://github.com/ifsnop/lpsf/blob/master/src/Ifsnop/functions.inc.php
      */
-    function insert_at_top(&$my_arr, $elem, int $count = 10): bool
+    function insert_at_topEx(&$my_arr, $elem, int $count = 10): bool
     {
         if (!is_array($my_arr) || is_null($elem)) {
             return false;
@@ -74,7 +74,7 @@ if (!function_exists('insert_at_top')) {
     }
 }
 
-if (!function_exists('array_has')) {
+if (!function_exists('array_hasEx')) {
     /**
      * Check if an item exists in an array using "dot" notation.
      *
@@ -82,7 +82,7 @@ if (!function_exists('array_has')) {
      * @param string $key
      * @return bool
      */
-    function array_has($array, $key)
+    function array_hasEx($array, $key)
     {
         if (empty($array) || is_null($key)) {
             return false;
@@ -100,7 +100,7 @@ if (!function_exists('array_has')) {
     }
 }
 
-if (!function_exists('array_accessible')) {
+if (!function_exists('array_accessibleEx')) {
     /**
      * Determine whether the given value is array accessible.
      * See: https://github.com/illuminate/support/blob/master/Arr.php
@@ -108,13 +108,13 @@ if (!function_exists('array_accessible')) {
      * @param mixed $value
      * @return bool
      */
-    function array_accessible($value)
+    function array_accessibleEx($value)
     {
         return is_array($value) || $value instanceof ArrayAccess;
     }
 }
 
-if (!function_exists('array_get')) {
+if (!function_exists('array_getEx')) {
     /**
      * Get an item from an array using "dot" notation.
      *
@@ -123,9 +123,9 @@ if (!function_exists('array_get')) {
      * @param  mixed $default
      * @return mixed
      */
-    function array_get($array, $key, $default = null)
+    function array_getEx($array, $key, $default = null)
     {
-        if (!array_accessible($array)) {
+        if (!array_accessibleEx($array)) {
             return valueEx($default);
         }
 
@@ -142,7 +142,7 @@ if (!function_exists('array_get')) {
         }
 
         foreach (explode('.', $key) as $segment) {
-            if (!array_accessible($array) || !array_key_exists_safe($array, $segment)) {
+            if (!array_accessibleEx($array) || !array_key_exists_safe($array, $segment)) {
                 return valueEx($default);
             }
             $array = $array[$segment];
@@ -151,7 +151,7 @@ if (!function_exists('array_get')) {
     }
 }
 
-if (!function_exists('array_set')) {
+if (!function_exists('array_setEx')) {
     /**
      * Set an array item to a given value using "dot" notation.
      * If no key is given to the method, the entire array will be replaced.
@@ -163,7 +163,7 @@ if (!function_exists('array_set')) {
      * @param mixed $value
      * @return array
      */
-    function array_set(&$array, $key, $value)
+    function array_setEx(&$array, $key, $value)
     {
         if (is_null($key)) {
             return $array = $value;

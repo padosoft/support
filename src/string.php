@@ -82,7 +82,7 @@ if (!function_exists('preg_replace_sub')) {
     }
 }
 
-if (!function_exists('snake_case')) {
+if (!function_exists('snake_caseEx')) {
     /**
      * Convert a string to snake case.
      *
@@ -90,7 +90,7 @@ if (!function_exists('snake_case')) {
      * @param  string $delimiter
      * @return string
      */
-    function snake_case($value, $delimiter = '_')
+    function snake_caseEx($value, $delimiter = '_')
     {
         $snakeCache = [];
         $key = $value . $delimiter;
@@ -394,14 +394,14 @@ if (!function_exists('str_replace_array')) {
     }
 }
 
-if (!function_exists('studly_case')) {
+if (!function_exists('studly_caseEx')) {
     /**
      * Convert a value to studly caps case.
      *
      * @param  string $value
      * @return string
      */
-    function studly_case($value)
+    function studly_caseEx($value)
     {
         $studlyCache = [];
         $key = $value;
@@ -413,7 +413,7 @@ if (!function_exists('studly_case')) {
     }
 }
 
-if (!function_exists('studly')) {
+if (!function_exists('studlyEx')) {
     /**
      * Convert a value to studly caps case.
      * Alias of studly_case
@@ -421,26 +421,26 @@ if (!function_exists('studly')) {
      * @param  string $value
      * @return string
      */
-    function studly($value)
+    function studlyEx($value)
     {
-        return studly_case($value);
+        return studly_caseEx($value);
     }
 }
 
-if (!function_exists('camel_case')) {
+if (!function_exists('camel_caseEx')) {
     /**
      * Convert a value to camel case.
      *
      * @param  string $value
      * @return string
      */
-    function camel_case($value)
+    function camel_caseEx($value)
     {
         $camelCache = [];
         if (isset($camelCache[$value])) {
             return $camelCache[$value];
         }
-        return $camelCache[$value] = lcfirst(studly($value));
+        return $camelCache[$value] = lcfirst(studlyEx($value));
     }
 }
 
