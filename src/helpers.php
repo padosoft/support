@@ -232,7 +232,7 @@ function getMaximumFileUploadSize(bool $humanFormat = false)
 function encryptString(string $string, string $chiave = '')
 {
     if ($chiave == '') {
-        $chiave = str_random(64);
+        $chiave = str_randomEx(64);
     }
 
     $key = pack('H*', $chiave);
@@ -287,7 +287,7 @@ function getFaviconUrl($url) : string
 function getFaviconImgTag($url, array $attributes = []) : string
 {
     $urlFav = getFaviconUrl($url);
-    $attr = arrayToString($attributes);
+    $attr = arrayToStringEx($attributes);
     return '<img src="' . $urlFav . '" ' . trim($attr) . ' />';
 }
 
@@ -319,7 +319,7 @@ function isHttps()
  */
 function getQRcode($string, int $width = 150, int $height = 150, array $attributes = []) : string
 {
-    $attr = arrayToString($attributes);
+    $attr = arrayToStringEx($attributes);
     $apiUrl = getQRcodeUrl($string, $width, $height);
     return '<img src="' . $apiUrl . '" ' . trim($attr) . ' />';
 }
@@ -376,7 +376,7 @@ if (!function_exists('gravatar')) {
      */
     function gravatar($email, $size = 80, $default = 'mm', $rating = 'g', $attributes = [])
     {
-        $attr = arrayToString($attributes);
+        $attr = arrayToStringEx($attributes);
         $url = gravatarUrl($email, $size, $default, $rating);
         return '<img src="' . $url . '" width="' . $size . 'px" height="' . $size . 'px" ' . trim($attr) . ' />';
     }
@@ -615,7 +615,7 @@ function getBrowser()
  */
 function getTinyUrl(string $url) : string
 {
-    if (!starts_with($url, 'http')) {
+    if (!starts_withEx($url, 'http')) {
         $url = (isHttps() ? 'https://' : 'http://') . $url;
     }
     $gettiny = curl('http://tinyurl.com/api-create.php?url=' . $url);
@@ -780,7 +780,7 @@ if (!function_exists('curl')) {
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, $followLocation ? true : false);
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout <= 1 ? 10 : $timeout);
-        if ($sslNotVerifyHostAndPeer && starts_with($url, 'https://')) {
+        if ($sslNotVerifyHostAndPeer && starts_withEx($url, 'https://')) {
             curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         }
@@ -1288,10 +1288,10 @@ if (!function_exists('getConsoleColorTagForStatusCode')) {
      */
     function getConsoleColorTagForStatusCode($code)
     {
-        if (starts_with($code, '2')) {
+        if (starts_withEx($code, '2')) {
             return 'info';
         }
-        if (starts_with($code, '3')) {
+        if (starts_withEx($code, '3')) {
             return 'comment';
         }
         return 'error';

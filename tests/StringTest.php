@@ -42,9 +42,9 @@ class StringTest extends TestCase
     {
         if ($this->expectedIsAnException($expected)) {
             $this->expectException($expected);
-            str_replace_multiple_space($val, $withNbSp);
+            str_replace_multiple_spaceEx($val, $withNbSp);
         } else {
-            $this->assertEquals($expected, str_replace_multiple_space($val, $withNbSp));
+            $this->assertEquals($expected, str_replace_multiple_spaceEx($val, $withNbSp));
         }
     }
 
@@ -77,9 +77,9 @@ class StringTest extends TestCase
     {
         if ($this->expectedIsAnException($expected)) {
             $this->expectException($expected);
-            str_replace_last($search, $replace, $subject);
+            str_replace_lastEx($search, $replace, $subject);
         } else {
-            $this->assertEquals($expected, str_replace_last($search, $replace, $subject));
+            $this->assertEquals($expected, str_replace_lastEx($search, $replace, $subject));
         }
     }
 
@@ -176,15 +176,15 @@ class StringTest extends TestCase
     /**
      * Convert number to word.
      */
-    public function test_starts_with()
+    public function test_starts_withEx()
     {
-        $this->assertFalse(starts_with('eight hundred', null));
-        $this->assertFalse(starts_with('eight hundred', ''));
-        $this->assertTrue(starts_with('eight hundred', 'eigh'));
-        $this->assertTrue(starts_with('eight hundred', 'eight '));
-        $this->assertTrue(starts_with('eight hundred', 'e'));
-        $this->assertFalse(starts_with('eight hundred', 'EN'));
-        $this->assertFalse(starts_with('eight hundred', 'eight hundred pounds'));
+        $this->assertFalse(starts_withEx('eight hundred', null));
+        $this->assertFalse(starts_withEx('eight hundred', ''));
+        $this->assertTrue(starts_withEx('eight hundred', 'eigh'));
+        $this->assertTrue(starts_withEx('eight hundred', 'eight '));
+        $this->assertTrue(starts_withEx('eight hundred', 'e'));
+        $this->assertFalse(starts_withEx('eight hundred', 'EN'));
+        $this->assertFalse(starts_withEx('eight hundred', 'eight hundred pounds'));
     }
 
     /**
@@ -323,17 +323,17 @@ class StringTest extends TestCase
     public function test_shortenString()
     {
         $string = 'The quick brown fox jumps over the lazy dog';
-        $shortenString = str_limit($string, 20);
+        $shortenString = str_limitEx($string, 20);
         $this->assertEquals(
             'The quick brown fox...',
             $shortenString
         );
-        $shortenString = str_limit($string, 20, '');
+        $shortenString = str_limitEx($string, 20, '');
         $this->assertEquals(
             'The quick brown fox',
             $shortenString
         );
-        $shortenString = str_limit($string, 23, '', true);
+        $shortenString = str_limitEx($string, 23, '', true);
         $this->assertEquals(
             'The quick brown fox',
             $shortenString
@@ -371,39 +371,39 @@ class StringTest extends TestCase
     /**
      *
      */
-    public function test_firstStringBetween()
+    public function test_firstStringBetweenEx()
     {
-        $result = firstStringBetween('This is a [custom] string', '[', ']');
+        $result = firstStringBetweenEx('This is a [custom] string', '[', ']');
         $this->assertEquals(
             'custom',
             $result
         );
-        $result = firstStringBetween('This is a [custom] string. Very [custom2] string.', '[', ']');
+        $result = firstStringBetweenEx('This is a [custom] string. Very [custom2] string.', '[', ']');
         $this->assertEquals(
             'custom',
             $result
         );
-        $result = firstStringBetween('This is a [custom] string', '[', '}');
+        $result = firstStringBetweenEx('This is a [custom] string', '[', '}');
         $this->assertEquals(
             '',
             $result
         );
-        $result = firstStringBetween('This is a [custom] string', '{', '}');
+        $result = firstStringBetweenEx('This is a [custom] string', '{', '}');
         $this->assertEquals(
             '',
             $result
         );
-        $result = firstStringBetween('', '[', ']');
+        $result = firstStringBetweenEx('', '[', ']');
         $this->assertEquals(
             '',
             $result
         );
-        $result = firstStringBetween(' ', '[', ']');
+        $result = firstStringBetweenEx(' ', '[', ']');
         $this->assertEquals(
             '',
             $result
         );
-        $result = firstStringBetween(null, '[', ']');
+        $result = firstStringBetweenEx(null, '[', ']');
         $this->assertEquals(
             '',
             $result

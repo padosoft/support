@@ -105,9 +105,9 @@ class SanitizeTest extends TestCase
     {
         if ($this->expectedIsAnException($expected)) {
             $this->expectException($expected);
-            she($val);
+            sheEx($val);
         } else {
-            $this->assertEquals($expected, she($val));
+            $this->assertEquals($expected, sheEx($val));
         }
     }
 

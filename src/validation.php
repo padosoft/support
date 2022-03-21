@@ -193,7 +193,7 @@ function isPercent($value, bool $withDecimal = true, bool $withPercentChar = fal
     if (isNullOrEmpty($value)) {
         return false;
     }
-    $contains_perc = str_contains($value, '%');
+    $contains_perc = str_containsEx($value, '%');
     if (($withPercentChar && !$contains_perc)
         || (!$withPercentChar && $contains_perc)
         || (substr_count($value, '%') > 1) //only one %
@@ -1268,7 +1268,7 @@ function isphoneNumber($field): bool
         return false;
     }
     $field = trim($field);
-    if (starts_with($field, '+')) {
+    if (starts_withEx($field, '+')) {
         $field = trim(substr($field, 1));
     }
     $regex = '/^(\d[\s-]?)?[\(\[\s-]{0,2}?\d{3}[\)\]\s-]{0,2}?\d{3}[\s-]?\d{4}$/i';

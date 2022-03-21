@@ -33,7 +33,7 @@ if (!function_exists('class_constants')) {
         }
 
         return array_filter($constants, function ($key) use ($startsWithFilter) {
-            return starts_with(strtolower($key), strtolower($startsWithFilter));
+            return starts_withEx(strtolower($key), strtolower($startsWithFilter));
         }, ARRAY_FILTER_USE_KEY);
     }
 }

@@ -268,7 +268,7 @@ if (!function_exists('in_array_column')) {
     }
 }
 
-if (!function_exists('objectToArray')) {
+if (!function_exists('objectToArrayEx')) {
 
     /**
      * Convert objecte to the array.
@@ -278,7 +278,7 @@ if (!function_exists('objectToArray')) {
      * @return array
      * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
      */
-    function objectToArray($object): array
+    function objectToArrayEx($object): array
     {
         if (!is_object($object) && !is_array($object)) {
             return [];
@@ -286,11 +286,11 @@ if (!function_exists('objectToArray')) {
         if (is_object($object)) {
             $object = get_object_vars($object);
         }
-        return array_map('objectToArray', $object);
+        return array_map('objectToArrayEx', $object);
     }
 }
 
-if (!function_exists('arrayToObject')) {
+if (!function_exists('arrayToObjectEx')) {
 
     /**
      * Convert array to the object.
@@ -300,7 +300,7 @@ if (!function_exists('arrayToObject')) {
      * @return stdClass (object)
      * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
      */
-    function arrayToObject(array $array = []): \stdClass
+    function arrayToObjectEx(array $array = []): \stdClass
     {
         $object = new \stdClass();
 
@@ -310,7 +310,7 @@ if (!function_exists('arrayToObject')) {
 
         foreach ($array as $name => $value) {
             if (is_array($value)) {
-                $object->$name = arrayToObject($value);
+                $object->$name = arrayToObjectEx($value);
                 continue;
             }
             $object->{$name} = $value;
@@ -319,7 +319,7 @@ if (!function_exists('arrayToObject')) {
     }
 }
 
-if (!function_exists('arrayToString')) {
+if (!function_exists('arrayToStringEx')) {
 
     /**
      * Convert Array to string
@@ -330,7 +330,7 @@ if (!function_exists('arrayToString')) {
      * @return string
      * @see https://github.com/ngfw/Recipe/blob/master/src/ngfw/Recipe.php
      */
-    function arrayToString(array $array = []): string
+    function arrayToStringEx(array $array = []): string
     {
         if (isNullOrEmptyArray($array)) {
             return '';

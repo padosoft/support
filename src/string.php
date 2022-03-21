@@ -9,6 +9,7 @@
  * @param int $length
  * @param int $secLevel
  * @return string
+ * @throws Exception
  */
 function generateRandomPassword(int $length = 10, int $secLevel = 2) : string
 {
@@ -34,6 +35,7 @@ function generateRandomPassword(int $length = 10, int $secLevel = 2) : string
  * @param string $extChars
  * @param string $newChars
  * @return string
+ * @throws Exception
  */
 function generateRandomString(int $length = 10, string $extChars = '', string $newChars = '') : string
 {
@@ -65,7 +67,7 @@ function generateRandomString(int $length = 10, string $extChars = '', string $n
  * *****************************************************
  */
 
-if (!function_exists('preg_replace_sub')) {
+if (!function_exists('preg_replace_subEx')) {
     /**
      * Replace a given pattern with each value in the array in sequentially.
      *
@@ -74,7 +76,7 @@ if (!function_exists('preg_replace_sub')) {
      * @param  string $subject
      * @return string
      */
-    function preg_replace_sub($pattern, &$replacements, $subject)
+    function preg_replace_subEx($pattern, &$replacements, $subject)
     {
         return preg_replace_callback($pattern, function () use (&$replacements) {
             return array_shift($replacements);
@@ -104,7 +106,7 @@ if (!function_exists('snake_caseEx')) {
     }
 }
 
-if (!function_exists('str_random')) {
+if (!function_exists('str_randomEx')) {
     /**
      * Generate a more truly "random" alpha-numeric string with openssl.
      * If openssl_random_pseudo_bytes not exists, use simple legacy function
@@ -114,7 +116,7 @@ if (!function_exists('str_random')) {
      *
      * @throws \RuntimeException
      */
-    function str_random(int $length = 16)
+    function str_randomEx(int $length = 16)
     {
         if ($length < 0) {
             $length = 16;
@@ -131,7 +133,7 @@ if (!function_exists('str_random')) {
     }
 }
 
-if (!function_exists('ends_with')) {
+if (!function_exists('ends_withEx')) {
     /**
      * Determine if a given string ends with a given substring.
      *
@@ -139,7 +141,7 @@ if (!function_exists('ends_with')) {
      * @param  string|array $needles
      * @return bool
      */
-    function ends_with($haystack, $needles)
+    function ends_withEx($haystack, $needles)
     {
         if (isNullOrEmpty($haystack) || isNullOrEmpty($needles)) {
             return false;
@@ -171,11 +173,11 @@ if (!function_exists('ends_with_insensitive')) {
         $haystack = strtolower($haystack);
         $needles = strtolower($needles);
 
-        return ends_with($haystack, $needles);
+        return ends_withEx($haystack, $needles);
     }
 }
 
-if (!function_exists('starts_with')) {
+if (!function_exists('starts_withEx')) {
     /**
      * Determine if a given string starts with a given substring.
      *
@@ -183,7 +185,7 @@ if (!function_exists('starts_with')) {
      * @param  string|array $needles
      * @return bool
      */
-    function starts_with($haystack, $needles)
+    function starts_withEx($haystack, $needles)
     {
         if (isNullOrEmpty($haystack) || (!is_array($needles) && isNullOrEmpty($needles))) {
             return false;
@@ -215,11 +217,11 @@ if (!function_exists('starts_with_insensitive')) {
         $haystack = strtolower($haystack);
         $needles = strtolower($needles);
 
-        return starts_with($haystack, $needles);
+        return starts_withEx($haystack, $needles);
     }
 }
 
-if (!function_exists('str_contains_array')) {
+if (!function_exists('str_contains_arrayEx')) {
     /**
      * Determine if a given string contains one of the given substring.
      *
@@ -227,10 +229,10 @@ if (!function_exists('str_contains_array')) {
      * @param  array $needles
      * @return bool
      */
-    function str_contains_array(string $haystack, array $needles)
+    function str_contains_arrayEx(string $haystack, array $needles)
     {
         foreach ($needles as $needle) {
-            if (str_contains($haystack,$needle)) {
+            if (str_containsEx($haystack,$needle)) {
                 return true;
             }
         }
@@ -238,7 +240,7 @@ if (!function_exists('str_contains_array')) {
     }
 }
 
-if (!function_exists('str_contains')) {
+if (!function_exists('str_containsEx')) {
     /**
      * Determine if a given string contains a given substring.
      *
@@ -246,7 +248,7 @@ if (!function_exists('str_contains')) {
      * @param  string|array $needles
      * @return bool
      */
-    function str_contains(string $haystack, $needles)
+    function str_containsEx(string $haystack, $needles)
     {
         if (isNullOrEmpty($haystack)) {
             return false;
@@ -283,11 +285,11 @@ if (!function_exists('str_contains_insensitive')) {
         $haystack = strtolower($haystack);
         $needles = strtolower($needles);
 
-        return str_contains($haystack, $needles);
+        return str_containsEx($haystack, $needles);
     }
 }
 
-if (!function_exists('str_finish')) {
+if (!function_exists('str_finishEx')) {
     /**
      * Cap a string with a single instance of a given value.
      *
@@ -295,7 +297,7 @@ if (!function_exists('str_finish')) {
      * @param  string $cap
      * @return string
      */
-    function str_finish($value, $cap)
+    function str_finishEx($value, $cap)
     {
         if (isNullOrEmpty($value) || isNullOrEmpty($cap)) {
             return false;
@@ -323,11 +325,11 @@ if (!function_exists('str_finish_insensitive')) {
         $value = strtolower($value);
         $cap = strtolower($cap);
 
-        return str_finish($value, $cap);
+        return str_finishEx($value, $cap);
     }
 }
 
-if (!function_exists('str_is')) {
+if (!function_exists('str_isEx')) {
     /**
      * Determine if a given string matches a given pattern.
      *
@@ -335,7 +337,7 @@ if (!function_exists('str_is')) {
      * @param  string $value
      * @return bool
      */
-    function str_is($pattern, $value)
+    function str_isEx($pattern, $value)
     {
         if ($pattern == $value) {
             return true;
@@ -351,7 +353,7 @@ if (!function_exists('str_is')) {
         return preg_match('#^' . $pattern . '#', $value) === 1;
     }
 }
-if (!function_exists('str_limit')) {
+if (!function_exists('str_limitEx')) {
     /**
      * Limit the number of characters in a string.
      *
@@ -361,7 +363,7 @@ if (!function_exists('str_limit')) {
      * @param  bool $wordsafe if set to true, remove any truncated word in the end of string so the result no breaking words.
      * @return string
      */
-    function str_limit(string $value, int $limit = 100, string $end = '...', bool $wordsafe = false) : string
+    function str_limitEx(string $value, int $limit = 100, string $end = '...', bool $wordsafe = false) : string
     {
         $limit = max($limit, 0);
         if (mb_strlen($value) <= $limit) {
@@ -376,7 +378,7 @@ if (!function_exists('str_limit')) {
     }
 }
 
-if (!function_exists('str_replace_array')) {
+if (!function_exists('str_replace_arrayEx')) {
     /**
      * Replace a given value in the string sequentially with an array.
      *
@@ -385,7 +387,7 @@ if (!function_exists('str_replace_array')) {
      * @param  string $subject
      * @return string
      */
-    function str_replace_array($search, array $replace, $subject)
+    function str_replace_arrayEx($search, array $replace, $subject)
     {
         foreach ($replace as $value) {
             $subject = preg_replace('/' . $search . '/', $value, $subject, 1);
@@ -444,29 +446,33 @@ if (!function_exists('camel_caseEx')) {
     }
 }
 
-/**
- * Replace underscores with dashes in the string.
- * @param string $word
- * @return string
- */
-function underscore2dash(string $word) : string
-{
-    return str_replace('_', '-', $word);
+if (!function_exists('underscore2dashEx')) {
+    /**
+     * Replace underscores with dashes in the string.
+     * @param string $word
+     * @return string
+     */
+    function underscore2dashEx(string $word): string
+    {
+        return str_replace('_', '-', $word);
+    }
 }
 
-/**
- * Make an underscored, lowercase form from the expression in the string.
- * @param string $word
- * @return string
- */
-function dash2underscore(string $word) : string
-{
-    $word = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\1_\2', $word);
-    $word = preg_replace('/([a-z])([A-Z])/', '\1_\2', $word);
-    return str_replace('-', '_', strtolower($word));
+if (!function_exists('dash2underscoreEx')) {
+    /**
+     * Make an underscored, lowercase form from the expression in the string.
+     * @param string $word
+     * @return string
+     */
+    function dash2underscoreEx(string $word): string
+    {
+        $word = preg_replace('/([A-Z]+)([A-Z][a-z])/', '\1_\2', $word);
+        $word = preg_replace('/([a-z])([A-Z])/', '\1_\2', $word);
+        return str_replace('-', '_', strtolower($word));
+    }
 }
 
-if (!function_exists('str_replace_multiple_space')) {
+if (!function_exists('str_replace_multiple_spaceEx')) {
 
     /**
      * Replace multiple spaces with one space.
@@ -475,7 +481,7 @@ if (!function_exists('str_replace_multiple_space')) {
      * @param bool $withNbsp
      * @return string
      */
-    function str_replace_multiple_space(string $str, bool $withNbsp = false) : string
+    function str_replace_multiple_spaceEx(string $str, bool $withNbsp = false) : string
     {
         if ($withNbsp) {
             $str = str_replace('&nbsp;', ' ', $str);
@@ -484,7 +490,7 @@ if (!function_exists('str_replace_multiple_space')) {
     }
 }
 
-if (!function_exists('str_replace_last')) {
+if (!function_exists('str_replace_lastEx')) {
     /**
      * Replace last occurrence ($search) of a string ($subject) with $replace string.
      * @param string $search
@@ -492,7 +498,7 @@ if (!function_exists('str_replace_last')) {
      * @param string $subject
      * @return string
      */
-    function str_replace_last(string $search, string $replace, string $subject) : string
+    function str_replace_lastEx(string $search, string $replace, string $subject) : string
     {
         if ($search == '') {
             return $subject;
@@ -504,7 +510,7 @@ if (!function_exists('str_replace_last')) {
         return substr_replace($subject, $replace, $position, strlen($search));
     }
 }
-if (!function_exists('segment')) {
+if (!function_exists('segmentEx')) {
 
     /**
      * Get a segment from a string based on a delimiter.
@@ -518,7 +524,7 @@ if (!function_exists('segment')) {
      * @return string
      * @see https://github.com/spatie/string/blob/master/src/Str.php
      */
-    function segment($delimiter, $index, $subject)
+    function segmentEx($delimiter, $index, $subject)
     {
         $segments = explode($delimiter, $subject);
         if ($index < 0) {
@@ -529,7 +535,7 @@ if (!function_exists('segment')) {
         return $segment;
     }
 }
-if (!function_exists('firstSegment')) {
+if (!function_exists('firstSegmentEx')) {
 
     /**
      * Get the first segment from a string based on a delimiter.
@@ -540,13 +546,13 @@ if (!function_exists('firstSegment')) {
      * @return string
      * @see https://github.com/spatie/string/blob/master/src/Str.php
      */
-    function firstSegment($delimiter, $subject) : string
+    function firstSegmentEx($delimiter, $subject) : string
     {
-        return segment($delimiter, 0, $subject);
+        return segmentEx($delimiter, 0, $subject);
     }
 }
 
-if (!function_exists('lastSegment')) {
+if (!function_exists('lastSegmentEx')) {
 
     /**
      * Get the last segment from a string based on a delimiter.
@@ -557,9 +563,9 @@ if (!function_exists('lastSegment')) {
      * @return string
      * @see https://github.com/spatie/string/blob/master/src/Str.php
      */
-    function lastSegment($delimiter, $subject) : string
+    function lastSegmentEx($delimiter, $subject) : string
     {
-        return segment($delimiter, -1, $subject);
+        return segmentEx($delimiter, -1, $subject);
     }
 }
 
@@ -1488,12 +1494,12 @@ if (!function_exists('charsArrayRegEx')) {
     }
 }
 
-if (!function_exists('firstStringBetween')) {
+if (!function_exists('firstStringBetweenEx')) {
 
     /**
      * Returns the first string there is between the strings from the parameter start and end.
      * Example:
-     * firstStringBetween('This is a [custom] string', '[', ']'); // return 'custom'
+     * firstStringBetweenEx('This is a [custom] string', '[', ']'); // return 'custom'
      * if start char and/or end char doesn't exists, return ''.
      *
      * @param $haystack
@@ -1501,7 +1507,7 @@ if (!function_exists('firstStringBetween')) {
      * @param $end
      * @return bool|string
      */
-    function firstStringBetween($haystack, $start, $end)
+    function firstStringBetweenEx($haystack, $start, $end)
     {
         if (isNullOrEmpty($haystack) || isNullOrEmpty($start)) {
             return '';

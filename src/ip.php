@@ -110,7 +110,7 @@ function anonimizeIpv4(string $ip):string
  *                   the unmodified ip_address on failure,
  *                   or FALSE on malformed input.
  */
-function getHost($ip)
+function getHostEx($ip)
 {
     return gethostbyaddr($ip);
 }

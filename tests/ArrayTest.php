@@ -33,22 +33,22 @@ class ArrayTest extends TestCase
     /**
      * Object to array conversion.
      */
-    public function test_objectToArray()
+    public function test_objectToArrayEx()
     {
         $obj = new \stdClass();
         $obj->foo = 'bar';
         $obj->baz = 'qux';
-        $array = objectToArray($obj);
+        $array = objectToArrayEx($obj);
         $this->assertIsArray($array);
     }
 
-    public function test_arrayToObject()
+    public function test_arrayToObjectEx()
     {
         $array = [
             'foo' => 'bar',
             'baz' => 'qux',
         ];
-        $obj = arrayToObject($array);
+        $obj = arrayToObjectEx($array);
         $this->assertIsObject( $obj);
         $this->assertEquals('bar', $obj->foo);
         $this->assertEquals('qux', $obj->baz);
@@ -60,7 +60,7 @@ class ArrayTest extends TestCase
                 'baz2' => 'ok',
             ],
         ];
-        $obj = arrayToObject($array);
+        $obj = arrayToObjectEx($array);
         $this->assertIsObject( $obj);
         $this->assertEquals('bar', $obj->foo);
         $this->assertIsObject( $obj->baz);
@@ -68,13 +68,13 @@ class ArrayTest extends TestCase
         $this->assertEquals('ok', $obj->baz->baz2);
     }
 
-    public function test_arrayToString()
+    public function test_arrayToStringEx()
     {
         $array = [
             'foo' => 'bar',
             'baz' => 'qux',
         ];
-        $string = arrayToString($array);
+        $string = arrayToStringEx($array);
         $this->assertEquals(
             'foo="bar" baz="qux"',
             $string

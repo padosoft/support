@@ -391,6 +391,7 @@ function getTimeFromDateTimeIso(string $dataTimeIso) : string
  * @param string $data2 date ('Y-m-d') or datetime ('Y-m-d H:i:s')
  *
  * @return int
+ * @throws Exception
  */
 function diff_in_year($data1, $data2 = '') : int
 {

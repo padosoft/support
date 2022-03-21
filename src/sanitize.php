@@ -1,19 +1,19 @@
 <?php
 
-if (!function_exists('strip_nl')) {
+if (!function_exists('strip_nlEx')) {
 
     /**
      * Strip new line breaks from a string
      * @param $str
      * @return string|array
      */
-    function strip_nl($str)
+    function strip_nlEx($str)
     {
         return str_replace("\n", "", str_replace("\r", "", $str));
     }
 }
 
-if (!function_exists('jse')) {
+if (!function_exists('jseEx')) {
 
     /**
      * Javascript escape
@@ -21,7 +21,7 @@ if (!function_exists('jse')) {
      * @return string
      * @source https://github.com/rtconner/laravel-plusplus/blob/laravel-5/src/plus-functions.php
      */
-    function jse(string $str): string
+    function jseEx(string $str): string
     {
         if (isNullOrEmpty($str)) {
             return '';
@@ -31,20 +31,20 @@ if (!function_exists('jse')) {
     }
 }
 
-if (!function_exists('e')) {
+if (!function_exists('eEx')) {
     /**
      * Escape HTML entities in a string.
      *
      * @param  string $value
      * @return string
      */
-    function e($value)
+    function eEx($value)
     {
         return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
     }
 }
 
-if (!function_exists('csse')) {
+if (!function_exists('csseEx')) {
     /**
      * Escape CSS entities in a string.
      *
@@ -52,7 +52,7 @@ if (!function_exists('csse')) {
      * @return string
      * @see https://github.com/auraphp/Aura.Html/blob/2.x/src/Escaper/CssEscaper.php
      */
-    function csse($value)
+    function csseEx($value)
     {
         // pre-empt replacement
         if ($value === '' || ctype_digit($value)) {
@@ -75,7 +75,7 @@ if (!function_exists('csse')) {
     }
 }
 
-if (!function_exists('attre')) {
+if (!function_exists('attreEx')) {
     /**
      * Escape HTML Attribute entities in a string.
      *
@@ -83,7 +83,7 @@ if (!function_exists('attre')) {
      * @return string
      * @see https://github.com/auraphp/Aura.Html/blob/2.x/src/Escaper/AttrEscaper.php
      */
-    function attre($value)
+    function attreEx($value)
     {
         // pre-empt replacement
         if ($value === '' || ctype_digit($value)) {
@@ -122,14 +122,14 @@ if (!function_exists('attre')) {
     }
 }
 
-if (!function_exists('she')) {
+if (!function_exists('sheEx')) {
 
     /**
      * Escape Shell argument.
      * @param string $input
      * @return string
      */
-    function she(string $input): string
+    function sheEx(string $input): string
     {
         if (windows_os()) {
             return '"' . addcslashes($input, '\\"') . '"';
@@ -256,16 +256,16 @@ function sanitize_filename(
     $fileName = trim(normalizeUtf8String($fileName));
 
     //do not start with ..
-    while (starts_with($fileName, '..') !== false) {
+    while (starts_withEx($fileName, '..') !== false) {
         $fileName = substr($fileName, 2);
     }
 
     //do not end with ..
-    while (ends_with($fileName, '..') !== false) {
+    while (ends_withEx($fileName, '..') !== false) {
         $fileName = substr($fileName, 0, -2);
     }
     //do not end with .
-    while (ends_with($fileName, '.') !== false) {
+    while (ends_withEx($fileName, '.') !== false) {
         $fileName = substr($fileName, 0, -1);
     }
 
@@ -389,7 +389,7 @@ function sanitize_phone($value, bool $preserveSpaces): string
         return '';
     }
 
-    $startsWithPlus = starts_with($value, '+');
+    $startsWithPlus = starts_withEx($value, '+');
 
     $phone = mb_ereg_replace('([^\d\(\)' . ($preserveSpaces ? '[:space:]' : '') . '])', $preserveSpaces ? ' ' : '', $value);
     $phone = trim($phone);
@@ -407,7 +407,7 @@ function sanitize_phone($value, bool $preserveSpaces): string
     }
 
     //remove multiple spaces
-    $phone = str_replace_multiple_space($phone);
+    $phone = str_replace_multiple_spaceEx($phone);
 
     //remove spaces into and around ()
     $phone = str_replace(['( ', ' )', ' (', ') '], ['(', ')', '(', ')'], $phone);
