@@ -102,7 +102,7 @@ function isInteger($value, $unsigned = true, $acceptIntegerFloatingPoints = fals
     }
 
     //accept only integer number and if $acceptIntegerFloatingPoints is true accept integer floating point too.
-    return ((preg_match('/^' . ($unsigned ? '' : '-{0,1}') . '[0-9]{1,}$/', (int)$value) === 1
+    return ((preg_match('/^' . ($unsigned ? '' : '-{0,1}') . '[0-9]{1,}$/', $value) === 1
             && ($value <= PHP_INT_MAX && $value >= PHP_INT_MIN && (((int)$value) == $value))
         )
         || ($acceptIntegerFloatingPoints && isIntegerFloatingPoint($value, $unsigned)));
@@ -201,7 +201,6 @@ function isPercent($value, bool $withDecimal = true, bool $withPercentChar = fal
         return false;
     }
     $value = trim(str_replace('%', '', $value));
-
     return $withDecimal ? isDouble($value, '', true) : isInteger($value, true);
 }
 

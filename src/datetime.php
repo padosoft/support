@@ -601,7 +601,7 @@ if (!function_exists('cal_days_in_month')) {
             return 0;
         }
         $dim = date('t', mktime(0, 0, 0, $month, 1, $year));
-        return is_int($dim) ? (int)$dim : 0;
+        return isIntegerPositive($dim) ? (int)$dim : 0;
     }
 }
 
