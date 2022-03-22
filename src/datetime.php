@@ -586,7 +586,9 @@ function dos2unixTimestamp($timestamp = false)
 
 if (!function_exists('cal_days_in_month')) {
     /**
+     * This is a PHP calendar function when calendar extension are not present.
      * Return the number of days in a month for a given year and calendar
+     * (ONLY CAL_GREGORIAN calendar fully supported).
      * If cal_days_in_month() is not defined return the number of days
      * in a month for a given year in CAL_GREGORIAN calendar.
      * If an error occourred return 0.
@@ -597,7 +599,7 @@ if (!function_exists('cal_days_in_month')) {
      */
     function cal_days_in_month($calendar = CAL_GREGORIAN, $month=0, $year=0) : int
     {
-        if (!isInRange($month, 1, 12) || $year < 1) {
+        if (($calendar == CAL_GREGORIAN) && (!isInRange($month, 1, 12) || $year < 1)) {
             return 0;
         }
         $dim = date('t', mktime(0, 0, 0, $month, 1, $year));
