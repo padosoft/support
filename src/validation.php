@@ -225,10 +225,14 @@ function isDateIta($value): bool
     if (isNullOrEmpty($value) || strlen($value) != 10 || strpos($value, '/') === false) {
         return false;
     }
-    list($dd, $mm, $yyyy) = explode('/', $value);
+    $strRegExp = '/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/';
+    if (!(preg_match($strRegExp, $value) === 1)) {
+        return false;
+    }
+    [$dd, $mm, $yyyy] = explode('/', $value);
     try {
         return checkdate((int)$mm, (int)$dd, (int)$yyyy);
-    } catch (Exception $e) {
+    } catch (\Throwable $e) {
         return false;
     }
 }
@@ -344,10 +348,14 @@ function isDateIso($value): bool
     if (isNullOrEmpty($value) || strlen($value) != 10 || strpos($value, '-') === false) {
         return false;
     }
+    $strRegExp = '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/';
+    if (!(preg_match($strRegExp, $value) === 1)) {
+        return false;
+    }
     [$yyyy, $mm, $dd] = explode('-', $value);
     try {
         return checkdate((int)$mm, (int)$dd, (int)$yyyy);
-    } catch (Exception $e) {
+    } catch (\Throwable $e) {
         return false;
     }
 }
