@@ -727,9 +727,10 @@ function urlW3c($check, bool $strict = false): bool
  * @param bool $validateOnVIES default false. if se to true, first check formal EU country algorithm,
  * then if it valid and country code isn't 'IT' try to check by API VIES service.
  * If VIES return false or soap exception was thrown, return false.
+ * @param bool $returnValueIfViesThrownEx if VIES service thrown an exception, return this value.
  * @return bool
  */
-function isEuVatNumber(string $pi, bool $validateOnVIES = false): bool
+function isEuVatNumber(string $pi, bool $validateOnVIES = false, bool $returnValueIfViesThrownEx = false): bool
 {
     $countryCode = getCoutryCodeByVatNumber($pi, 'IT');
 
@@ -748,8 +749,8 @@ function isEuVatNumber(string $pi, bool $validateOnVIES = false): bool
     //check vies
     try {
         return isVATRegisteredInVies($pi);
-    } catch (SoapFault $e) {
-        return false;
+    } catch (\Throwable $e) {
+        return $returnValueIfViesThrownEx;
     }
 }
 
