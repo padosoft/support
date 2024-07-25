@@ -97,6 +97,10 @@ function isIntegerZero($value, $acceptIntegerFloatingPoints = false, $acceptSign
  */
 function isInteger($value, $unsigned = true, $acceptIntegerFloatingPoints = false): bool
 {
+    if (isNullOrEmpty($value)) {
+        return false;
+    }
+
     if (isStringNumberStartsWithMoreThanOneZero($value)) {
         return false;
     }
