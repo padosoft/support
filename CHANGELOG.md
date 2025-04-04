@@ -2,6 +2,13 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 3.2.0 - 2025-04-04
+
+### ADD:
+- support for Carbon 3.x
+### CHANGE:
+- Updated dependencies
+
 ## 2.5.0 - 2021-08-22
 
 ### ADD:
