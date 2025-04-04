@@ -570,24 +570,6 @@ class ValidationTest extends TestCase
     /**
      * @test
      * @param $val
-     * @param $validateOnVies
-     * @param $expected
-     * @dataProvider isEuVatNumberProvider
-     */
-    public function isEuVatNumberTest($val, $validateOnVies, $expected)
-    {
-        if ($this->expectedIsAnException($expected)) {
-            $this->expectException($expected);
-            isEuVatNumber($val, $validateOnVies);
-        } else {
-            $this->assertEquals($expected, isEuVatNumber($val, $validateOnVies));
-        }
-    }
-
-
-    /**
-     * @test
-     * @param $val
      * @param $expected
      * @dataProvider isITVatProvider
      */
@@ -600,6 +582,25 @@ class ValidationTest extends TestCase
             $result = isITVat($val);
             $this->assertEquals($expected, $result);
         }
+    }
+
+
+    /**
+     * @test
+     * @param $val
+     * @param $validateOnVies
+     * @param $returnValueIfViesThrownEx
+     * @param $expected
+     * @dataProvider isEuVatNumberProvider
+     */
+    public function isEuVatNumberTest($val, $validateOnVies, $expected, $returnValueIfViesThrownEx)
+    {
+        if ($this->expectedIsAnException($expected)) {
+            $this->expectException($expected);
+            isEuVatNumber($val, $validateOnVies, $returnValueIfViesThrownEx);
+            return;
+        }
+        $this->assertEquals($expected, isEuVatNumber($val, $validateOnVies, $returnValueIfViesThrownEx));
     }
 
     /**
