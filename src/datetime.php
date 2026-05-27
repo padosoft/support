@@ -209,7 +209,7 @@ function carbon(string $date, string $format = DATE_TIME_FORMAT_ISO): Carbon\Car
  * @return string
  * @see https://github.com/spatie-custom/blender/blob/master/app/Foundation/helpers.php
  */
-function roman_year(int $year = null): string
+function roman_year(?int $year = null): string
 {
     if (!is_numeric($year)) {
         $year = (int)date('Y');
