@@ -127,7 +127,7 @@ function isIntegerFloatingPoint($value, $unsigned = true): bool
         && $value <= PHP_INT_MAX && $value >= PHP_INT_MIN
         //big number rouned to int aproximately!
         //big number change into exp format
-        && ((int)((double)$value) == $value || (int)$value == $value || strpos(strtoupper((string)$value),
+        && ((int)((float)$value) == $value || (int)$value == $value || strpos(strtoupper((string)$value),
                                                                                'E') === false);
 }
 
