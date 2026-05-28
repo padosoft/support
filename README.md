@@ -2,8 +2,7 @@
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/padosoft/support.svg?style=flat-square)](https://packagist.org/packages/padosoft/support)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-[![Build Status](https://img.shields.io/travis/padosoft/support/master.svg?style=flat-square)](https://travis-ci.org/padosoft/support)
-[![Quality Score](https://img.shields.io/scrutinizer/g/padosoft/support.svg?style=flat-square)](https://scrutinizer-ci.com/g/padosoft/support)
+[![Tests](https://github.com/padosoft/support/actions/workflows/tests.yml/badge.svg)](https://github.com/padosoft/support/actions/workflows/tests.yml)
 [![Total Downloads](https://img.shields.io/packagist/dt/padosoft/support.svg?style=flat-square)](https://packagist.org/packages/padosoft/support)
 
 This package provides a lot of very usefull agnostic helpers to use as foundation in packages and other project.
@@ -28,7 +27,7 @@ All helpers function are splitted into these files:
 
 ##Requires
   
-- php: >=7.0.0|^8.0|^8.1
+- php: ^7.0|^8.0 (tested up to PHP 8.5)
 - nesbot/carbon (only for some datetime functions)
   
 ## Installation

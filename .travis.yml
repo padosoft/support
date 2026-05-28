@@ -7,6 +7,9 @@ php:
   - 8.0
   - 8.1
   - 8.2
+  - 8.3
+  - 8.4
+  - 8.5
 
 env:
   matrix:
@@ -17,7 +20,7 @@ before_script:
   - travis_retry composer update ${COMPOSER_FLAGS} --no-interaction --prefer-source
 
 script:
-  - phpunit --coverage-text --coverage-clover=coverage.clover
+  - vendor/bin/phpunit --exclude-group network
 
 #after_script:
   #- wget https://scrutinizer-ci.com/ocular.phar

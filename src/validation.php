@@ -123,12 +123,22 @@ function isInteger($value, $unsigned = true, $acceptIntegerFloatingPoints = fals
  */
 function isIntegerFloatingPoint($value, $unsigned = true): bool
 {
-    return isFloatingPoint($value, $unsigned)
-        && $value <= PHP_INT_MAX && $value >= PHP_INT_MIN
-        //big number rouned to int aproximately!
-        //big number change into exp format
-        && ((int)((double)$value) == $value || (int)$value == $value || strpos(strtoupper((string)$value),
-                                                                               'E') === false);
+    if (!isFloatingPoint($value, $unsigned)) {
+        return false;
+    }
+    if ($value > PHP_INT_MAX || $value < PHP_INT_MIN) {
+        return false;
+    }
+
+    // Only cast to int when the float is strictly within the int range,
+    // otherwise PHP 8.5+ emits "float not representable as int" on cast.
+    $intCastable = (float)$value >= (float)PHP_INT_MIN && (float)$value < (float)PHP_INT_MAX;
+
+    //big number rouned to int aproximately!
+    //big number change into exp format
+    return ($intCastable && (int)((float)$value) == $value)
+        || ($intCastable && (int)$value == $value)
+        || strpos(strtoupper((string)$value), 'E') === false;
 }
 
 /**

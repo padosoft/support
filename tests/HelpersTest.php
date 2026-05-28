@@ -354,6 +354,7 @@ class HelpersTest extends TestCase
 
     /**
      * Curl.
+     * @group network
      */
     public function test_curl()
     {
@@ -386,6 +387,7 @@ class HelpersTest extends TestCase
 
     /**
      * Expend shortened URLs.
+     * @group network
      */
     public function test_expandShortUrl()
     {
@@ -398,6 +400,7 @@ class HelpersTest extends TestCase
 
     /**
      * Shorten the URL.
+     * @group network
      */
     public function test_getTinyUrl()
     {
@@ -438,6 +441,7 @@ class HelpersTest extends TestCase
 
     /**
      * Test get_http_response_code
+     * @group network
      */
     public function test_get_http_response_code()
     {
@@ -449,6 +453,7 @@ class HelpersTest extends TestCase
 
     /**
      * Test test_url_exists
+     * @group network
      */
     public function test_url_exists()
     {

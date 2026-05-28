@@ -2,6 +2,22 @@
 
 All Notable changes to `support` will be documented in this file
 
+## 3.3.0 - 2026-05-28
+
+### ADD:
+- Support for PHP up to 8.5 (added to the CI test matrix: 8.0 -> 8.5)
+- GitHub Actions test workflow with PHP 8.0-8.5 matrix
+
+### CHANGE:
+- Bumped `phpunit/phpunit` dev requirement to `^9.6.33` (fixes GHSA unsafe deserialization in PHPT code coverage handling, < 8.5.52 / < 9.6.33)
+- `php` requirement normalized to `^7.0|^8.0`
+
+### FIX:
+- PHP 8.5: `roman_year()` explicit nullable parameter (`?int`)
+- PHP 8.5: replaced deprecated `(double)` cast with `(float)` in `isIntegerFloatingPoint()`
+- PHP 8.5: guard int casts in `isIntegerFloatingPoint()` to avoid "float not representable as int" warning at the PHP_INT_MAX boundary
+- PHP 8.5: skip deprecated `xml_parser_free()` (no-op since PHP 8.0) on PHP >= 8.0
+
 ## 3.2.0 - 2025-04-04
 
 ### ADD:
