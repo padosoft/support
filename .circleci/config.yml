@@ -1,0 +1,23 @@
+version: 2.1
+
+jobs:
+  build:
+    docker:
+      - image: cimg/php:8.3
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "composer.json" }}
+            - v2-dependencies-
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: v2-dependencies-{{ checksum "composer.json" }}
+          paths:
+            - ./vendor
+      - run: ./vendor/bin/phpunit --exclude-group network
+
+workflows:
+  build:
+    jobs:
+      - build
